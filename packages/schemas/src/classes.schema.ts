@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 //classes
 export const PostClassSchema = z.object({
@@ -23,11 +23,8 @@ export const PostStudentSchema = z.object({
 });
 
 //general
-export const DeleteSchema = z.object({
-  id: z.string(),
-});
 
-export const getSchema = z.object({
+export const getClassesSchema = z.object({
   name: z.string().nullable(),
   page: z.string(),
 });

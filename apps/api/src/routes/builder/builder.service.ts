@@ -13,7 +13,7 @@ import {
   UploadActivitySchema,
   UploadEventSchema,
   WebsiteSchema,
-} from 'schemas/dist/builder.schema';
+} from '@iglesiasbc/schemas';
 import { File } from '@nest-lab/fastify-multer';
 
 const eventsLimit = 20;

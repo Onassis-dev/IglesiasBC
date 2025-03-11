@@ -1,11 +1,7 @@
 import { Controller, Post, Body, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  authSchema,
-  googleSchema,
-  registerSchema,
-} from 'schemas/dist/auth.schema';
+import { authSchema, googleSchema, registerSchema } from '@iglesiasbc/schemas';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')

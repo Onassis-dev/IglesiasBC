@@ -1,6 +1,6 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const getSchema = z.object({
+export const getCertificateSchema = z.object({
   name: z.string().nullable(),
   page: z.string(),
 });
@@ -16,10 +16,6 @@ export const PostCertificateSchema = z.object({
   pastor2: z.string().optional().nullable(),
   expeditionDate: z.string(),
   certificateTypeId: z.string(),
-});
-
-export const DeleteSchema = z.object({
-  id: z.string(),
 });
 
 export const DownloadSchema = z.object({

@@ -1,5 +1,5 @@
-import * as postgres from 'postgres';
-import * as dotenv from 'dotenv';
+import postgres from 'postgres';
+import dotenv from 'dotenv';
 
 dotenv.config();
 

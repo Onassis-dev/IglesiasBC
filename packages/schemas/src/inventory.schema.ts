@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const getSchema = z.object({
+export const getInventorySchema = z.object({
   name: z.string().nullable(),
   page: z.string(),
 });
 
-export const PostMemberSchema = z.object({
+export const PostInventorySchema = z.object({
   name: z.string(),
   brand: z.string().optional().nullable(),
   model: z.string().optional().nullable(),
@@ -16,7 +16,7 @@ export const PostMemberSchema = z.object({
   observations: z.string().optional().nullable(),
 });
 
-export const EditMemberSchema = z.object({
+export const EditInventorySchema = z.object({
   id: z.number(),
   name: z.string().optional().nullable(),
   brand: z.string().optional().nullable(),

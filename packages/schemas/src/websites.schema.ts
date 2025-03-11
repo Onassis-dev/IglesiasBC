@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const getWebsiteSchema = z.object({
   title: z.string(),
 });
 
-export const getPostSchema = z.object({
+export const getWebsitePostSchema = z.object({
   title: z.string(),
   post: z.string(),
 });

@@ -4,17 +4,17 @@ import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
   DeleteSchema,
-  EditSchema,
-  PostSchema,
+  EditTransactionSchema,
+  PostTransactionSchema,
   StatsSchema,
-  getSchema,
-} from 'schemas/dist/transactions.schema';
+  getTransactionsSchema,
+} from '@iglesiasbc/schemas';
 
 @Injectable()
 export class TransactionsService {
   constructor(private readonly req: ContextProvider) {}
 
-  async read(query: z.infer<typeof getSchema>) {
+  async read(query: z.infer<typeof getTransactionsSchema>) {
     const rows = await sql`
     SELECT transactions.*, 
            financescategories.name as category, 
@@ -36,7 +36,7 @@ export class TransactionsService {
     return { rows, count: rows[0]?.count || 0, name: treasury.name };
   }
 
-  async post(body: z.infer<typeof PostSchema>) {
+  async post(body: z.infer<typeof PostTransactionSchema>) {
     const treasuryCheck =
       await sql`SELECT 1 FROM treasuries WHERE id = ${body.treasuryId} AND "churchId" = ${this.req.getChurchId()} LIMIT 1`;
 
@@ -49,7 +49,7 @@ export class TransactionsService {
     return await sql`INSERT INTO transactions ${sql({ ...body })}`;
   }
 
-  async edit(body: z.infer<typeof EditSchema>) {
+  async edit(body: z.infer<typeof EditTransactionSchema>) {
     return await sql`UPDATE transactions SET ${sql(body)} FROM treasuries
       WHERE transactions."treasuryId" = treasuries.id
       AND transactions.id = ${body.id}

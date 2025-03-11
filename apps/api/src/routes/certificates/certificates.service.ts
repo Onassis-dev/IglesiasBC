@@ -4,8 +4,8 @@ import {
   DeleteSchema,
   DownloadSchema,
   PostCertificateSchema,
-  getSchema,
-} from 'schemas/dist/certificates.schema';
+  getCertificateSchema,
+} from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { PDFDocument, rgb } from 'pdf-lib';
@@ -211,7 +211,7 @@ export class CertificatesService {
     return pdfBytes;
   }
 
-  async get(query: z.infer<typeof getSchema>) {
+  async get(query: z.infer<typeof getCertificateSchema>) {
     //Ambos filtros deben de ser iguales
     const rows = await sql`
     SELECT certificates.*, certificatetypes.name as type, COUNT(*) OVER () AS count

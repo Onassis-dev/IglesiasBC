@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
-import { SelectChurchSchema, UserSchema } from 'schemas/dist/users.schema';
+import { SelectChurchSchema, UserSchema } from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { cookieConfig } from 'src/utils/cookiesConfig';

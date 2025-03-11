@@ -4,9 +4,9 @@ import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
   DeleteSchema,
-  EditSchema,
-  PostSchema,
-} from 'schemas/dist/permissions.schema';
+  EditPermissionSchema,
+  PostPermissionSchema,
+} from '@iglesiasbc/schemas';
 
 const permissionsLimits = [2, 10, 20];
 
@@ -29,7 +29,7 @@ export class PermissionsService {
     return rows;
   }
 
-  async createPermission(body: z.infer<typeof PostSchema>) {
+  async createPermission(body: z.infer<typeof PostPermissionSchema>) {
     const permissionsCount = (
       await sql`select count(*) from permissions where "churchId" = ${this.req.getChurchId()}`
     )[0].count;
@@ -60,7 +60,7 @@ export class PermissionsService {
     return await sql`insert into permissions ${sql({ userId: user.id, churchId: this.req.getChurchId() })}`;
   }
 
-  async editPermission(body: z.infer<typeof EditSchema>) {
+  async editPermission(body: z.infer<typeof EditPermissionSchema>) {
     const [permission] =
       await sql`select 1 from churches where "ownerId" = ${this.req.getUserId()} and id = ${this.req.getChurchId()}`;
     if (!permission)

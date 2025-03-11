@@ -6,8 +6,8 @@ import {
   PostClassSchema,
   PostStudentSchema,
   PostSubjectSchema,
-  getSchema,
-} from 'schemas/dist/classes.schema';
+  getClassesSchema,
+} from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import jsPDF from 'jspdf';
@@ -17,7 +17,7 @@ import autoTable from 'jspdf-autotable';
 export class ClassesService {
   constructor(private readonly req: ContextProvider) {}
 
-  async read(query: z.infer<typeof getSchema>) {
+  async read(query: z.infer<typeof getClassesSchema>) {
     //Ambos filtros deben de ser iguales
     const rows = await sql`
     SELECT *, COUNT(*) OVER () AS count

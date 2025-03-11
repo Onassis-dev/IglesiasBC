@@ -2,10 +2,10 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
   DeleteSchema,
-  EditSchema,
-  PostSchema,
-  getSchema,
-} from 'schemas/dist/treasuries.schema';
+  EditTreasurySchema,
+  PostTreasurySchema,
+  getTreasurySchema,
+} from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 
@@ -13,7 +13,7 @@ import sql from 'src/utils/db';
 export class TreasuriesService {
   constructor(private readonly req: ContextProvider) {}
 
-  async read(query: z.infer<typeof getSchema>) {
+  async read(query: z.infer<typeof getTreasurySchema>) {
     const rows = await sql`
     SELECT *, COUNT(*) OVER () AS count
     FROM treasuries
@@ -34,12 +34,12 @@ export class TreasuriesService {
     return data[0];
   }
 
-  async post(body: z.infer<typeof PostSchema>) {
+  async post(body: z.infer<typeof PostTreasurySchema>) {
     const data = { ...body, churchId: this.req.getChurchId() };
     return await sql`insert into treasuries ${sql(data)}`;
   }
 
-  async edit(body: z.infer<typeof EditSchema>) {
+  async edit(body: z.infer<typeof EditTreasurySchema>) {
     return await sql`update treasuries set ${sql(body)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
   }
 

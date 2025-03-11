@@ -14,9 +14,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
   DeleteSchema,
-  EditSchema,
-  PostSchema,
-} from 'schemas/dist/permissions.schema';
+  EditPermissionSchema,
+  PostPermissionSchema,
+} from '@iglesiasbc/schemas';
 
 @ApiTags('Permissions')
 @Controller('permissions')
@@ -30,12 +30,12 @@ export class PermissionsController {
   }
 
   @Post()
-  createPermission(@Body(new ZodPiPe(PostSchema)) body) {
+  createPermission(@Body(new ZodPiPe(PostPermissionSchema)) body) {
     return this.permissionsService.createPermission(body);
   }
 
   @Put()
-  editPermission(@Body(new ZodPiPe(EditSchema)) body) {
+  editPermission(@Body(new ZodPiPe(EditPermissionSchema)) body) {
     return this.permissionsService.editPermission(body);
   }
 

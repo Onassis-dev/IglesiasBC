@@ -1,12 +1,12 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const getSchema = z.object({
+export const getTransactionsSchema = z.object({
   name: z.string().nullable(),
   id: z.string().nullable(),
   page: z.string(),
 });
 
-export const PostSchema = z.object({
+export const PostTransactionSchema = z.object({
   date: z.string(),
   notes: z.string().optional().nullable(),
   concept: z.string(),
@@ -15,17 +15,13 @@ export const PostSchema = z.object({
   amount: z.number(),
 });
 
-export const EditSchema = z.object({
+export const EditTransactionSchema = z.object({
   date: z.string(),
   notes: z.string().optional().nullable(),
   concept: z.string(),
   categoryId: z.number(),
   amount: z.number(),
   id: z.number(),
-});
-
-export const DeleteSchema = z.object({
-  id: z.string(),
 });
 
 export const StatsSchema = z.object({

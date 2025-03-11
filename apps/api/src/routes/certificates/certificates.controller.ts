@@ -18,8 +18,8 @@ import {
   DeleteSchema,
   DownloadSchema,
   PostCertificateSchema,
-  getSchema,
-} from 'schemas/dist/certificates.schema';
+  getCertificateSchema,
+} from '@iglesiasbc/schemas';
 import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 import { ImageHandler } from 'src/interceptors/files/image.interceptor';
 
@@ -30,7 +30,7 @@ export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}
 
   @Get()
-  read(@Query(new ZodPiPe(getSchema)) query) {
+  read(@Query(new ZodPiPe(getCertificateSchema)) query) {
     return this.certificatesService.get(query);
   }
 

@@ -5,7 +5,7 @@ import {
   PostMemberSchema,
   getSchema,
   idSchema,
-} from 'schemas/dist/members.schema';
+} from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { File } from '@nest-lab/fastify-multer';

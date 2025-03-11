@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
-  EditMemberSchema,
+  EditInventorySchema,
   IdSchema,
-  PostMemberSchema,
-  getSchema,
-} from 'schemas/dist/inventory.schema';
+  PostInventorySchema,
+  getInventorySchema,
+} from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import * as excelJS from 'exceljs';
@@ -19,7 +19,7 @@ export class InventoryService {
     )[0];
   }
 
-  async read(query: z.infer<typeof getSchema>) {
+  async read(query: z.infer<typeof getInventorySchema>) {
     //Ambos filtros deben de ser iguales
     const rows = await sql`
     SELECT id, name, amount, price, brand, COUNT(*) OVER () AS count
@@ -32,12 +32,12 @@ export class InventoryService {
     return { rows, count: rows[0]?.count || 0 };
   }
 
-  async post(body: z.infer<typeof PostMemberSchema>) {
+  async post(body: z.infer<typeof PostInventorySchema>) {
     const data = { ...body, churchId: this.req.getChurchId() };
     return await sql`insert into inventory ${sql(data)}`;
   }
 
-  async edit(body: z.infer<typeof EditMemberSchema>) {
+  async edit(body: z.infer<typeof EditInventorySchema>) {
     return await sql`update inventory set ${sql(body)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
   }
 

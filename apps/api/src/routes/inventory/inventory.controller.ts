@@ -14,11 +14,11 @@ import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
-  EditMemberSchema,
+  EditInventorySchema,
   IdSchema,
-  PostMemberSchema,
-  getSchema,
-} from 'schemas/dist/inventory.schema';
+  PostInventorySchema,
+  getInventorySchema,
+} from '@iglesiasbc/schemas';
 
 @ApiTags('Inventory')
 @Controller('inventory')
@@ -32,7 +32,7 @@ export class InventoryController {
   }
 
   @Get()
-  read(@Query(new ZodPiPe(getSchema)) query) {
+  read(@Query(new ZodPiPe(getInventorySchema)) query) {
     return this.inventoryService.read(query);
   }
 
@@ -42,12 +42,12 @@ export class InventoryController {
   }
 
   @Post()
-  create(@Body(new ZodPiPe(PostMemberSchema)) body) {
+  create(@Body(new ZodPiPe(PostInventorySchema)) body) {
     return this.inventoryService.post(body);
   }
 
   @Put()
-  edit(@Body(new ZodPiPe(EditMemberSchema)) body) {
+  edit(@Body(new ZodPiPe(EditInventorySchema)) body) {
     return this.inventoryService.edit(body);
   }
 

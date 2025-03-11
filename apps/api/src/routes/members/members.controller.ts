@@ -20,7 +20,7 @@ import {
   PostMemberSchema,
   getSchema,
   idSchema,
-} from 'schemas/dist/members.schema';
+} from '@iglesiasbc/schemas';
 import { FileInterceptor } from '@nest-lab/fastify-multer';
 
 @ApiTags('Members')

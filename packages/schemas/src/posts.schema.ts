@@ -1,21 +1,21 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const GetOneSchema = z.object({
+export const GetOnePostSchema = z.object({
   id: z.string(),
 });
 
-export const GetSchema = z.object({
+export const getPostSchema = z.object({
   title: z.string().nullable(),
   page: z.string(),
 });
 
-export const PostSchema = z.object({
+export const PostPostSchema = z.object({
   title: z.string(),
   body: z.string(),
   description: z.string(),
 });
 
-export const EditSchema = z.object({
+export const EditPostSchema = z.object({
   id: z.string(),
   title: z.string(),
   body: z.string(),

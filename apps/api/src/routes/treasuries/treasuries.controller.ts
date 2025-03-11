@@ -15,10 +15,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
   DeleteSchema,
-  EditSchema,
-  PostSchema,
-  getSchema,
-} from 'schemas/dist/treasuries.schema';
+  EditTreasurySchema,
+  PostTreasurySchema,
+  getTreasurySchema,
+} from '@iglesiasbc/schemas';
 
 @ApiTags('Treasuries')
 @Controller('treasuries')
@@ -27,7 +27,7 @@ export class TreasuriesController {
   constructor(private readonly financesService: TreasuriesService) {}
 
   @Get()
-  read(@Query(new ZodPiPe(getSchema)) query) {
+  read(@Query(new ZodPiPe(getTreasurySchema)) query) {
     return this.financesService.read(query);
   }
 
@@ -37,12 +37,12 @@ export class TreasuriesController {
   }
 
   @Post()
-  create(@Body(new ZodPiPe(PostSchema)) body) {
+  create(@Body(new ZodPiPe(PostTreasurySchema)) body) {
     return this.financesService.post(body);
   }
 
   @Put()
-  edit(@Body(new ZodPiPe(EditSchema)) body) {
+  edit(@Body(new ZodPiPe(EditTreasurySchema)) body) {
     return this.financesService.edit(body);
   }
 

@@ -1,7 +1,7 @@
 import { Controller, Query, Get } from '@nestjs/common';
 import { WebsitesService } from './websites.service';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import { getPostSchema, getWebsiteSchema } from 'schemas/dist/websites.schema';
+import { getWebsitePostSchema, getWebsiteSchema } from '@iglesiasbc/schemas';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Websites')
@@ -30,7 +30,7 @@ export class WebsitesController {
   }
 
   @Get('post')
-  getPost(@Query(new ZodPiPe(getPostSchema)) query) {
+  getPost(@Query(new ZodPiPe(getWebsitePostSchema)) query) {
     return this.websitesService.getPost(query);
   }
 }

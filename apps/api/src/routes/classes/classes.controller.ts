@@ -19,8 +19,8 @@ import {
   PostClassSchema,
   PostStudentSchema,
   PostSubjectSchema,
-  getSchema,
-} from 'schemas/dist/classes.schema';
+  getClassesSchema,
+} from '@iglesiasbc/schemas';
 
 @ApiTags('Classes')
 @Controller('classes')
@@ -29,7 +29,7 @@ export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}
 
   @Get()
-  read(@Query(new ZodPiPe(getSchema)) query) {
+  read(@Query(new ZodPiPe(getClassesSchema)) query) {
     return this.classesService.read(query);
   }
 

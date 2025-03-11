@@ -2,11 +2,11 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
   DeleteSchema,
-  EditSchema,
-  GetOneSchema,
-  GetSchema,
-  PostSchema,
-} from 'schemas/dist/posts.schema';
+  EditPostSchema,
+  GetOnePostSchema,
+  getPostSchema,
+  PostPostSchema,
+} from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { parseTitle } from 'src/utils/commonUtils';
@@ -17,7 +17,7 @@ import { File } from '@nest-lab/fastify-multer';
 export class PostsService {
   constructor(private readonly req: ContextProvider) {}
 
-  async getOne(dto: z.infer<typeof GetOneSchema>) {
+  async getOne(dto: z.infer<typeof GetOnePostSchema>) {
     const data =
       await sql`SELECT id, title, body, description FROM posts WHERE "churchId" = ${this.req.getChurchId()} AND id = ${dto.id}`;
 
@@ -25,7 +25,7 @@ export class PostsService {
     return data[0];
   }
 
-  async get(query: z.infer<typeof GetSchema>) {
+  async get(query: z.infer<typeof getPostSchema>) {
     const rows = await sql`
     SELECT id, title, publication, description, COUNT(*) OVER () AS count
     FROM posts
@@ -41,7 +41,7 @@ export class PostsService {
     return { rows, count: rows[0]?.count || 0, websiteTitle: title };
   }
 
-  async post(body: z.infer<typeof PostSchema>, file: File) {
+  async post(body: z.infer<typeof PostPostSchema>, file: File) {
     const [sameName] =
       await sql`select 1 from "posts" where ${parseTitle('title', true)} = ${parseTitle(body.title)} and "churchId" = ${this.req.getChurchId()}`;
     if (sameName)
@@ -55,7 +55,7 @@ export class PostsService {
     return await sql`insert into posts ${sql({ ...data, img: url })}`;
   }
 
-  async edit(body: z.infer<typeof EditSchema>, file: File) {
+  async edit(body: z.infer<typeof EditPostSchema>, file: File) {
     const [isTheSame] = await sql`select 1 from "posts" where ${parseTitle(
       (await sql`(select "title" from "posts" where id = ${body.id})`)[0].title,
       false,

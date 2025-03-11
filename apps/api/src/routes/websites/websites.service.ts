@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { getPostSchema, getWebsiteSchema } from 'schemas/dist/websites.schema';
+import { getWebsitePostSchema, getWebsiteSchema } from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { parseTitle } from 'src/utils/commonUtils';
@@ -72,7 +72,7 @@ export class WebsitesService {
     }
   }
 
-  async getPost(query: z.infer<typeof getPostSchema>) {
+  async getPost(query: z.infer<typeof getWebsitePostSchema>) {
     try {
       const [website] =
         await sql`select (select plan from users where id = (select "ownerId" from churches where id = "churchId")), (select count(*) from posts where "churchId" = websites."churchId") as blog, "churchId","title", structure,"color","style","logo","language","facebookLink","youtubeLink","donationLink","preachLink","whatsappLink","mapsLink","instagramLink", "animations" from "websites" where ${parseTitle('title', true)} = ${parseTitle(query.title)}`;
