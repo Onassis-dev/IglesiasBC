@@ -1,5 +1,6 @@
 {
   "name": "iglesiasbc",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,5 +10,19 @@
   "keywords": [],
   "author": "onassis",
   "license": "ISC",
-  "packageManager": "pnpm@10.5.2"
+  "packageManager": "pnpm@10.5.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "core-js",
+      "@swc/core",
+      "@firebase/util",
+      "aws-sdk",
+      "core-js",
+      "esbuild",
+      "protobufjs",
+      "sharp",
+      "workerd"
+    ]
+  }
 }

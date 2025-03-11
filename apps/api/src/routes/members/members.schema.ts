@@ -4,7 +4,6 @@ export const getSchema = z.object({
   name: z.string().nullable(),
   page: z.string(),
 });
-
 export const PostMemberSchema = z.object({
   name: z.string(),
   cellphone: z.string().optional().nullable(),
