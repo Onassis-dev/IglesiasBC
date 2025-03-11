@@ -1,0 +1,13 @@
+---
+interface Props {
+    pastors: string;
+    pastorsImg: string;
+}
+
+const { pastors, pastorsImg } = Astro.props;
+---
+
+<div>
+    <img src={pastorsImg} alt="" />
+    <p>{pastors}</p>
+</div>

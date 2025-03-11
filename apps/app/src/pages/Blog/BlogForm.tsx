@@ -1,0 +1,221 @@
+import { api } from '@/lib/boilerplate';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import type { z } from 'zod';
+import { DialogHeader } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useEffect, useState } from 'react';
+import { showPromise } from '@/lib/showFunctions.tsx';
+import { Button, RegisterButton } from '@/components/ui/button';
+import { Bold, Check, HeadingIcon, Image, Italic, LoaderIcon, Strikethrough, Upload, X } from 'lucide-react';
+import { usePostSchema, type PostSchema } from './posts.models';
+import { useQuery } from '@tanstack/react-query';
+import { useQueryStore } from '@/lib/store';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+import { Toggle } from '@/components/ui/toggle';
+import './tiptap.css';
+
+interface props {
+    id: string | number;
+    open: boolean;
+    setOpen: (open: boolean) => void;
+}
+
+const BlogForm = ({ id, open, setOpen }: props) => {
+    const [showEditor, setShowEditor] = useState(false);
+    const [selectedFile, setSelectedFile]: any = useState(null);
+    const blogForm = usePostSchema();
+    const client = useQueryStore((queryClient) => queryClient.queryClient);
+
+    const editor = useEditor({
+        extensions: [
+            StarterKit.configure(),
+            Placeholder.configure({
+                placeholder: 'Empieza a escribir aquí...',
+            }),
+        ],
+        content: blogForm.getValues('body'),
+        editorProps: {
+            attributes: {
+                class: 'max-h-full h-full overflow-y-auto p-3 mb-0 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-ring  ',
+            },
+        },
+        onUpdate({ editor }) {
+            blogForm.setValue('body', editor.getHTML(), { shouldValidate: true });
+        },
+    });
+
+    const { data: post } = useQuery({
+        queryKey: ['posts', id],
+        queryFn: async () => (await api.get(`/posts/${id}`)).data,
+        initialData: {},
+        enabled: !!id,
+    });
+
+    const handleSubmit = async (values: z.infer<typeof PostSchema>) => {
+        const formData = new FormData();
+
+        formData.append('image', selectedFile);
+
+        if (id) {
+            await api.put('/posts', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                params: values,
+            });
+        } else {
+            if (!selectedFile) throw new Error('Por favor, elija una imagen para la portada.');
+            await api.post('/posts', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                params: values,
+            });
+        }
+
+        client.refetchQueries({ queryKey: ['posts'] });
+        setOpen(false);
+    };
+
+    const handleFile = (e: any) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            setSelectedFile(files[0]);
+        }
+    };
+
+    useEffect(() => {
+        blogForm.setValue('id', post.id);
+        blogForm.setValue('title', post.title);
+        blogForm.setValue('body', post.body);
+        blogForm.setValue('description', post.description);
+        setSelectedFile(null);
+        editor?.commands.setContent(post.body);
+
+        if (post.id) return setShowEditor(true);
+        if (open && !id) return setShowEditor(true);
+        setShowEditor(false);
+    }, [post, open]);
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <RegisterButton>Publicar post</RegisterButton>
+            </DialogTrigger>
+            <DialogContent className="max-h-[98vh] h-full max-w-2xl flex flex-col p-0" closeButton={false}>
+                <DialogHeader className="flex flex-row items-center border-b border-input min-h-10 p-2 space-y-0 gap-0.5">
+                    <Toggle
+                        size="sm"
+                        pressed={editor?.isActive('heading')}
+                        onPressedChange={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+                        className="aspect-square"
+                    >
+                        <HeadingIcon className="size-4" />
+                    </Toggle>
+                    <Toggle
+                        size="sm"
+                        pressed={editor?.isActive('bold')}
+                        onPressedChange={() => editor?.chain().focus().toggleBold().run()}
+                        className="aspect-square"
+                    >
+                        <Bold className="size-4" />
+                    </Toggle>
+                    <Toggle
+                        size="sm"
+                        pressed={editor?.isActive('italic')}
+                        onPressedChange={() => editor?.chain().focus().toggleItalic().run()}
+                        className="aspect-square"
+                    >
+                        <Italic className="size-4" />
+                    </Toggle>
+                    <Toggle
+                        size="sm"
+                        pressed={editor?.isActive('strike')}
+                        onPressedChange={() => editor?.chain().focus().toggleStrike().run()}
+                        className="aspect-square"
+                    >
+                        <Strikethrough className="size-4" />
+                    </Toggle>
+                    <label className="h-9 px-2.5 flex items-center justify-center gap-2 rounded-md hover:bg-muted cursor-pointer ml-auto relative">
+                        <Image className="size-4 " />
+                        {selectedFile && <Check className="size-3.5 bottom-0.5 right-1 absolute text-green" />}
+                        {!selectedFile && !id && <span className="size-3.5 bottom-3 -right-1 absolute text-destructive">!</span>}
+                        <Input type="file" accept="image/*" id="username" onChange={(e) => handleFile(e)} className="hidden" />
+                    </label>
+
+                    <Button
+                        onClick={blogForm.handleSubmit((values: z.infer<typeof PostSchema>) =>
+                            showPromise(handleSubmit(values), id ? 'Post actualizado' : 'Post publicado')
+                        )}
+                        className="max-w-32 h-8 gap-2"
+                        size="sm"
+                    >
+                        <Upload className="size-3.5" />
+                        Subir
+                    </Button>
+                    <Button className="size-8 sm:hidden" variant="ghost" size="icon" onClick={() => setOpen(false)}>
+                        <X className="size-3.5" />
+                    </Button>
+                </DialogHeader>
+                <Form {...blogForm}>
+                    <form
+                        onSubmit={blogForm.handleSubmit((values: z.infer<typeof PostSchema>) =>
+                            showPromise(handleSubmit(values), id ? 'Post actualizado' : 'Post publicado')
+                        )}
+                        className="grid h-full overflow-y-auto p-2 sm:p-6 pt-1 "
+                        style={{ gridTemplateRows: 'auto auto 1fr' }}
+                    >
+                        <FormField
+                            control={blogForm.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input placeholder="Titulo" {...field} className="border-none font-semibold text-2xl" />
+                                    </FormControl>
+                                    <FormMessage className="h-5" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={blogForm.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input placeholder="Descripción" {...field} className="border-none h-8 text-muted-foreground" />
+                                    </FormControl>
+                                    <FormMessage className="h-5" />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={blogForm.control}
+                            name="body"
+                            render={() => (
+                                <FormItem>
+                                    <FormControl>
+                                        {showEditor ? (
+                                            <EditorContent editor={editor}></EditorContent>
+                                        ) : (
+                                            <div className="w-full h-full flex justify-center items-center">
+                                                <LoaderIcon className="animate-spin size-8" />
+                                            </div>
+                                        )}
+                                    </FormControl>
+                                    <FormMessage className="h-5" />
+                                </FormItem>
+                            )}
+                        />
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+export default BlogForm;

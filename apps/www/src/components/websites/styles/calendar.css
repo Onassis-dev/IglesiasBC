@@ -1,0 +1,129 @@
+#caleandar {
+    width: 100%;
+}
+
+.cld-main {
+    width: 100%;
+    height: 100%;
+}
+
+.cld-datetime {
+    position: relative;
+    width: 66%;
+    min-width: 100px;
+    max-width: 300px;
+    margin: auto;
+    overflow: hidden;
+}
+.cld-datetime .today {
+    position: relative;
+    float: left;
+    width: calc(100% - 40px);
+    margin: auto;
+    text-align: center;
+}
+.cld-nav {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    margin-bottom: 30px;
+}
+.cld-nav:hover {
+    cursor: pointer;
+}
+.cld-nav svg {
+    fill: var(--border);
+}
+.cld-nav:hover svg {
+    fill: #666;
+}
+.cld-rwd {
+    float: left;
+}
+.cld-fwd {
+    float: right;
+}
+
+.cld-days,
+.cld-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 0.2px;
+    border-radius: var(--radius);
+    background-color: var(--border);
+}
+.cld-day {
+    border: 1px solid var(--border);
+}
+.cld-labels {
+    background-color: var(--background);
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+}
+.cld-day,
+.cld-label {
+    background-color: var(--background);
+}
+.cld-day {
+    min-height: 80px;
+    display: block;
+    float: left;
+    position: relative;
+    margin: 0;
+    padding: 5px;
+    aspect-ratio: auto;
+    overflow-y: auto;
+}
+.cld-day.clickable:hover {
+    cursor: pointer;
+}
+.cld-day.today {
+    border: 1px solid;
+}
+.cld-day.disableDay {
+    opacity: 1;
+}
+.cld-day.nextMonth,
+.cld-day.prevMonth {
+    background-color: var(--border);
+}
+.cld-number {
+    margin: 0;
+    width: fit-content;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+.cld-title {
+    font-size: 12px;
+    margin: 0;
+    font-weight: 400;
+    background-color: var(--primary);
+    color: var(--primarytext) !important;
+    margin-bottom: 1px;
+    border-radius: calc(var(--bradius) - 2px);
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.cld-day:hover {
+    background: var(--border);
+}
+.cld-number.eventday {
+    font-weight: bold;
+}
+.cld-number.eventday:hover {
+    background: var(--border);
+}
+.cld-title a {
+    white-space: nowrap;
+}
+@media (max-width: 640px) {
+    .cld-day {
+        overflow-x: auto;
+    }
+    .cld-title {
+        font-size: 9px;
+    }
+}

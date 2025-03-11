@@ -1,0 +1,11 @@
+---
+import type { Image } from "@/components/pages/Website/website.types";
+interface Props {
+    image: Image;
+    className?: string;
+}
+
+const { image, className } = Astro.props;
+---
+
+<img class={className} src={image.img} alt="" loading="lazy"/>

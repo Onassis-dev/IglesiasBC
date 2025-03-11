@@ -1,0 +1,42 @@
+---
+export const prerender = false;
+
+import Layout from "../../layouts/WebsitesLayout.astro";
+import Sencillo from "../../components/websites/pages/Sencillo.Home.astro";
+import Impactante from "../../components/websites/pages/Impactante.Home.astro";
+import Elegante from "../../components/websites/pages/Elegante.Home.astro";
+import Minimalista from "../../components/websites/pages/Moderno.Home.astro";
+import type { Website } from "@/components/pages/Website/website.types";
+
+const { title } = Astro.params;
+let webpage: Website;
+
+try {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_BASE}/websites/start?title=${title}`);
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            return new Response(null, {
+                status: 404,
+            });
+        } else {
+            return new Response(null, {
+                status: 500,
+            });
+        }
+    }
+
+    webpage = await response.json();
+} catch (error) {
+    return new Response(null, {
+        status: 500,
+    });
+}
+---
+
+<Layout webpage={webpage}>
+    {webpage.structure === "1" && <Sencillo webpage={webpage} />}
+    {webpage.structure === "2" && <Impactante webpage={webpage} />}
+    {webpage.structure === "3" && <Elegante webpage={webpage} />}
+    {webpage.structure === "4" && <Minimalista webpage={webpage} />}
+</Layout>

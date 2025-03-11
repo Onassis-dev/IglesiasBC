@@ -1,0 +1,25 @@
+---
+import type { Activity } from "@/components/pages/Website/website.types";
+import Section2 from "../basics/Section2.astro";
+
+interface Props {
+    activity: Activity;
+    flip?: boolean;
+    animations: number;
+}
+
+const { activity, flip, animations } = Astro.props;
+---
+
+<Section2 animations={animations}>
+    <div class="flex sm:flex-row-reverse"></div>
+    <div class=`flex gap-4 shadow-md shadow-cshadow border-border items-center rounded-md flex-col w-full sm:flex-row${flip?"-reverse":""}`>
+        <img class="sm:w-1/3 w-full aspect-[4/3] object-cover" loading="lazy" src={activity.img} />
+
+        <div class="flex flex-col gap-4 p-4">
+            <h3 class="text-2xl font-header">{activity.title}</h3>
+
+            <p class="sm:text-xl">{activity.text}</p>
+        </div>
+    </div>
+</Section2>

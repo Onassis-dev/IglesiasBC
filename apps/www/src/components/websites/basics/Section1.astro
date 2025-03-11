@@ -1,0 +1,14 @@
+---
+interface Props {
+    full?: boolean;
+    animations: number;
+}
+
+const { full, animations } = Astro.props;
+---
+
+<section class={"flex justify-center bg-background animatedscroll" + animations}>
+    <div class=`py-8 ${full?"":"px-4 max-w-6xl"}  lg:py-16 w-full`>
+        <slot />
+    </div>
+</section>

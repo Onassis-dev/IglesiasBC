@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cardo:ital,wght@0,400;0,700;1,400&family=Copse&family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
+
+.p1 {
+    /* simple */
+    --foreground: hsl(249, 47%, 3%);
+    --background: hsl(0, 0%, 100%);
+    --secondary: hsl(0, 0%, 90%);
+    --cshadow: rgba(0, 0, 0, 0.1);
+    --radius: 5px;
+    --borderwidth: 1px;
+    --border: var(--secondary);
+    --headerfont: "Inter", sans-serif;
+    --size: 400;
+    font-weight: 350;
+}
+.p2 {
+    /* elegante */
+    --foreground: hsl(249, 47%, 3%);
+    --background: hsl(0, 0%, 100%);
+    --secondary: hsl(0, 0%, 93%);
+    --cshadow: rgba(0, 0, 0, 0.05);
+    --radius: 3px;
+    --borderwidth: 1px;
+    --border: var(--secondary);
+    --headerfont: "Cardo", serif;
+    --size: 100;
+    font-weight: 250;
+}
+.p3 {
+    /* moderno */
+    --foreground: hsl(230, 35%, 7%);
+    --background: hsl(0, 0%, 98%);
+    --secondary: hsl(0, 0%, 93%);
+    --cshadow: rgba(0, 0, 0, 0.2);
+    --radius: 6px;
+    --borderwidth: 1px;
+    --border: var(--secondary);
+    --headerfont: "Inter", sans-serif;
+    --size: 250;
+    font-weight: 200;
+}
+.p4 {
+    /* Creativo */
+    --background: #121212;
+    --foreground: #eee;
+    --secondary: hsl(0, 0%, 18%);
+    --cshadow: rgba(222, 222, 222, 0);
+    --radius: 5px;
+    --borderwidth: 2px;
+    --border: var(--secondary);
+    --headerfont: "Bebas Neue", sans-serif;
+    --size: 100;
+    font-weight: 400;
+}
+.p5 {
+    /* Oscuro */
+    --background: hsl(240 10% 3.9%);
+    --foreground: hsl(0 0% 98%);
+    --secondary: hsl(0, 0%, 20%);
+    --cshadow: rgba(0, 0, 0, 0);
+    --bradius: 4px;
+    --borderwidth: 1.5px;
+    --border: var(--secondary);
+    --headerfont: "Inter", sans-serif;
+    --size: 200;
+    font-weight: 200;
+}
+.p6 {
+    /* Lujoso */
+    --background: #08080b;
+    --foreground: hsl(0, 0%, 95%);
+    --secondary: hsl(0, 0%, 15%);
+    --cshadow: rgba(255, 255, 255, 0.08);
+    --bradius: 3px;
+    --borderwidth: 1px;
+    --border: var(--secondary);
+    --headerfont: "Cormorant Infant", serif;
+    --size: 100;
+    font-weight: 225;
+}
+
+.scrollable {
+    scroll-margin-top: 7rem;
+}
+
+main {
+    padding-top: 0;
+    scroll-behavior: smooth;
+}

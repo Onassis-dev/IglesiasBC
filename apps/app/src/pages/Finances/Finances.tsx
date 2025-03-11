@@ -1,0 +1,82 @@
+import '@/lib/boilerplate';
+import { useEffect, useState } from 'react';
+import { api } from '@/lib/boilerplate';
+import { CircleDollarSign, MinusCircle, PlusCircle } from 'lucide-react';
+import DeleteDialog from '@/components/common/DeleteDialog';
+import { Card, CardContent } from '@/components/ui/card';
+import { SearchInput } from '@/components/ui/input';
+import PaginationMenu from '@/components/common/PaginationMenu';
+import InfoCard from '@/components/common/InfoCard';
+import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
+
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { CrudTable, type Column } from '@/components/common/CrudTable';
+import TreasuriesForm from './TreasuriesForm';
+
+export const Finances = () => {
+    const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
+    const [selectedTreasury, setSelectedTreasury] = useState<any>({});
+    const [filters, setFilters] = useState<any>({ name: '' });
+    const [page, setPage] = useState(1);
+
+    const { data: treasuries, status } = useQuery({
+        queryKey: ['treasuries', page, filters],
+        queryFn: async () => (await api.get('/treasuries', { params: { ...filters, page } })).data,
+        placeholderData: keepPreviousData,
+    });
+    const { data: stats } = useQuery({ queryKey: ['treasuries', 'stats'], queryFn: async () => (await api.get('/treasuries/stats')).data });
+
+    useEffect(() => {
+        if (!open && !open1) setTimeout(() => setSelectedTreasury({}), 200);
+    }, [open, open1]);
+
+    const columns: Column[] = [{ title: 'Tesorería', data: 'name' }];
+
+    return (
+        <div className="space-y-3 bg-dashboardbg">
+            <StatsGrid>
+                <InfoCard color="green" title="Total de ingresos" data={stats?.income}>
+                    <PlusCircle />
+                </InfoCard>
+                <InfoCard color="green" title="Total de egresos" data={stats?.expense}>
+                    <MinusCircle />
+                </InfoCard>
+                <InfoCard color="green" title="Balance" data={stats?.balance}>
+                    <CircleDollarSign />
+                </InfoCard>
+            </StatsGrid>
+            <OptionsGrid>
+                <SearchInput placeholder="Buscar..." value={filters.name} onChange={(e) => setFilters({ ...filters, name: e.target.value })} />
+
+                <DeleteDialog
+                    text="Desea eliminar esta tesorería y todos sus movimientos?"
+                    successMessage="Tesorería eliminada"
+                    path="treasuries"
+                    open={open1}
+                    setOpen={setOpen1}
+                    id={selectedTreasury.id}
+                />
+                <TreasuriesForm open={open} setOpen={setOpen} id={selectedTreasury.id} />
+            </OptionsGrid>
+
+            <Card>
+                <CardContent className="p-0">
+                    <CrudTable
+                        columns={columns}
+                        data={treasuries?.rows}
+                        status={status}
+                        setSelectedRow={setSelectedTreasury}
+                        viewHref="/finances/treasury?id="
+                        setOpenEdit={setOpen}
+                        setOpenDelete={setOpen1}
+                        enableOpenOnRowClick={true}
+                    ></CrudTable>
+                </CardContent>
+            </Card>
+            <PaginationMenu page={page} setPage={setPage} count={treasuries?.count} rowsDisplayed={10} />
+        </div>
+    );
+};
+
+export default Finances;

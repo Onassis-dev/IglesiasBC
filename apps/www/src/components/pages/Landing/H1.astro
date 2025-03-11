@@ -1,0 +1,12 @@
+---
+interface Props {
+    className?: string;
+    variant?: "default" | "big";
+}
+
+const { className, variant } = Astro.props;
+---
+
+<h1 class={(variant === "big" ? "text-[3.3rem] md:text-[70px] max-w-4xl " : "text-[2.8rem] md:text-[65px] max-w-3xl ") + " font-medium tracking-tight text-[3.3rem] md:text-[80px] max-w-4xl text-center space-x-2 leading-tight mx-auto px-2" + " " + className}>
+    <slot />
+</h1>

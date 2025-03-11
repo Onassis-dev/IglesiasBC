@@ -1,0 +1,108 @@
+---
+import "@/global.css";
+import "@/components/websites/styles/websites.css";
+import "@/components/websites/styles/animations.css";
+
+import { ViewTransitions } from "astro:transitions";
+import Header1 from "@/components/websites/components/Header1.astro";
+import Header2 from "@/components/websites/components/Header2.astro";
+import Header3 from "@/components/websites/components/Header3.astro";
+import Header4 from "@/components/websites/components/Header4.astro";
+import Footer from "@/components/websites/components/Footer.astro";
+import type { Event, Website } from "@/components/pages/Website/website.types";
+
+interface Props {
+  webpage: Website;
+  event?: Event;
+}
+
+const { webpage, event } = Astro.props;
+
+function isColorDark(hexColor?: string) {
+  if (!hexColor) return;
+  const hex = hexColor.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+  const brightnessThreshold = 160;
+
+  return luminance < brightnessThreshold ? "#fff" : "#000";
+}
+
+webpage.blog = webpage.blog !== "0";
+---
+
+<html lang={webpage.language} transition:animate="none">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    {!event && <meta name="description" content={webpage.description} />}
+    <link rel="icon" type="image/svg+xml" href={webpage.logo} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{webpage.title}</title>
+    <ViewTransitions />
+  </head>
+  <body
+    class={`p${webpage.style}`}
+    style=`--primary:${webpage.color}; --primarytext:${isColorDark(webpage.color)}`
+  >
+    {
+      webpage.structure === "1" && (
+        <Header1
+          language={webpage.language}
+          title={webpage.title}
+          logo={webpage.logo}
+          blog={!!webpage.blog}
+        />
+      )
+    }
+    {
+      webpage.structure === "2" && (
+        <Header2
+          language={webpage.language}
+          title={webpage.title}
+          logo={webpage.logo}
+          blog={!!webpage.blog}
+        />
+      )
+    }
+    {
+      webpage.structure === "3" && (
+        <Header3
+          language={webpage.language}
+          title={webpage.title}
+          logo={webpage.logo}
+          blog={!!webpage.blog}
+        />
+      )
+    }
+    {
+      webpage.structure === "4" && (
+        <Header4
+          language={webpage.language}
+          title={webpage.title}
+          logo={webpage.logo}
+          blog={!!webpage.blog}
+        />
+      )
+    }
+    <main>
+      <slot />
+    </main>
+    <Footer
+      language={webpage.language}
+      instagramLink={webpage.instagramLink}
+      facebookLink={webpage.facebookLink}
+      whatsappLink={webpage.whatsappLink}
+      mapsLink={webpage.mapsLink}
+      donationLink={webpage.donationLink}
+      youtubeLink={webpage.youtubeLink}
+    />
+
+    {webpage.animations && <script src="/lib/animations.js" />}
+    <script is:inline src="/lib/websitesHeader.js"></script>
+  </body>
+</html>

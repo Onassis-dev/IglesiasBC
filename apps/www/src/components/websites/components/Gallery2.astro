@@ -1,0 +1,46 @@
+---
+import Section2 from "../basics/Section2.astro";
+import Image2 from "./Image2.astro";
+import H2 from "../basics/H2.astro";
+import type { Image } from "@/components/pages/Website/website.types";
+
+interface Props {
+    images?: Image[];
+    animations: number;
+}
+
+const { images, animations } = Astro.props;
+---
+
+<Section2 animations={animations}>
+    <div class="w-full">
+        <H2>Algunas imágenes</H2>
+        {
+            images?.length || 0 > 3 ? (
+                <>
+                    <div class="w-full h-52 md:h-80  gap-0.5 hidden md:flex">
+                        {images?.map((image) => (
+                            <Image2 className="bg-cover bg-center bg-no-repeat h-full rounded-md w-0 max-w-fit object-cover" image={image} />
+                        ))}
+                    </div>
+                    <div class="w-full flex h-52 md:h-80  gap-0.5 pb-0.5 md:hidden ">
+                        {images?.slice(3).map((image) => (
+                            <Image2 className="bg-cover bg-center bg-no-repeat h-full rounded-md w-0 max-w-fit object-cover" image={image} />
+                        ))}
+                    </div>
+                    <div class="w-full flex h-52 md:h-80  gap-0.5 md:hidden">
+                        {images?.slice(0, 3).map((image) => (
+                            <Image2 className="bg-cover bg-center bg-no-repeat h-full rounded-md w-0 max-w-fit object-cover" image={image} />
+                        ))}
+                    </div>
+                </>
+            ) : (
+                <div class="w-full flex h-52 md:h-80  gap-0.5">
+                    {images?.map((image) => (
+                        <Image2 className="bg-cover bg-center bg-no-repeat h-full rounded-md w-0 max-w-fit object-cover" image={image} />
+                    ))}
+                </div>
+            )
+        }
+    </div>
+</Section2>

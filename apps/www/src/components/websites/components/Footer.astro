@@ -1,0 +1,72 @@
+---
+import DonationIcon from "../vectors/DonationIcon.astro";
+import FacebookIcon from "../vectors/FacebookIcon.astro";
+import WhatsappIcon from "../vectors/WhatsappIcon.astro";
+import YoutubeIcon from "../vectors/YoutubeIcon.astro";
+import MapIcon from "../vectors/MapIcon.astro";
+import InstagramIcon from "../vectors/InstagramIcon.astro";
+import type { Website } from "@/components/pages/Website/website.types";
+
+interface Props {
+    instagramLink?: string;
+    facebookLink?: string;
+    whatsappLink?: string;
+    mapsLink?: string;
+    youtubeLink?: string;
+    donationLink?: string;
+    language: Website["language"];
+}
+
+const { language, instagramLink, facebookLink, whatsappLink, mapsLink, youtubeLink, donationLink } = Astro.props;
+---
+
+<footer class="text-center bg-background text-foreground py-5 z-10 border-t-border">
+    <div class="flex justify-center gap-4 mb-3">
+        {
+            facebookLink && (
+                <a href={facebookLink}>
+                    <FacebookIcon className=" h-8 aspect-square  " />
+                </a>
+            )
+        }
+        {
+            instagramLink && (
+                <a href={instagramLink}>
+                    <InstagramIcon className=" h-8 aspect-square  " />
+                </a>
+            )
+        }
+        {
+            whatsappLink && (
+                <a href={whatsappLink}>
+                    <WhatsappIcon className=" h-8 aspect-square  " />
+                </a>
+            )
+        }
+        {
+            youtubeLink && (
+                <a href={youtubeLink}>
+                    <YoutubeIcon className=" h-8 aspect-square  " />
+                </a>
+            )
+        }
+        {
+            mapsLink && (
+                <a href={mapsLink}>
+                    <MapIcon className=" h-8 aspect-square  " />
+                </a>
+            )
+        }
+        {
+            donationLink && (
+                <a href={donationLink}>
+                    <DonationIcon className=" h-8 aspect-square  " />
+                </a>
+            )
+        }
+    </div>
+    <p class="text-foreground">
+        {language === "es" ? "Creado con" : "Created with"}
+        <a href="/" class="hover:underline">IglesiasBC</a>
+    </p>
+</footer>

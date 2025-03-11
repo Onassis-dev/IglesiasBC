@@ -1,0 +1,84 @@
+---
+import "@/global.css";
+import { ViewTransitions } from "astro:transitions";
+import IndexHeader from "@/components/pages/General/layout/IndexHeader.astro";
+import IndexFooter from "@/components/pages/General/layout/IndexFooter.astro";
+import WhatsappButton from "@/components/pages/General/layout/WhatsappButton.astro";
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <IndexHeader />
+    <main class="flex flex-col">
+      <slot />
+    </main>
+    <WhatsappButton transition:persist="WhatsApp" />
+    <IndexFooter />
+    <style is:global>
+      @keyframes appear {
+        0% {
+          opacity: 0;
+          transform: translateY(150px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+      .fadein {
+        transform: translateY(20px);
+        opacity: 0;
+        animation-timing-function: ease-out;
+        animation-name: appear;
+        animation-duration: 0.6s;
+        animation-fill-mode: forwards;
+      }
+
+      section {
+        width: 90%;
+        scroll-margin-top: 8rem;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      @keyframes appear1 {
+        0% {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0px);
+        }
+      }
+      .fadein1 {
+        transform: translateY(10px);
+        opacity: 0;
+        animation-name: appear1;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+      }
+    </style>
+  </body>
+</html>

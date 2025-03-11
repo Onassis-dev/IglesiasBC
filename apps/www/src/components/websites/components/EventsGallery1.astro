@@ -1,0 +1,106 @@
+---
+import type { Event, Website } from "@/components/pages/Website/website.types";
+import Event1 from "./Event1.astro";
+import Section1 from "../basics/Section1.astro";
+import "@/components/websites/styles/calendar.css";
+
+interface Props {
+    events: Event[];
+    animations: number;
+    pageTitle: string;
+    language: Website["language"];
+}
+
+const { events, pageTitle, animations, language } = Astro.props;
+if (!events) events;
+---
+
+<style is:global>
+    .gallery1 {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+        grid-template-rows: masonry;
+    }
+
+    .eventselected {
+        transform: translateY(-5px);
+        border: 1px solid var(--foreground);
+    }
+</style>
+
+<Section1 animations={animations}>
+    <div class="flex flex-col">
+        <h1 class="font-header text-5xl mb-16 w-full">
+            {language === "es" ? "Nuestros eventos" : "Our events"}
+        </h1>
+        <div class="flex justify-center mb-16">
+            <div id="caleandar"></div>
+        </div>
+        <div class="space-y-5">
+            <div id="next">
+                <h3 class="text-3xl font-header ml-2 mb-2">{language === "es" ? "Proximos" : "Upcoming"}</h3>
+                <div class="gallery1">
+                    {events.map((event: Event) => <Event1 pageTitle={pageTitle} event={event} />)}
+                </div>
+            </div>
+            <div id="previous">
+                <h3 class="text-3xl font-header ml-2 mb-2">{language === "es" ? "Pasados" : "Past"}</h3>
+                <div class="gallery1"></div>
+            </div>
+        </div>
+    </div>
+</Section1>
+
+<script>
+import type { Event } from "@/components/pages/Website/website.types";
+import { caleandar } from "../general/calendar";
+
+
+    document.addEventListener("astro:page-load", () => {
+        const selectEvent = () => {
+            document.querySelectorAll(".eventselected").forEach((element) => {
+                element.classList.remove("eventselected");
+            });
+
+            setTimeout(() => {
+                const eventDiv = document.getElementById(decodeURI(window.location.hash.substring(1)));
+                if (!eventDiv) return;
+                eventDiv.classList.add("eventselected");
+            }, 10);
+        };
+
+        selectEvent();
+        const eventElements = document.querySelectorAll(".event");
+
+        let events: Event[] = [];
+        eventElements.forEach((e: any) => {
+            const dateParts = e.getAttribute("data-date").split("T")[0].split("-");
+
+            events.push({
+                title: e.getAttribute("data-title"),
+                date: new Date(dateParts[0], dateParts[1] - 1, dateParts[2]),
+                img: "#" + e.getAttribute("data-title"),
+            });
+        });
+
+        const nextEvents = events.filter((event: Event) => event.date >= new Date()) || [];
+        const previousEvents = events.filter((event: Event) => event.date < new Date()) || [];
+
+        const nextDiv = document.getElementById("next");
+        const previousDiv = document.getElementById("previous");
+
+        const gallery = previousDiv?.querySelector(".gallery1");
+        previousEvents.forEach((event: Event) => {
+            const element = document.getElementById(event.title);
+            if (element) gallery?.appendChild(element);
+        });
+
+        if (nextEvents.length === 0) nextDiv?.remove();
+        if (previousEvents.length === 0) previousDiv?.remove();
+
+        const settings = { EventTargetWholeDay: true, EventClick: selectEvent, language: document.documentElement.lang };
+        const element = document.getElementById("caleandar");
+        caleandar(element, events, settings);
+    });
+</script>

@@ -1,0 +1,40 @@
+---
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { type ChartConfig } from "@/components/ui/chart";
+import Graph1 from "./Graph1";
+
+const data = [
+    { month: "January", desktop: 186 },
+    { month: "February", desktop: 305 },
+    { month: "March", desktop: 237 },
+    { month: "April", desktop: 73 },
+    { month: "May", desktop: 209 },
+    { month: "June", desktop: 214 },
+];
+const data2 = [
+    { month: "January", ingresos: 186, egresos: 186 - 30 },
+    { month: "February", ingresos: 305, egresos: 315 },
+    { month: "March", ingresos: 237, egresos: 237 - 20 },
+    { month: "April", ingresos: 73, egresos: 73 },
+    { month: "May", ingresos: 209, egresos: 209 - 40 },
+    { month: "June", ingresos: 214, egresos: 214 - 10 },
+];
+
+const lines = [{ key: "desktop", color: "purple" }];
+
+const chartConfig = {
+    desktop: {},
+} satisfies ChartConfig;
+---
+
+<section>
+    <h2 class="text-3xl font-medium">Conoce el estado de tu iglesia</h2>
+    <Card className="w-full">
+        <CardHeader>
+            <CardTitle className="text-md">Miembros nuevos registrados</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <Graph1 client:load />
+        </CardContent>
+    </Card>
+</section>

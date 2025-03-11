@@ -1,0 +1,34 @@
+---
+export const prerender = false;
+
+import Layout from "../../../layouts/WebsitesLayout.astro";
+import General from "../../../components/websites/pages/General.Blog.astro";
+import type { Website } from "@/components/pages/Website/website.types";
+
+const { title } = Astro.params;
+let webpage: Website;
+
+try {
+    const response = await fetch(`${import.meta.env.PUBLIC_API_BASE}/websites/posts?title=${title}`);
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            return new Response(null, {
+                status: 404,
+            });
+        } else {
+            return new Response(null, {
+                status: 500,
+            });
+        }
+    }
+
+    webpage = await response.json();
+} catch (error) {
+    return new Response(null, {
+        status: 500,
+    });
+}
+---
+
+<Layout webpage={webpage}> <General webpage={webpage} /></Layout>

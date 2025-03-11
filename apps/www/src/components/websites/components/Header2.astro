@@ -1,0 +1,86 @@
+---
+import type { Website } from "@/components/pages/Website/website.types";
+
+interface Props {
+    title: string;
+    language: Website["language"];
+    logo?: string;
+    blog: boolean;
+}
+
+const { title, logo, language, blog } = Astro.props;
+---
+
+<header class="w-full fixed z-50" transition:persist="headertop">
+    <div id="header" class="relative text-primary px-4 bg-background" transition:persist="header">
+        <nav class="relative flex items-center justify-between md:rounded-md h-16 md:px-8 md:py-2">
+            <a href={`/${title.replaceAll(" ", "-")}/`} class="flex-shrink-0">
+                <img class="w-auto h-8 md:h-10" src={logo} alt="" />
+            </a>
+
+            <div id="text" class="hidden ml-10 md:flex md:items-center md:ml-auto md:space-x-10 text-foreground">
+                <a href={`/${title.replaceAll(" ", "-")}/`} class="text-base font-medium transition-all duration-200 hover:text-secondary">{language === "es" ? "Inicio" : "Home"}</a>
+
+                <a href={`/${title.replaceAll(" ", "-")}/eventos`} class="text-base font-medium transition-all duration-200 hover:text-secondary">{language === "es" ? "Eventos" : "Events"}</a>
+
+                <a href={`/${title.replaceAll(" ", "-")}/servicios`} class="text-base font-medium transition-all duration-200 hover:text-secondary">{language === "es" ? "Servicios" : "Services"}</a>
+                {
+                    blog && (
+                        <a href={`/${title.replaceAll(" ", "-")}/blog`} class="text-base font-medium transition-all duration-200 hover:text-secondary">
+                            Blog
+                        </a>
+                    )
+                }
+            </div>
+
+            <button id="toggle" onclick="toggle()" type="button" class="inline-flex p-2 transition-all duration-200 rounded-md md:hidden text-foreground">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </nav>
+    </div>
+    <nav id="nav" class="text-foreground flex flex-col justify-evenly items-center md:hidden w-full max-w-sm z-[-1] h-screen top-0 fixed bg-background border-r-border shadow-md shadow-cshadow">
+        <a href={`/${title.replaceAll(" ", "-")}/`} class="px-20 text-lg font-medium transition-all duration-200 hover:text-secondary border-secondary border-b">{language === "es" ? "Inicio" : "Home"}</a>
+
+        <a href={`/${title.replaceAll(" ", "-")}/eventos`} class="px-20 text-lg font-medium transition-all duration-200 hover:text-secondary border-secondary border-b">{language === "es" ? "Eventos" : "Events"}</a>
+
+        <a href={`/${title.replaceAll(" ", "-")}/servicios`} class="px-20 text-lg font-medium transition-all duration-200 hover:text-secondary border-secondary border-b">{language === "es" ? "Servicios" : "Services"}</a>
+
+        {
+            blog && (
+                <a href={`/${title.replaceAll(" ", "-")}/blog`} class="px-20 text-lg font-medium transition-all duration-200 hover:text-secondary border-secondary border-b">
+                    Blog
+                </a>
+            )
+        }
+    </nav>
+    <div onclick="hide()" id="backdrop"></div>
+</header>
+
+<style is:global>
+    #nav {
+        transition: all 0.4s ease;
+        transform: translateX(-100%);
+    }
+    .toogle-show {
+        transform: translateX(0) !important;
+    }
+    .button-close {
+    }
+    #backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        cursor: pointer;
+        background-color: black;
+        opacity: 0.2;
+        z-index: -2;
+    }
+    .backdrop-show {
+        display: block !important;
+    }
+</style>

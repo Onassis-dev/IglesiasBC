@@ -1,0 +1,112 @@
+---
+import MenuButton from "../../Landing/MenuButton.astro";
+import { Button } from "@/components/ui/button";
+---
+
+<div class="h-16" transition:persist="indexheadertop"></div>
+
+<nav
+  id="nav"
+  class="z-20 text-xl bg-background toggle1 flex flex-col justify-between items-center sm:hidden w-full p-6 shadow-cshadow shadow-lg min-h-fit h-[calc(100vh-4rem)]"
+>
+  <div></div>
+  <a class="text-xl font-medium" href="/">Inicio</a>
+  <a class="text-xl font-medium" href="/precios">Precios</a>
+  <!-- <a class="text-xl font-medium" href="/ejemplos">Ejemplos</a> -->
+
+  <div class="flex flex-col gap-4 w-full">
+    <a class="redirectButton w-full" href="/login">
+      <Button variant={"outline"} className="w-full text-lg">Ingresar</Button>
+    </a>
+    <a
+      class="w-full"
+      href={import.meta.env.PUBLIC_APP_BASE + "/signup?redirect=/"}
+    >
+      <Button className="w-full text-lg">Registrarse</Button>
+    </a>
+  </div>
+</nav>
+
+<header
+  id="header"
+  class="z-30 top-0 left-0 right-0 bg-background fixed h-fit flex item-center justify-center"
+  transition:persist="indexheader"
+>
+  <div
+    class="max-w-6xl h-16 p-3 flex items-center justify-between bg-background w-full transition-all duration-400"
+  >
+    <a href="/" class="text-2xl font-medium">IglesiasBC</a>
+
+    <div class="gap-6 items-center font-medium hidden sm:flex">
+      <!-- <a class="text-sm" href="/ejemplos">Ejemplos</a> -->
+      <a class="text-sm" href="/precios">Precios</a>
+      <div class="space-x-2">
+        <a class="redirectButton text-sm" href="/login">
+          <Button className="text-sm font-medium h-8" variant={"outline"}
+            >Ingresar</Button
+          >
+        </a>
+        <a
+          class="text-sm"
+          href={import.meta.env.PUBLIC_APP_BASE + "/signup?redirect=/"}
+        >
+          <Button className="text-sm font-medium  h-8">Registrarse</Button>
+        </a>
+      </div>
+    </div>
+
+    <MenuButton />
+  </div>
+</header>
+
+<script>
+  const init = () => {
+    const redirectButtons = document.querySelectorAll(".redirectButton");
+    redirectButtons.forEach((element: any) => {
+      element.href = import.meta.env.PUBLIC_APP_BASE;
+    });
+  };
+
+  const handleScroll = () => {
+    const header = document.getElementById("header");
+    window.addEventListener("scroll", (e) => {
+      if (window.scrollY < 10) {
+        header?.classList.remove("bottom");
+      } else {
+        header?.classList.add("bottom");
+      }
+    });
+  };
+
+  init();
+  document.addEventListener("astro:page-load", () => {
+    handleScroll();
+    init();
+  });
+</script>
+
+<style>
+  #header {
+    transition: box-shadow 0.45s cubic-bezier(0.6, 0.6, 0, 1);
+  }
+
+  .bottom {
+    outline: 1px solid var(--border);
+
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+
+  .toggle1 {
+    position: fixed !important;
+    bottom: 0;
+    transform: translateY(100%);
+    transition: all 0.4s ease;
+  }
+
+  .toogle-hidden {
+    transform: translateY(0);
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import type { Website } from "@/components/pages/Website/website.types";
+import H2 from "../basics/H2.astro";
+import Section1 from "../basics/Section1.astro";
+
+interface Props {
+    about?: string;
+    pastors?: string;
+    pastorsImg?: string;
+    animations: number;
+    language: Website["language"];
+}
+
+const { about, animations, pastors, pastorsImg, language } = Astro.props;
+---
+
+<Section1 animations={animations}>
+    <div id="about" class="scrollable w-full lg:py-16 flex flex-col md:flex-row items-center justify-between gap-10">
+        <div class="sm:text-lg max-w-xl md:max-w-full">
+            <H2>{language === "es" ? "¿Quiénes somos?" : "Who are we?"}</H2>
+            <p class="mb-4">{about}</p>
+        </div>
+
+        <div class="max-w-64 rounded-md shadow-md shadow-cshadow border-border overflow-hidden">
+            <img src={pastorsImg} alt="" class="w-full aspect-square object-cover" />
+            <div class="p-4">
+                <h2 class="text-lg font-header">{pastors}</h2>
+            </div>
+        </div>
+    </div>
+</Section1>

@@ -1,0 +1,19 @@
+---
+import type { Website } from "@/components/pages/Website/website.types";
+import Section2 from "../basics/Section2.astro";
+
+interface Props {
+    servicesDates?: string;
+    animations: number;
+    language: Website["language"];
+}
+
+const { servicesDates, animations, language } = Astro.props;
+---
+
+<Section2 animations={animations}>
+    <div id="servicios" class="scrollable py-10 text-center shadow-md shadow-cshadow border-border rounded-md">
+        <h3 class="font-header text-3xl mb-4">{language === "es" ? "Fechas de servicio:" : "Service dates:"}</h3>
+        <p class="font-xl">{servicesDates}</p>
+    </div>
+</Section2>

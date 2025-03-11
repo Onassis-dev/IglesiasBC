@@ -1,0 +1,21 @@
+---
+import Image1 from "./Image1.astro";
+import H2 from "../basics/H2.astro";
+import Section1 from "../basics/Section1.astro";
+import type { Image, Website } from "@/components/pages/Website/website.types";
+
+interface Props {
+    animations: number;
+    images?: Image[];
+    language: Website["language"];
+}
+
+const { images, animations, language } = Astro.props;
+---
+
+<Section1 animations={animations}>
+    <H2>{language === "es" ? "Algunas imágenes" : "Some pictures"}</H2>
+    <div class="w-full grid xs:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 place-items-stretch">
+        {images?.map((image) => <Image1 className="rounded-md w-full aspect-video object-center shadow-sm shadow-cshadow" image={image} />)}
+    </div>
+</Section1>

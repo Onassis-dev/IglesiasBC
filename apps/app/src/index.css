@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: #fefefe;
+        --dashboardbg: #f6f6f6;
+        --foreground: #252525;
+        --card: hsl(0 0% 100%);
+        --card-foreground: hsl(203, 13%, 12%);
+        --popover: hsl(0 0% 100%);
+        --popover-foreground: hsl(203, 13%, 12%);
+        --primary: #252525;
+        --primary-foreground: hsl(0 0% 98%);
+        --secondary: #575757;
+        --secondary-foreground: hsl(240 5.9% 10%);
+        --muted: hsl(240 4.8% 95.9%);
+        --muted-foreground: #71717a;
+        --accent: #e4e4e7;
+        --accent-foreground: hsl(240 5.9% 10%);
+        --border: #e4e4e7;
+        --input: hsl(240 5.9% 90%);
+        --ring: hsl(240 5.9% 10%);
+        --radius: 0.5rem;
+
+        --gray: hsl(40, 4%, 26%);
+        --blue: hsl(201, 84%, 41%);
+        --orange: hsl(18, 100%, 46%);
+        --green: hsl(148, 51%, 42%);
+        --yellow: hsl(43, 100%, 40%);
+        --purple: hsl(265, 100%, 56%);
+        --cyan: hsl(178, 97%, 31%);
+        --destructive: hsl(356, 99%, 47%);
+        --destructive-background: hsl(10, 25%, 95%);
+        --blue-background: hsl(204, 20%, 95%);
+        --orange-background: hsl(27, 24%, 95%);
+        --green-background: hsl(140, 9%, 95%);
+        --yellow-background: hsl(44, 26%, 95%);
+        --purple-background: hsl(276, 26%, 96%);
+        --gray-background: hsl(0, 2%, 95%);
+        --cyan-background: hsl(165, 25%, 95%);
+    }
+}
+
+* {
+    scrollbar-width: thin;
+}
+
+body {
+    font-family: 'Geist', sans-serif;
+    font-optical-sizing: auto;
+    margin: 0 !important;
+}
+
+.antiscroll {
+    overflow: hidden !important;
+}
+
+main {
+    flex: 1;
+}
+
+aside,
+#asidespan {
+    transition: all 0.3s ease;
+}
+
+#open {
+    left: 0;
+}
+
+.openbg {
+    z-index: 10;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+
+@layer base {
+    body {
+        @apply bg-background text-foreground;
+    }
+}

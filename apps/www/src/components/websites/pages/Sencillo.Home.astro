@@ -1,0 +1,20 @@
+---
+import type { Website } from "@/components/pages/Website/website.types";
+import Hero1 from "@/components/websites/components/Hero1.astro";
+import Gallery1 from "../components/Gallery1.astro";
+import Ubication1 from "../components/Ubication1.astro";
+import About1 from "../components/About1.astro";
+import Mission1 from "../components/Mission1.astro";
+
+interface Props {
+    webpage: Website;
+}
+
+const { webpage } = Astro.props;
+---
+
+<Hero1 webpage={webpage} />
+<About1 about={webpage.about} pastors={webpage.pastors} pastorsImg={webpage.pastorsImg} animations={webpage.animations} language={webpage.language} />
+<Mission1 mission={webpage.mission} animations={webpage.animations} />
+<Gallery1 images={webpage.images} animations={webpage.animations} language={webpage.language} />
+<Ubication1 mapsLink={webpage.mapsLink} ubication={webpage.ubication} animations={webpage.animations} language={webpage.language} />

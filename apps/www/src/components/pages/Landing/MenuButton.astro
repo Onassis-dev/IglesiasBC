@@ -1,0 +1,49 @@
+<style>
+    #toggle div {
+        width: 100%;
+        height: 3px;
+        margin-bottom: 4px;
+        margin-top: 4px;
+        transition: all 0.3s;
+        backface-visibility: hidden;
+        border-radius: 1px;
+    }
+
+    #toggle.on .one {
+        transform: rotate(45deg) translate(4px, 4px);
+    }
+
+    #toggle.on .two {
+        opacity: 0;
+    }
+
+    #toggle.on .three {
+        transform: rotate(-45deg) translate(6px, -7px);
+    }
+</style>
+
+<div id="toggle" onclick="toggleMenu()" class="sm:hidden h-6 w-6 cursor-pointer">
+    <div class="one bg-foreground overflow-hidden"></div>
+    <div class="two bg-foreground"></div>
+    <div class="three bg-foreground"></div>
+</div>
+
+<script is:inline>
+    document.addEventListener("astro:page-load", () => {
+        const nav = document.getElementById("nav");
+        const toggle = document.querySelector("#toggle");
+
+        nav?.classList.remove("toogle-hidden");
+        toggle?.classList.remove("on");
+        document.getElementsByTagName("html")[0].style.overflow = "auto";
+    });
+
+    function toggleMenu() {
+        const nav = document.getElementById("nav");
+        const toggle = document.querySelector("#toggle");
+
+        toggle?.classList.toggle("on");
+        nav?.classList.toggle("toogle-hidden");
+        document.getElementsByTagName("html")[0].classList.toggle("antiscroll");
+    }
+</script>

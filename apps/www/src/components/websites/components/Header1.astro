@@ -1,0 +1,92 @@
+---
+import type { Website } from "@/components/pages/Website/website.types";
+
+interface Props {
+    title: string;
+    logo?: string;
+    language: Website["language"];
+    blog: boolean;
+}
+
+const { title, logo, language, blog } = Astro.props;
+---
+
+<div class="h-16" transition:persist="headertop"></div>
+<header class="w-full fixed z-50 top-0" transition:persist="header">
+    <div class="relative bg-background text-foreground shadow-cshadow shadow-md border-b-border px-4 flex justify-center">
+        <nav class="relative flex items-center justify-between h-16 md:rounded-md md:h-16 md:px-8 md:py-2 w-full max-w-6xl">
+            <a href={`/${title.replaceAll(" ", "-")}/`} class="flex-shrink-0">
+                <img class="w-auto h-8 md:h-10" src={logo} alt="" />
+            </a>
+
+            <div class="hidden ml-10 md:flex md:items-center md:ml-auto md:space-x-10">
+                <a href={`/${title.replaceAll(" ", "-")}/`} class="text-base font-medium transition-all duration-200 hover:text-primary focus:text-primary">{language === "es" ? "Inicio" : "Home"}</a>
+
+                <a href={`/${title.replaceAll(" ", "-")}/eventos`} class="text-base font-medium transition-all duration-200 hover:text-primary focus:text-primary">{language === "es" ? "Eventos" : "Events"}</a>
+
+                <a href={`/${title.replaceAll(" ", "-")}/servicios`} class="text-base font-medium transition-all duration-200 hover:text-primary focus:text-primary">{language === "es" ? "Servicios" : "Services"}</a>
+
+                {
+                    blog && (
+                        <a href={`/${title.replaceAll(" ", "-")}/blog`} class="text-base font-medium transition-all duration-200 hover:text-primary focus:text-primary">
+                            Blog
+                        </a>
+                    )
+                }
+            </div>
+
+            <button id="toggle" onclick="toggle()" type="button" class="inline-flex p-2 transition-all duration-200 rounded-md md:hidden">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </nav>
+
+        <nav id="nav" class="bg-background flex flex-col space-y-5 md:hidden w-full z-[-1] p-6 shadow-cshadow shadow-lg">
+            <a href={`/${title.replaceAll(" ", "-")}/`} class="text-lg font-medium transition-all duration-200 hover:text-primary focus:text-primary border-secondary border-b">{language === "es" ? "Inicio" : "Home"}</a>
+
+            <a href={`/${title.replaceAll(" ", "-")}/eventos`} class="text-lg font-medium transition-all duration-200 hover:text-primary focus:text-primary border-secondary border-b">{language === "es" ? "Eventos" : "Events"}</a>
+
+            <a href={`/${title.replaceAll(" ", "-")}/servicios`} class="text-lg font-medium transition-all duration-200 hover:text-primary focus:text-primary border-secondary border-b">{language === "es" ? "Servicios" : "Services"}</a>
+
+            {
+                blog && (
+                    <a href={`/${title.replaceAll(" ", "-")}/blog`} class="text-lg font-medium transition-all duration-200 hover:text-primary focus:text-primary border-secondary border-b">
+                        Blog
+                    </a>
+                )
+            }
+        </nav>
+        <div onclick="hide()" id="backdrop"></div>
+    </div>
+</header>
+
+<style>
+    #nav {
+        position: absolute !important;
+        bottom: 0;
+        transition: all 0.3s ease-in-out;
+    }
+
+    #backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        cursor: pointer;
+        background-color: black;
+        opacity: 0.2;
+        z-index: -2;
+    }
+
+    .toogle-show {
+        transform: translateY(100%);
+    }
+    .button-close {
+    }
+    .backdrop-show {
+        display: block !important;
+    }
+</style>

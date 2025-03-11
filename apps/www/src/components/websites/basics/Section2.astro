@@ -1,0 +1,13 @@
+---
+interface Props {
+    animations: number;
+}
+
+const { animations } = Astro.props;
+---
+
+<section class={"flex justify-center z-10 bg-background animatedscroll" + animations}>
+    <div class=`py-4 px-4 max-w-6xl w-full`>
+        <slot />
+    </div>
+</section>

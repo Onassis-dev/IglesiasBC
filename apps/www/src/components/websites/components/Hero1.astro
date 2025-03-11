@@ -1,0 +1,31 @@
+---
+import type { Website } from "@/components/pages/Website/website.types";
+import Section1 from "../basics/Section1.astro";
+import AButton from "../basics/AButton.astro";
+
+interface Props {
+    webpage: Website;
+}
+
+const { webpage } = Astro.props;
+---
+
+<Section1 animations={webpage.animations}>
+    <div class="mx-auto max-w-6xl min-h-lvh">
+        <div class="text-center">
+            <h1 class="font-header max-w-4xl mx-auto mb-4 text-4xl font-bold leading-tight text-foreground sm:leading-tight sm:text-5xl lg:text-6xl lg:leading-tight">{webpage.title}</h1>
+            <p class="mb-10 max-w-2xl mx-auto px-6 text-lg text-foreground">{webpage.description}</p>
+            <div class="flex flex-wrap gap-2 xs:gap-5 justify-center">
+                <AButton href="#about">{webpage.language === "es" ? "Sobre nosotros" : "About us"}</AButton>
+                {
+                    webpage.preachLink && (
+                        <AButton href={webpage.preachLink} variant="outside">
+                            {webpage.language === "es" ? "Predica" : "Preach"}
+                        </AButton>
+                    )
+                }
+            </div>
+        </div>
+        <img class="rounded-md mt-10 w-full max-h-lvh mx-auto object-cover shadow-md shadow-cshadow" src={webpage.coverImg} />
+    </div>
+</Section1>

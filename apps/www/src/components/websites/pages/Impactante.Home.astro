@@ -1,0 +1,22 @@
+---
+import type { Website } from "@/components/pages/Website/website.types";
+import Hero2 from "@/components/websites/components/Hero2.astro";
+import Gallery2 from "../components/Gallery2.astro";
+import Ubication2 from "../components/Ubication2.astro";
+import About2 from "../components/About2.astro";
+import Mission2 from "../components/Mission2.astro";
+
+interface Props {
+    webpage: Website;
+}
+
+const { webpage } = Astro.props;
+---
+
+<Hero2 webpage={webpage} />
+<div class="bg-background">
+    <About2 about={webpage.about} pastors={webpage.pastors} pastorsImg={webpage.pastorsImg} animations={webpage.animations} />
+    <Mission2 mission={webpage.mission} animations={webpage.animations} />
+    <Gallery2 images={webpage.images} animations={webpage.animations} />
+    <Ubication2 mapsLink={webpage.mapsLink} ubication={webpage.ubication} animations={webpage.animations} />
+</div>
