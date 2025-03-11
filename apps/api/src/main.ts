@@ -31,7 +31,7 @@ async function bootstrap() {
   app.useGlobalFilters(new DBFilter());
 
   //middleware
-  await app.register(fastifyCookie);
+  await app.register(fastifyCookie as any);
 
   //swagger implementation
   const config = new DocumentBuilder()

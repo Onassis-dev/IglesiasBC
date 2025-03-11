@@ -18,7 +18,7 @@ import {
   EditSchema,
   PostSchema,
   getSchema,
-} from './treasuries.schema';
+} from 'schemas/dist/treasuries.schema';
 
 @ApiTags('Treasuries')
 @Controller('treasuries')

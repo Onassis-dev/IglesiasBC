@@ -5,7 +5,7 @@ import {
   PostMemberSchema,
   getSchema,
   idSchema,
-} from './members.schema';
+} from 'schemas/dist/members.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { File } from '@nest-lab/fastify-multer';
@@ -151,7 +151,7 @@ export class MembersService {
         birthday: row.values[8]?.toISOString
           ? row.values[8]?.toISOString()
           : row.values[8] || '',
-        joinDate: row.values[8]?.toISOString
+        joinDate: row.values[9]?.toISOString
           ? row.values[9]?.toISOString()
           : row.values[9] || '',
       });
@@ -184,7 +184,7 @@ export class MembersService {
 
       if (isNaN(new Date(member.joinDate).getTime()))
         throw new HttpException(
-          `Error en la fila ${rowNumber}: Formato de fecha (union) incorrecto`,
+          `Error en la fila ${rowNumber}: Formato de fecha (membresia) incorrecto`,
           400,
         );
 

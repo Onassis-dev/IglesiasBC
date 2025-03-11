@@ -13,10 +13,9 @@
   "packageManager": "pnpm@10.5.2",
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@nestjs/core",
-      "core-js",
-      "@swc/core",
       "@firebase/util",
+      "@nestjs/core",
+      "@swc/core",
       "aws-sdk",
       "core-js",
       "esbuild",
@@ -24,5 +23,11 @@
       "sharp",
       "workerd"
     ]
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
   }
 }

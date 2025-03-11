@@ -6,7 +6,7 @@ import {
   GetOneSchema,
   GetSchema,
   PostSchema,
-} from './posts.schema';
+} from 'schemas/dist/posts.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { parseTitle } from 'src/utils/commonUtils';

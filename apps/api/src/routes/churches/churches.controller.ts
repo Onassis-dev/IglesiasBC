@@ -3,7 +3,7 @@ import { ChurchesService } from './churches.service';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { ChurchSchema } from './churches.schema';
+import { ChurchSchema } from 'schemas/dist/churches.schema';
 
 @ApiTags('Churches')
 @Controller('churches')

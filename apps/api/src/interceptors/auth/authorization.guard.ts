@@ -24,6 +24,7 @@ interface Request extends FastifyRequest {
   churchId: number;
   plan: number;
   session: string;
+  cookies: Record<string, string>;
 }
 
 const planAccess: Record<permission, number> = {

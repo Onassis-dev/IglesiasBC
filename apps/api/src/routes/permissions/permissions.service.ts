@@ -2,7 +2,11 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import { z } from 'zod';
 import sql from 'src/utils/db';
-import { DeleteSchema, EditSchema, PostSchema } from './permissions.schema';
+import {
+  DeleteSchema,
+  EditSchema,
+  PostSchema,
+} from 'schemas/dist/permissions.schema';
 
 const permissionsLimits = [2, 10, 20];
 

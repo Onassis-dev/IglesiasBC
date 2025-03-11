@@ -12,7 +12,11 @@ import { PermissionsService } from './permissions.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import { DeleteSchema, EditSchema, PostSchema } from './permissions.schema';
+import {
+  DeleteSchema,
+  EditSchema,
+  PostSchema,
+} from 'schemas/dist/permissions.schema';
 
 @ApiTags('Permissions')
 @Controller('permissions')

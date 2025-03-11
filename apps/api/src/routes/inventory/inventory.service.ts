@@ -5,7 +5,7 @@ import {
   IdSchema,
   PostMemberSchema,
   getSchema,
-} from './inventory.schema';
+} from 'schemas/dist/inventory.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import * as excelJS from 'exceljs';

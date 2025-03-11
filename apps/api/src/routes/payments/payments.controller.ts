@@ -2,7 +2,7 @@ import { Controller, Body, Req, Post, UseGuards } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { CheckoutSchema } from './payments.schema';
+import { CheckoutSchema } from 'schemas/dist/payments.schema';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 
 @ApiTags('Payments')

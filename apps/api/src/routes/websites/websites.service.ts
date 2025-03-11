@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { getPostSchema, getWebsiteSchema } from './websites.schema';
+import { getPostSchema, getWebsiteSchema } from 'schemas/dist/websites.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { parseTitle } from 'src/utils/commonUtils';

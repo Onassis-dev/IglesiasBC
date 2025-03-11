@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import { SelectChurchSchema, UserSchema } from './users.schema';
+import { SelectChurchSchema, UserSchema } from 'schemas/dist/users.schema';
 
 @ApiTags('Users')
 @Controller('users')

@@ -18,7 +18,7 @@ import {
   IdSchema,
   PostMemberSchema,
   getSchema,
-} from './inventory.schema';
+} from 'schemas/dist/inventory.schema';
 
 @ApiTags('Inventory')
 @Controller('inventory')

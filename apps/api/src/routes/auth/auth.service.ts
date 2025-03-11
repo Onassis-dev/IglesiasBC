@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { authSchema, registerSchema } from './auth.schema';
+import { authSchema, registerSchema } from 'schemas/dist/auth.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { httpCookieConfig } from 'src/utils/cookiesConfig';

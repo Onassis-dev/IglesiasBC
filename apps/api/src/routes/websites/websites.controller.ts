@@ -1,7 +1,7 @@
 import { Controller, Query, Get } from '@nestjs/common';
 import { WebsitesService } from './websites.service';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import { getPostSchema, getWebsiteSchema } from './websites.schema';
+import { getPostSchema, getWebsiteSchema } from 'schemas/dist/websites.schema';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Websites')

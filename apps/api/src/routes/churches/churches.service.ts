@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { ContextProvider } from 'src/interceptors/contextProvider';
-import { ChurchSchema } from './churches.schema';
+import { ChurchSchema } from 'schemas/dist/churches.schema';
 import { getUserData } from 'src/utils/getUserData';
 
 @Injectable()

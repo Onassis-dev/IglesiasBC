@@ -5,7 +5,7 @@ import {
   DownloadSchema,
   PostCertificateSchema,
   getSchema,
-} from './certificates.schema';
+} from 'schemas/dist/certificates.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { PDFDocument, rgb } from 'pdf-lib';

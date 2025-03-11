@@ -23,7 +23,7 @@ import {
   EditActivitySchema,
   UploadActivitySchema,
   UploadEventSchema,
-} from './builder.schema';
+} from 'schemas/dist/builder.schema';
 import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 import { ImageHandler } from 'src/interceptors/files/image.interceptor';
 

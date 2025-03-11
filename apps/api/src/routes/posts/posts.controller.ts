@@ -20,7 +20,7 @@ import {
   PostSchema,
   GetSchema,
   GetOneSchema,
-} from './posts.schema';
+} from 'schemas/dist/posts.schema';
 import { ImageHandler } from 'src/interceptors/files/image.interceptor';
 import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 

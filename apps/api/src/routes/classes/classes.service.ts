@@ -7,7 +7,7 @@ import {
   PostStudentSchema,
   PostSubjectSchema,
   getSchema,
-} from './classes.schema';
+} from 'schemas/dist/classes.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import jsPDF from 'jspdf';

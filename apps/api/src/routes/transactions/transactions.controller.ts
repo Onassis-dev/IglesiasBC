@@ -19,7 +19,7 @@ import {
   PostSchema,
   StatsSchema,
   getSchema,
-} from './transactions.schema';
+} from 'schemas/dist/transactions.schema';
 
 @ApiTags('Transactions')
 @Controller('transactions')

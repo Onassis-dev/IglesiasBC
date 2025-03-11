@@ -5,7 +5,7 @@ import {
   EditSchema,
   PostSchema,
   getSchema,
-} from './treasuries.schema';
+} from 'schemas/dist/treasuries.schema';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 

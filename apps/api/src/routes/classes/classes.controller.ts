@@ -20,7 +20,7 @@ import {
   PostStudentSchema,
   PostSubjectSchema,
   getSchema,
-} from './classes.schema';
+} from 'schemas/dist/classes.schema';
 
 @ApiTags('Classes')
 @Controller('classes')

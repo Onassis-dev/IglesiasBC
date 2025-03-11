@@ -19,7 +19,7 @@ import {
   DownloadSchema,
   PostCertificateSchema,
   getSchema,
-} from './certificates.schema';
+} from 'schemas/dist/certificates.schema';
 import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 import { ImageHandler } from 'src/interceptors/files/image.interceptor';
 
