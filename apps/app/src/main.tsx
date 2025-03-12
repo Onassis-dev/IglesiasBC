@@ -1,10 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router';
-
 import './index.css';
 import Members from './pages/Members/Members';
-import { QueryClientProvider } from '@tanstack/react-query';
 import Finances from './pages/Finances/Finances';
 import Blog from './pages/Blog/Blog';
 import Website from './pages/Website/Website';
@@ -13,7 +11,6 @@ import Website from './pages/Website/Website';
 import Inventory from './pages/Inventory/Inventory';
 import LoginForm from './pages/Auth/LoginForm';
 import Account from './pages/Account/Account';
-import { useQueryStore } from './lib/store';
 import SignupForm from './pages/Auth/SignupForm';
 import SelectDashboard from './pages/Dashboard/SelectDashboard';
 import { Layout } from './components/common/layout/Layout';
@@ -24,12 +21,11 @@ import { AuthLayout } from './components/common/layout/AuthLayout';
 import Treasury from './pages/Treasury/Treasury';
 import Pricing from './pages/Pricing/Pricing';
 import Checkout from './pages/Checkout/Checkout';
-
-const queryClient = useQueryStore.getState().queryClient;
+import { Providers } from './providers';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <QueryClientProvider client={queryClient}>
+        <Providers>
             <BrowserRouter>
                 <Routes>
                     <Route element={<Layout />}>
@@ -57,7 +53,7 @@ createRoot(document.getElementById('root')!).render(
                     </Route>
                 </Routes>
             </BrowserRouter>
-        </QueryClientProvider>
+        </Providers>
         <Toaster />
     </StrictMode>
 );

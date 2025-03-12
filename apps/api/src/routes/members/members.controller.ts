@@ -1,67 +1,70 @@
 import {
   Controller,
   UseGuards,
-  Post,
-  Body,
-  Put,
-  Get,
-  Delete,
-  Query,
-  Param,
   UseInterceptors,
   UploadedFile,
+  Post,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  PutMemberSchema,
-  PostMemberSchema,
-  getSchema,
-  idSchema,
-} from '@iglesiasbc/schemas';
 import { FileInterceptor } from '@nest-lab/fastify-multer';
+import { membersContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
 @ApiTags('Members')
-@Controller('members')
+@Controller()
 @UseGuards(new AuthGuard('members'))
 export class MembersController {
   constructor(private readonly membersService: MembersService) {}
 
-  @Get()
-  get(@Query(new ZodPiPe(getSchema)) query) {
-    return this.membersService.get(query);
+  @TsRestHandler(membersContract.get)
+  getMembers() {
+    return tsRestHandler(membersContract.get, async ({ query }) =>
+      this.membersService.get(query),
+    );
   }
 
-  @Get(':id')
-  getSingle(@Param(new ZodPiPe(idSchema)) query) {
-    return this.membersService.getSingle(query);
+  @TsRestHandler(membersContract.getOne)
+  getMember() {
+    return tsRestHandler(membersContract.getOne, async ({ params }) =>
+      this.membersService.getSingle({ id: params.id }),
+    );
   }
 
-  @Get('birthdays')
+  @TsRestHandler(membersContract.getBirthdays)
   getBirthdays() {
-    return this.membersService.getBirthdays();
+    return tsRestHandler(membersContract.getBirthdays, async () =>
+      this.membersService.getBirthdays(),
+    );
   }
 
-  @Post()
-  post(@Body(new ZodPiPe(PostMemberSchema)) body) {
-    return this.membersService.post(body);
+  @TsRestHandler(membersContract.post)
+  postMember() {
+    return tsRestHandler(membersContract.post, async ({ body }) =>
+      this.membersService.post(body),
+    );
   }
 
-  @Put()
-  put(@Body(new ZodPiPe(PutMemberSchema)) body) {
-    return this.membersService.put(body);
+  @TsRestHandler(membersContract.put)
+  putMember() {
+    return tsRestHandler(membersContract.put, async ({ body }) =>
+      this.membersService.put(body),
+    );
   }
 
-  @Delete(':id')
-  delete(@Param(new ZodPiPe(idSchema)) param) {
-    return this.membersService.delete(param);
+  @TsRestHandler(membersContract.delete)
+  deleteMember() {
+    return tsRestHandler(membersContract.delete, async ({ params }) =>
+      this.membersService.delete({ id: params.id }),
+    );
   }
 
-  @Get('stats')
+  @TsRestHandler(membersContract.getStats)
   getStats() {
-    return this.membersService.getStats();
+    return tsRestHandler(membersContract.getStats, async () =>
+      this.membersService.getStats(),
+    );
   }
 
   @Post('import')

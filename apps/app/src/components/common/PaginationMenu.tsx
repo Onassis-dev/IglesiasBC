@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 interface props {
     page: number;
     setPage: any;
-    count: number;
+    count: number | undefined;
     rowsDisplayed: number;
 }
 

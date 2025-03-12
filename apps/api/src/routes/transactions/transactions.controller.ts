@@ -1,54 +1,48 @@
-import {
-  Controller,
-  UseGuards,
-  Post,
-  Body,
-  Put,
-  Get,
-  Delete,
-  Query,
-  Param,
-} from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  DeleteSchema,
-  EditTransactionSchema,
-  PostTransactionSchema,
-  StatsSchema,
-  getTransactionsSchema,
-} from '@iglesiasbc/schemas';
+import { transactionsContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
 @ApiTags('Transactions')
-@Controller('transactions')
+@Controller()
 @UseGuards(new AuthGuard('finances'))
 export class TransactionsController {
   constructor(private readonly financesService: TransactionsService) {}
 
-  @Get()
-  read(@Query(new ZodPiPe(getTransactionsSchema)) query) {
-    return this.financesService.read(query);
+  @TsRestHandler(transactionsContract.get)
+  getTransactions() {
+    return tsRestHandler(transactionsContract.get, async ({ query }) =>
+      this.financesService.read(query),
+    );
   }
 
-  @Post()
-  create(@Body(new ZodPiPe(PostTransactionSchema)) body) {
-    return this.financesService.post(body);
+  @TsRestHandler(transactionsContract.post)
+  createTransaction() {
+    return tsRestHandler(transactionsContract.post, async ({ body }) =>
+      this.financesService.post(body),
+    );
   }
 
-  @Put()
-  edit(@Body(new ZodPiPe(EditTransactionSchema)) body) {
-    return this.financesService.edit(body);
+  @TsRestHandler(transactionsContract.put)
+  editTransaction() {
+    return tsRestHandler(transactionsContract.put, async ({ body }) =>
+      this.financesService.edit(body),
+    );
   }
 
-  @Delete(':id')
-  delete(@Param(new ZodPiPe(DeleteSchema)) params) {
-    return this.financesService.delete(params);
+  @TsRestHandler(transactionsContract.delete)
+  deleteTransaction() {
+    return tsRestHandler(transactionsContract.delete, async ({ params }) =>
+      this.financesService.delete(params),
+    );
   }
 
-  @Get('stats/:id')
-  getStats(@Param(new ZodPiPe(StatsSchema)) params) {
-    return this.financesService.getStats(params);
+  @TsRestHandler(transactionsContract.getStats)
+  getTransactionStats() {
+    return tsRestHandler(transactionsContract.getStats, async ({ params }) =>
+      this.financesService.getStats(params),
+    );
   }
 }

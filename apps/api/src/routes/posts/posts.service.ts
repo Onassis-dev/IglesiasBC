@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
-  DeleteSchema,
+  IdSchema,
   EditPostSchema,
   GetOnePostSchema,
   getPostSchema,
@@ -12,6 +12,7 @@ import sql from 'src/utils/db';
 import { parseTitle } from 'src/utils/commonUtils';
 import { deleteImage, uploadImage } from 'src/utils/spaceStorageUtils';
 import { File } from '@nest-lab/fastify-multer';
+import { res } from 'src/utils/response';
 
 @Injectable()
 export class PostsService {
@@ -22,7 +23,7 @@ export class PostsService {
       await sql`SELECT id, title, body, description FROM posts WHERE "churchId" = ${this.req.getChurchId()} AND id = ${dto.id}`;
 
     if (data.length === 0) throw new HttpException('', 404);
-    return data[0];
+    return res(200, data[0]);
   }
 
   async get(query: z.infer<typeof getPostSchema>) {
@@ -38,10 +39,15 @@ export class PostsService {
     const [{ title }] =
       await sql`select title from websites where "churchId" = ${this.req.getChurchId()}`;
 
-    return { rows, count: rows[0]?.count || 0, websiteTitle: title };
+    return res(200, {
+      rows,
+      count: rows[0]?.count || 0,
+      websiteTitle: title,
+    });
   }
 
   async post(body: z.infer<typeof PostPostSchema>, file: File) {
+    delete body.file;
     const [sameName] =
       await sql`select 1 from "posts" where ${parseTitle('title', true)} = ${parseTitle(body.title)} and "churchId" = ${this.req.getChurchId()}`;
     if (sameName)
@@ -52,7 +58,8 @@ export class PostsService {
     if (!file) throw new HttpException('No se pudo procesar la imagen', 400);
     const url = await uploadImage(file);
 
-    return await sql`insert into posts ${sql({ ...data, img: url })}`;
+    const result = await sql`insert into posts ${sql({ ...data, img: url })}`;
+    return res(200, result);
   }
 
   async edit(body: z.infer<typeof EditPostSchema>, file: File) {
@@ -82,10 +89,12 @@ export class PostsService {
       values = { ...body, img: url };
     }
 
-    return await sql`update posts set ${sql(values)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
+    const result =
+      await sql`update posts set ${sql(values)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
+    return res(200, result);
   }
 
-  async delete(body: z.infer<typeof DeleteSchema>) {
+  async delete(body: z.infer<typeof IdSchema>) {
     const [result] =
       await sql`select "img" from "posts" where "id" = ${body.id}`;
     if (!result) throw new HttpException('No se encontro la imagen', 404);
@@ -94,7 +103,9 @@ export class PostsService {
       deleteImage(url);
     }
 
-    return await sql`delete from posts where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
+    const deleteResult =
+      await sql`delete from posts where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
+    return res(200, deleteResult);
   }
 
   async getStats() {
@@ -120,6 +131,10 @@ export class PostsService {
       `
     )[0].count;
 
-    return { posts, views, postsMonthly };
+    return res(200, {
+      posts,
+      views,
+      postsMonthly,
+    });
   }
 }

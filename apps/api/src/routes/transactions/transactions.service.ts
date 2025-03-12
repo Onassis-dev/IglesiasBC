@@ -3,12 +3,13 @@ import { ContextProvider } from 'src/interceptors/contextProvider';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
-  DeleteSchema,
+  IdSchema,
   EditTransactionSchema,
   PostTransactionSchema,
   StatsSchema,
   getTransactionsSchema,
 } from '@iglesiasbc/schemas';
+import { res } from 'src/utils/response';
 
 @Injectable()
 export class TransactionsService {
@@ -33,7 +34,7 @@ export class TransactionsService {
     const [treasury] = await sql`
     SELECT name FROM treasuries where id = ${query.id}`;
 
-    return { rows, count: rows[0]?.count || 0, name: treasury.name };
+    return res(200, { rows, count: rows[0]?.count || 0, name: treasury.name });
   }
 
   async post(body: z.infer<typeof PostTransactionSchema>) {
@@ -46,18 +47,23 @@ export class TransactionsService {
         400,
       );
 
-    return await sql`INSERT INTO transactions ${sql({ ...body })}`;
+    const result = await sql`INSERT INTO transactions ${sql({ ...body })}`;
+    return res(200, result);
   }
 
   async edit(body: z.infer<typeof EditTransactionSchema>) {
-    return await sql`UPDATE transactions SET ${sql(body)} FROM treasuries
+    const result =
+      await sql`UPDATE transactions SET ${sql(body)} FROM treasuries
       WHERE transactions."treasuryId" = treasuries.id
       AND transactions.id = ${body.id}
       AND treasuries."churchId" = ${this.req.getChurchId()}`;
+    return res(200, result);
   }
 
-  async delete(body: z.infer<typeof DeleteSchema>) {
-    return await sql`delete from transactions where id = ${body.id} and (select "churchId" from treasuries where id = "treasuryId") = ${this.req.getChurchId()}`;
+  async delete(body: z.infer<typeof IdSchema>) {
+    const result =
+      await sql`delete from transactions where id = ${body.id} and (select "churchId" from treasuries where id = "treasuryId") = ${this.req.getChurchId()}`;
+    return res(200, result);
   }
 
   async getStats(body: z.infer<typeof StatsSchema>) {
@@ -82,10 +88,10 @@ export class TransactionsService {
     const balance: string =
       income - expense ? (income - expense).toFixed(2) : '0';
 
-    return {
+    return res(200, {
       income: income || '0',
       expense: expense || '0',
       balance: balance,
-    };
+    });
   }
 }

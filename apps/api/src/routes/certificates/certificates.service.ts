@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
-  DeleteSchema,
+  IdSchema,
   DownloadSchema,
   PostCertificateSchema,
   getCertificateSchema,
@@ -246,7 +246,7 @@ export class CertificatesService {
     return await sql`insert into certificates ${sql(data)}`;
   }
 
-  async delete(body: z.infer<typeof DeleteSchema>) {
+  async delete(body: z.infer<typeof IdSchema>) {
     return await sql`delete from certificates where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
   }
 

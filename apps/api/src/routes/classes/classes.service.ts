@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
-  DeleteSchema,
+  IdSchema,
   EditClassSchema,
   PostClassSchema,
   PostStudentSchema,
@@ -30,7 +30,7 @@ export class ClassesService {
     return { rows, count: rows[0]?.count || 0 };
   }
 
-  async readOne(dto: z.infer<typeof DeleteSchema>) {
+  async readOne(dto: z.infer<typeof IdSchema>) {
     const data =
       await sql`select id, title from classes where id = ${dto.id} and "churchId" = ${this.req.getChurchId()}`;
 
@@ -38,7 +38,7 @@ export class ClassesService {
     return data[0];
   }
 
-  async readData(params: z.infer<typeof DeleteSchema>) {
+  async readData(params: z.infer<typeof IdSchema>) {
     const subjects =
       await sql`select * from subjects where "classId" = ${parseInt(params.id)} and (select "churchId" from classes where id = "classId") = ${this.req.getChurchId()}`;
 
@@ -84,22 +84,22 @@ export class ClassesService {
     return await sql`insert into students ${sql({ memberId, classId })}`;
   }
 
-  async delete(body: z.infer<typeof DeleteSchema>) {
+  async delete(body: z.infer<typeof IdSchema>) {
     await sql`delete from students where "classId" = ${body.id} and (select "churchId" from classes where id = "classId") = ${this.req.getChurchId()}`;
     await sql`delete from subjects where "classId" = ${body.id} and (select "churchId" from classes where id = "classId") = ${this.req.getChurchId()}`;
 
     return await sql`delete from classes where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
   }
 
-  async deleteStudent(body: z.infer<typeof DeleteSchema>) {
+  async deleteStudent(body: z.infer<typeof IdSchema>) {
     return await sql`delete from students where id = ${body.id} and (select "churchId" from classes where id = "classId") = ${this.req.getChurchId()}`;
   }
 
-  async deleteSubject(body: z.infer<typeof DeleteSchema>) {
+  async deleteSubject(body: z.infer<typeof IdSchema>) {
     return await sql`delete from subjects where id = ${body.id} and (select "churchId" from classes where id = "classId") = ${this.req.getChurchId()}`;
   }
 
-  async downloadAssistanceList(params: z.infer<typeof DeleteSchema>) {
+  async downloadAssistanceList(params: z.infer<typeof IdSchema>) {
     const classInfo = (
       await sql`select title, (select name from churches where id = "churchId") as "churchName" from classes where id = ${params.id} and "churchId" = ${this.req.getChurchId()}`
     )[0];

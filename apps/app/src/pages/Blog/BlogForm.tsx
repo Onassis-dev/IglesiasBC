@@ -57,14 +57,16 @@ const BlogForm = ({ id, open, setOpen }: props) => {
     const handleSubmit = async (values: z.infer<typeof PostSchema>) => {
         const formData = new FormData();
 
-        formData.append('image', selectedFile);
+        formData.append('file', selectedFile);
+        formData.append('title', values.title);
+        formData.append('description', values.description);
+        formData.append('body', values.body);
 
         if (id) {
             await api.put('/posts', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
-                params: values,
             });
         } else {
             if (!selectedFile) throw new Error('Por favor, elija una imagen para la portada.');
@@ -72,7 +74,6 @@ const BlogForm = ({ id, open, setOpen }: props) => {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
-                params: values,
             });
         }
 

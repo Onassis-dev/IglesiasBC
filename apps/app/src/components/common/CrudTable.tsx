@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 
 interface props {
     columns: Column[];
-    data: Record<string, any>;
+    data: Record<string, any> | undefined;
     status: QueryStatus;
     setSelectedRow: (value: any) => void;
     setOpenDelete?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -44,15 +44,15 @@ export const CrudTable = ({
             </TableHeader>
             <TableBody>
                 {status === 'success' &&
-                    data.map((row: any) => (
+                    data?.map((row: any) => (
                         <TableRow className="w-full" key={row.id}>
                             {columns.map((column, i) => {
                                 const cellContent =
                                     Array.isArray(column.data) && column.transform
                                         ? column.transform(column.data.map((data) => row[data]))
                                         : column.transform
-                                        ? column.transform(row[column.data as string])
-                                        : row[column.data as string];
+                                          ? column.transform(row[column.data as string])
+                                          : row[column.data as string];
 
                                 return (
                                     <TableCell
@@ -172,6 +172,15 @@ export const CrudTable = ({
                     ))}
 
                 {status === 'error' && (
+                    <TableCell colSpan={100}>
+                        <div className="w-full justify-center flex flex-col items-center text-muted-foreground h-40">
+                            <Ban strokeWidth={1} className="size-12 mb-4" />
+                            <span className="font-medium">Hubo un problema al completar la petición</span>
+                        </div>
+                    </TableCell>
+                )}
+
+                {status === 'success' && !data && (
                     <TableCell colSpan={100}>
                         <div className="w-full justify-center flex flex-col items-center text-muted-foreground h-40">
                             <Ban strokeWidth={1} className="size-12 mb-4" />

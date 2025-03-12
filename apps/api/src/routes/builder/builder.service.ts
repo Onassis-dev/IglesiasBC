@@ -15,6 +15,7 @@ import {
   WebsiteSchema,
 } from '@iglesiasbc/schemas';
 import { File } from '@nest-lab/fastify-multer';
+import { res } from 'src/utils/response';
 
 const eventsLimit = 20;
 const imagesLimit = 12;
@@ -27,19 +28,19 @@ export class BuilderService {
   async getWebsiteInfo() {
     const result =
       await sql`select "title", "id" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async getWebsite() {
     const result =
       await sql`select "title", "structure", "style","language","pastors","servicesDates","facebookLink","instagramLink","whatsappLink","mission","mapsLink","youtubeLink","donationLink","preachLink","animations","about","color","description","ubication" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async getStart() {
     const result =
       await sql`select "preachLink" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async editStart(body: z.infer<typeof StartSchema>) {
@@ -51,7 +52,7 @@ export class BuilderService {
     await sql`
         UPDATE "websites" SET ${sql(body)} WHERE "churchId" = ${this.req.getChurchId()}`;
 
-    return;
+    return res(200, { success: true });
   }
 
   async createWebsite(body: z.infer<typeof WebsiteSchema>) {
@@ -75,7 +76,7 @@ export class BuilderService {
 
     await sql`
         INSERT INTO "websites" ${sql(data)}`;
-    return;
+    return res(200, { success: true });
   }
 
   async editWebsite(body: z.infer<typeof WebsiteSchema>) {
@@ -97,13 +98,13 @@ export class BuilderService {
 
     await sql`UPDATE "websites" SET ${sql(body)} WHERE "churchId" = ${this.req.getChurchId()}`;
 
-    return;
+    return res(200, { success: true });
   }
 
   async getLogo() {
     const result =
       await sql`select "logo" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async uploadLogo(file: File) {
@@ -130,7 +131,7 @@ export class BuilderService {
   async getPastorsImg() {
     const result =
       await sql`select "pastorsImg" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async uploadPastorsImg(file: File) {
@@ -157,7 +158,7 @@ export class BuilderService {
   async getCoverImg() {
     const result =
       await sql`select "coverImg" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async uploadCoverImg(file: File) {
@@ -184,7 +185,7 @@ export class BuilderService {
   async getEvents() {
     const result =
       await sql`select * from "events" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async uploadEvent(query: z.infer<typeof UploadEventSchema>, file: File) {
@@ -224,13 +225,13 @@ export class BuilderService {
     }
 
     await sql`delete from "events" where "id" = ${body.eventId}`;
-    return;
+    return res(200, { success: true });
   }
 
   async getChurchImages() {
     const result =
       await sql`select "img" from "churchimages" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async uploadChurchImage(file: File) {
@@ -264,7 +265,7 @@ export class BuilderService {
     deleteImage(url);
 
     await sql`delete from "churchimages" where "img" = ${body.imageUrl}`;
-    return;
+    return res(200, { success: true });
   }
 
   async uploadActivity(
@@ -297,7 +298,7 @@ export class BuilderService {
   async getActivities() {
     const result =
       await sql`select * from "activities" where "churchId" = ${this.req.getChurchId()}`;
-    return result;
+    return res(200, result);
   }
 
   async deleteActivity(body: z.infer<typeof DeleteActivitySchema>) {
@@ -308,7 +309,7 @@ export class BuilderService {
     deleteImage(url);
 
     await sql`delete from "activities" where "id" = ${body.id}`;
-    return;
+    return res(200, { success: true });
   }
 
   async editActivity(query: z.infer<typeof EditActivitySchema>, file: File) {

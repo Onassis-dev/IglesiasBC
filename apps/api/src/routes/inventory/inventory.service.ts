@@ -9,14 +9,17 @@ import {
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import * as excelJS from 'exceljs';
+import { res } from 'src/utils/response';
 
 @Injectable()
 export class InventoryService {
   constructor(private readonly req: ContextProvider) {}
   async readOne(params: z.infer<typeof IdSchema>) {
-    return (
+    const data = (
       await sql`select * from inventory where id = ${params.id} and "churchId" = ${this.req.getChurchId()}`
     )[0];
+
+    return res(200, data);
   }
 
   async read(query: z.infer<typeof getInventorySchema>) {
@@ -29,20 +32,25 @@ export class InventoryService {
     ORDER BY id
     LIMIT 10 OFFSET ${10 * (parseInt(query.page) - 1)}`;
 
-    return { rows, count: rows[0]?.count || 0 };
+    return res(200, { rows, count: rows[0]?.count || 0 });
   }
 
   async post(body: z.infer<typeof PostInventorySchema>) {
     const data = { ...body, churchId: this.req.getChurchId() };
-    return await sql`insert into inventory ${sql(data)}`;
+    const result = await sql`insert into inventory ${sql(data)}`;
+    return res(200, result);
   }
 
   async edit(body: z.infer<typeof EditInventorySchema>) {
-    return await sql`update inventory set ${sql(body)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
+    const result =
+      await sql`update inventory set ${sql(body)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
+    return res(200, result);
   }
 
   async delete(param: z.infer<typeof IdSchema>) {
-    return await sql`delete from inventory where id = ${param.id} and "churchId" = ${this.req.getChurchId()}`;
+    const result =
+      await sql`delete from inventory where id = ${param.id} and "churchId" = ${this.req.getChurchId()}`;
+    return res(200, result);
   }
 
   async getStats() {
@@ -58,7 +66,11 @@ export class InventoryService {
       await sql`select SUM(amount) as count from inventory  WHERE "churchId" = ${this.req.getChurchId()}`
     )[0].count;
 
-    return { items: items || '0', money: money || '0', total: total || '0' };
+    return res(200, {
+      items: items || '0',
+      money: money || '0',
+      total: total || '0',
+    });
   }
 
   async export() {
@@ -86,6 +98,6 @@ export class InventoryService {
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
-    return buffer;
+    return res(200, buffer);
   }
 }

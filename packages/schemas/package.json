@@ -3,10 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "build": "tsc && tsc --project tsconfig.esm.json",
+    "dev": "tsc --watch & tsc --project tsconfig.esm.json --watch",
+    "dev2": "tsc --project tsconfig.esm.json --watch"
   },
   "exports": {
-    ".": "./dist/src/index.js"
+    "import": "./dist/esm/src/index.js",
+    "require": "./dist/src/index.js"
+  },
+  "main": "./dist/src/index.js",
+  "module": "./dist/esm/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "dependencies": {
+    "@ts-rest/core": "^3.52.1"
   }
 }

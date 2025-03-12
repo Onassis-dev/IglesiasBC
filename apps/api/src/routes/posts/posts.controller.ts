@@ -1,67 +1,65 @@
 import {
   Controller,
   UseGuards,
-  Post,
-  Put,
-  Get,
-  Delete,
-  Query,
-  Param,
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  DeleteSchema,
-  EditPostSchema,
-  PostPostSchema,
-  getPostSchema,
-  GetOnePostSchema,
-} from '@iglesiasbc/schemas';
-import { ImageHandler } from 'src/interceptors/files/image.interceptor';
-import { FileInterceptor, File } from '@nest-lab/fastify-multer';
+import { FileInterceptor } from '@nest-lab/fastify-multer';
+import { File } from '@nest-lab/fastify-multer';
+import { postsContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
 @ApiTags('Posts')
-@Controller('posts')
+@Controller()
 @UseGuards(new AuthGuard('blog'))
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Get()
-  read(@Query(new ZodPiPe(getPostSchema)) query) {
-    return this.postsService.get(query);
+  @TsRestHandler(postsContract.get)
+  read() {
+    return tsRestHandler(postsContract.get, async ({ query }) =>
+      this.postsService.get(query),
+    );
   }
 
-  @Get(':id')
-  readOne(@Param(new ZodPiPe(GetOnePostSchema)) param) {
-    return this.postsService.getOne(param);
+  @TsRestHandler(postsContract.getOne)
+  readOne() {
+    return tsRestHandler(postsContract.getOne, async ({ params }) =>
+      this.postsService.getOne({ id: params.id }),
+    );
   }
 
-  @Post()
-  @UseInterceptors(FileInterceptor('image'), new ImageHandler(800))
-  create(
-    @Query(new ZodPiPe(PostPostSchema)) query,
-    @UploadedFile() file: File,
-  ) {
-    return this.postsService.post(query, file);
+  @TsRestHandler(postsContract.post)
+  @UseInterceptors(FileInterceptor('file'))
+  create(@UploadedFile() file: File) {
+    return tsRestHandler(postsContract.post, async ({ body }) => {
+      console.log(body, file);
+      return this.postsService.post(body, file);
+    });
   }
 
-  @Put()
-  @UseInterceptors(FileInterceptor('image'), new ImageHandler(800))
-  edit(@Query(new ZodPiPe(EditPostSchema)) query, @UploadedFile() file: File) {
-    return this.postsService.edit(query, file);
+  @TsRestHandler(postsContract.put)
+  @UseInterceptors(FileInterceptor('file'))
+  edit(@UploadedFile() file: File) {
+    return tsRestHandler(postsContract.put, async ({ body }) => {
+      return this.postsService.edit(body, file);
+    });
   }
 
-  @Delete(':id')
-  delete(@Param(new ZodPiPe(DeleteSchema)) param) {
-    return this.postsService.delete(param);
+  @TsRestHandler(postsContract.delete)
+  delete() {
+    return tsRestHandler(postsContract.delete, async ({ params }) =>
+      this.postsService.delete({ id: params.id }),
+    );
   }
 
-  @Get('stats')
+  @TsRestHandler(postsContract.getStats)
   getStats() {
-    return this.postsService.getStats();
+    return tsRestHandler(postsContract.getStats, async () =>
+      this.postsService.getStats(),
+    );
   }
 }

@@ -1,3 +1,11 @@
+import { initContract } from "@ts-rest/core";
+import { membersContract } from "./members.schema.js";
+import { inventoryContract } from "./inventory.schema.js";
+import { transactionsContract } from "./transactions.schema.js";
+import { treasuriesContract } from "./treasuries.schema.js";
+import { builderContract } from "./builder.schema.js";
+import { postsContract } from "./posts.schema.js";
+
 export * from "./auth.schema.js";
 export * from "./members.schema.js";
 export * from "./transactions.schema.js";
@@ -12,3 +20,15 @@ export * from "./permissions.schema.js";
 export * from "./churches.schema.js";
 export * from "./treasuries.schema.js";
 export * from "./certificates.schema.js";
+export * from "./general.schema.js";
+
+const c = initContract();
+
+export const contract = c.router({
+  members: membersContract,
+  inventory: inventoryContract,
+  transactions: transactionsContract,
+  treasuries: treasuriesContract,
+  builder: builderContract,
+  posts: postsContract,
+});

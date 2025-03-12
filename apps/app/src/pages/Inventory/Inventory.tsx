@@ -1,7 +1,7 @@
 import '@/lib/boilerplate';
 import { ActionButton } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { Boxes, DollarSign, FileDown, Package } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import { showPromise } from '@/lib/showFunctions.tsx';
@@ -13,7 +13,7 @@ import InventoryForm from './InventoryForm';
 import InventoryCard from './InventoryCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { downloadFile } from '@/lib/downloadFile';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData } from '@tanstack/react-query';
 
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 
@@ -25,15 +25,23 @@ export function Inventory() {
     const [filters, setFilters] = useState<any>({ name: '' });
     const [page, setPage] = useState(1);
 
-    const { data: inventory, status } = useQuery({
+    const { data: { body: inventory } = {}, status } = tsr.inventory.get.useQuery({
         queryKey: ['inventory', page, filters],
-        queryFn: async () => (await api.get('/inventory', { params: { ...filters, page } })).data,
         placeholderData: keepPreviousData,
+        queryData: {
+            query: {
+                page,
+                ...filters,
+            },
+        },
     });
-    const { data: stats } = useQuery({ queryKey: ['inventory', 'stats'], queryFn: async () => (await api.get('/inventory/stats')).data });
+
+    const { data: { body: stats } = {} } = tsr.inventory.getStats.useQuery({
+        queryKey: ['inventory', 'stats'],
+    });
 
     const exportData = async () => {
-        const buffer: ArrayBuffer = (await api.get('/inventory/export', { responseType: 'arraybuffer' })).data;
+        const { body: buffer } = await tsr.inventory.export.query({});
         downloadFile(buffer, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Inventario.xlsx');
     };
 

@@ -1,63 +1,62 @@
-import {
-  Controller,
-  UseGuards,
-  Post,
-  Body,
-  Put,
-  Get,
-  Delete,
-  Query,
-  Param,
-} from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  EditInventorySchema,
-  IdSchema,
-  PostInventorySchema,
-  getInventorySchema,
-} from '@iglesiasbc/schemas';
+import { inventoryContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
 @ApiTags('Inventory')
-@Controller('inventory')
+@Controller()
 @UseGuards(new AuthGuard('inventory'))
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
-  @Get(':id')
-  readOne(@Param(new ZodPiPe(IdSchema)) params) {
-    return this.inventoryService.readOne(params);
+  @TsRestHandler(inventoryContract.getOne)
+  getInventoryItem() {
+    return tsRestHandler(inventoryContract.getOne, async ({ params }) =>
+      this.inventoryService.readOne({ id: params.id }),
+    );
   }
 
-  @Get()
-  read(@Query(new ZodPiPe(getInventorySchema)) query) {
-    return this.inventoryService.read(query);
+  @TsRestHandler(inventoryContract.get)
+  getInventory() {
+    return tsRestHandler(inventoryContract.get, async ({ query }) =>
+      this.inventoryService.read(query),
+    );
   }
 
-  @Get('export')
-  export() {
-    return this.inventoryService.export();
+  @TsRestHandler(inventoryContract.export)
+  exportInventory() {
+    return tsRestHandler(inventoryContract.export, async () =>
+      this.inventoryService.export(),
+    );
   }
 
-  @Post()
-  create(@Body(new ZodPiPe(PostInventorySchema)) body) {
-    return this.inventoryService.post(body);
+  @TsRestHandler(inventoryContract.post)
+  createInventoryItem() {
+    return tsRestHandler(inventoryContract.post, async ({ body }) =>
+      this.inventoryService.post(body),
+    );
   }
 
-  @Put()
-  edit(@Body(new ZodPiPe(EditInventorySchema)) body) {
-    return this.inventoryService.edit(body);
+  @TsRestHandler(inventoryContract.put)
+  editInventoryItem() {
+    return tsRestHandler(inventoryContract.put, async ({ body }) =>
+      this.inventoryService.edit(body),
+    );
   }
 
-  @Delete(':id')
-  delete(@Param(new ZodPiPe(IdSchema)) params) {
-    return this.inventoryService.delete(params);
+  @TsRestHandler(inventoryContract.delete)
+  deleteInventoryItem() {
+    return tsRestHandler(inventoryContract.delete, async ({ params }) =>
+      this.inventoryService.delete({ id: params.id }),
+    );
   }
 
-  @Get('stats')
-  getTotal() {
-    return this.inventoryService.getStats();
+  @TsRestHandler(inventoryContract.getStats)
+  getInventoryStats() {
+    return tsRestHandler(inventoryContract.getStats, async () =>
+      this.inventoryService.getStats(),
+    );
   }
 }

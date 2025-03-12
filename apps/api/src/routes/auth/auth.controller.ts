@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import { authSchema, googleSchema, registerSchema } from '@iglesiasbc/schemas';
+import { loginSchema, googleSchema, signUpSchema } from '@iglesiasbc/schemas';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
@@ -10,12 +10,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  login(@Body(new ZodPiPe(authSchema)) body, @Res() res) {
+  login(@Body(new ZodPiPe(loginSchema)) body, @Res() res) {
     return this.authService.login(body, res);
   }
 
   @Post('signup')
-  signup(@Body(new ZodPiPe(registerSchema)) body, @Res() res) {
+  signup(@Body(new ZodPiPe(signUpSchema)) body, @Res() res) {
     return this.authService.signup(body, res);
   }
 

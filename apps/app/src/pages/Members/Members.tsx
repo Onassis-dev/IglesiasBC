@@ -1,7 +1,7 @@
 import '@/lib/boilerplate';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { BadgeCheck, User, UserCheck2 } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,7 +11,7 @@ import InfoCard from '@/components/common/InfoCard';
 import MembersCard from './MembersCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { displayDate } from '@/lib/timeFunctions';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData } from '@tanstack/react-query';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import { calculateAge } from './members.lib';
 import MembersForm from './MembersForm';
@@ -25,18 +25,21 @@ export function Members() {
     const [filters, setFilters] = useState<any>({ name: '' });
     const [page, setPage] = useState(1);
 
-    const { data: members, status } = useQuery({
+    const { data: { body: members } = {}, status } = tsr.members.get.useQuery({
         queryKey: ['members', page, filters],
-        queryFn: async () => (await api.get('/members', { params: { ...filters, page } })).data,
         placeholderData: keepPreviousData,
+        queryData: {
+            query: {
+                page,
+                ...filters,
+            },
+        },
     });
-    const { data: stats } = useQuery({
+    const { data: { body: stats } = {} } = tsr.members.getStats.useQuery({
         queryKey: ['members', 'stats'],
-        queryFn: async () => (await api.get('/members/stats')).data,
     });
-    const { data: birthdays } = useQuery({
+    const { data: { body: birthdays } = {} } = tsr.members.getBirthdays.useQuery({
         queryKey: ['members', 'birthdays'],
-        queryFn: async () => (await api.get('/members/birthdays')).data,
     });
 
     useEffect(() => {

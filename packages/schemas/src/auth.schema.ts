@@ -1,6 +1,7 @@
-import { z } from 'zod';
+import { initContract } from "@ts-rest/core";
+import { z } from "zod";
 
-export const authSchema = z.object({
+export const loginSchema = z.object({
   email: z
     .string()
     .email()
@@ -19,7 +20,7 @@ export const googleSchema = z.object({
   username: z.string(),
 });
 
-export const registerSchema = z.object({
+export const signUpSchema = z.object({
   email: z
     .string()
     .email()
@@ -27,4 +28,45 @@ export const registerSchema = z.object({
   username: z.string(),
   token: z.string(),
   refreshToken: z.string(),
+});
+
+// Contract
+const c = initContract();
+
+export const authContract = c.router({
+  login: {
+    method: "POST",
+    path: "/login/login",
+    responses: {
+      201: z.string(),
+    },
+    body: loginSchema,
+  },
+
+  signup: {
+    method: "POST",
+    path: "/auth/signup",
+    responses: {
+      201: z.any(),
+    },
+    body: signUpSchema,
+  },
+
+  google: {
+    method: "POST",
+    path: "/auth/google",
+    responses: {
+      201: z.any(),
+    },
+    body: googleSchema,
+  },
+
+  logout: {
+    method: "POST",
+    path: "/auth/logout",
+    responses: {
+      201: z.any(),
+    },
+    body: null,
+  },
 });

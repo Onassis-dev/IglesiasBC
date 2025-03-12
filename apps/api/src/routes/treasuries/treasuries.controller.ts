@@ -1,58 +1,55 @@
-import {
-  Controller,
-  UseGuards,
-  Post,
-  Body,
-  Put,
-  Get,
-  Delete,
-  Query,
-  Param,
-} from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { TreasuriesService } from './treasuries.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import { ApiTags } from '@nestjs/swagger';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  DeleteSchema,
-  EditTreasurySchema,
-  PostTreasurySchema,
-  getTreasurySchema,
-} from '@iglesiasbc/schemas';
+import { treasuriesContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
 @ApiTags('Treasuries')
-@Controller('treasuries')
+@Controller()
 @UseGuards(new AuthGuard('finances'))
 export class TreasuriesController {
   constructor(private readonly financesService: TreasuriesService) {}
 
-  @Get()
-  read(@Query(new ZodPiPe(getTreasurySchema)) query) {
-    return this.financesService.read(query);
+  @TsRestHandler(treasuriesContract.get)
+  getTreasuries() {
+    return tsRestHandler(treasuriesContract.get, async ({ query }) =>
+      this.financesService.read(query),
+    );
   }
 
-  @Get(':id')
-  readOne(@Param(new ZodPiPe(DeleteSchema)) param) {
-    return this.financesService.getOne(param);
+  @TsRestHandler(treasuriesContract.getOne)
+  getTreasury() {
+    return tsRestHandler(treasuriesContract.getOne, async ({ params }) =>
+      this.financesService.getOne(params),
+    );
   }
 
-  @Post()
-  create(@Body(new ZodPiPe(PostTreasurySchema)) body) {
-    return this.financesService.post(body);
+  @TsRestHandler(treasuriesContract.post)
+  createTreasury() {
+    return tsRestHandler(treasuriesContract.post, async ({ body }) =>
+      this.financesService.post(body),
+    );
   }
 
-  @Put()
-  edit(@Body(new ZodPiPe(EditTreasurySchema)) body) {
-    return this.financesService.edit(body);
+  @TsRestHandler(treasuriesContract.put)
+  editTreasury() {
+    return tsRestHandler(treasuriesContract.put, async ({ body }) =>
+      this.financesService.edit(body),
+    );
   }
 
-  @Delete(':id')
-  delete(@Param(new ZodPiPe(DeleteSchema)) params) {
-    return this.financesService.delete(params);
+  @TsRestHandler(treasuriesContract.delete)
+  deleteTreasury() {
+    return tsRestHandler(treasuriesContract.delete, async ({ params }) =>
+      this.financesService.delete(params),
+    );
   }
 
-  @Get('stats')
-  getTotal() {
-    return this.financesService.getStats();
+  @TsRestHandler(treasuriesContract.getStats)
+  getTreasuryStats() {
+    return tsRestHandler(treasuriesContract.getStats, async () =>
+      this.financesService.getStats(),
+    );
   }
 }

@@ -1,13 +1,15 @@
+import { generateOpenApi } from '@ts-rest/open-api';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { ValidationFilter } from './interceptors/validation/validation.filter';
 import fastifyCookie from '@fastify/cookie';
 import { DBFilter } from './interceptors/db/db.filter';
+import { contract } from '@iglesiasbc/schemas';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -27,6 +29,7 @@ async function bootstrap() {
     exposedHeaders: ['Content-Disposition'],
     credentials: true,
   });
+
   app.useGlobalFilters(new ValidationFilter());
   app.useGlobalFilters(new DBFilter());
 
@@ -34,13 +37,12 @@ async function bootstrap() {
   await app.register(fastifyCookie as any);
 
   //swagger implementation
-  const config = new DocumentBuilder()
-    .setTitle('Docs')
-    .setDescription('IglesiasBC Docs')
-    .setVersion('1.0')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
+  const document = generateOpenApi(contract, {
+    info: {
+      title: 'IglesiasBC',
+      version: '1.0',
+    },
+  });
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT || 3000, '0.0.0.0');

@@ -5,10 +5,6 @@ export const getCertificateSchema = z.object({
   page: z.string(),
 });
 
-export const getMembersSchema = z.object({
-  name: z.string().nullable(),
-});
-
 export const PostCertificateSchema = z.object({
   member: z.string(),
   member2: z.string().optional().nullable(),

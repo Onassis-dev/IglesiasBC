@@ -3,7 +3,7 @@ import { ContextProvider } from 'src/interceptors/contextProvider';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
-  DeleteSchema,
+  IdSchema,
   EditPermissionSchema,
   PostPermissionSchema,
 } from '@iglesiasbc/schemas';
@@ -80,7 +80,7 @@ export class PermissionsService {
     return await sql`update permissions set ${sql(body)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
   }
 
-  async deletePermission(params: z.infer<typeof DeleteSchema>) {
+  async deletePermission(params: z.infer<typeof IdSchema>) {
     const [permission] =
       await sql`select 1 from churches where "ownerId" = ${this.req.getUserId()} and id = ${this.req.getChurchId()}`;
     if (!permission)

@@ -3,13 +3,14 @@ import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
   PutMemberSchema,
   PostMemberSchema,
-  getSchema,
-  idSchema,
+  getMembersSchema,
+  IdSchema,
 } from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { File } from '@nest-lab/fastify-multer';
 import * as excelJS from 'exceljs';
+import { res } from 'src/utils/response';
 
 const memberLimits = [30, 100, 300];
 
@@ -17,7 +18,7 @@ const memberLimits = [30, 100, 300];
 export class MembersService {
   constructor(private readonly req: ContextProvider) {}
 
-  async get(dto: z.infer<typeof getSchema>) {
+  async get(dto: z.infer<typeof getMembersSchema>) {
     const rows = await sql`
     SELECT id, name, COUNT(*) OVER () AS count, cellphone, email, (select name from positions where id = "positionId") as "positionId"
     FROM members
@@ -27,15 +28,15 @@ export class MembersService {
     LIMIT 10 OFFSET ${10 * (parseInt(dto.page) - 1)}
   `;
 
-    return { rows, count: rows[0]?.count || 0 };
+    return res(200, { rows, count: rows[0]?.count || 0 });
   }
 
-  async getSingle(dto: z.infer<typeof idSchema>) {
+  async getSingle(dto: z.infer<typeof IdSchema>) {
     const data =
       await sql`select * from members where id = ${dto.id} and "churchId" = ${this.req.getChurchId()}`;
 
     if (data.length === 0) throw new HttpException('', 404);
-    return data[0];
+    return res(200, data[0]);
   }
 
   async getBirthdays() {
@@ -47,7 +48,7 @@ export class MembersService {
     AND EXTRACT(MONTH FROM birthday) = ${new Date().getMonth() + 1}
     ORDER BY birthday`;
 
-    return rows;
+    return res(200, rows);
   }
 
   async post(dto: z.infer<typeof PostMemberSchema>) {
@@ -62,7 +63,7 @@ export class MembersService {
       );
 
     const data = { ...dto, churchId: this.req.getChurchId() };
-    return await sql`insert into members ${sql(data)}`;
+    return res(200, await sql`insert into members ${sql(data)}`);
   }
 
   async put(dto: z.infer<typeof PutMemberSchema>) {
@@ -72,11 +73,17 @@ export class MembersService {
     dto.joinDate = dto.joinDate.split('T')[0];
     const date1 = new Date(dto.joinDate);
 
-    return await sql`update members set ${sql({ ...dto, birthday: date, joinDate: date1 })} where id = ${dto.id} and "churchId" = ${this.req.getChurchId()}`;
+    return res(
+      200,
+      await sql`update members set ${sql({ ...dto, birthday: date, joinDate: date1 })} where id = ${dto.id} and "churchId" = ${this.req.getChurchId()}`,
+    );
   }
 
-  async delete(dto: z.infer<typeof idSchema>) {
-    return await sql`delete from members where id = ${dto.id} and "churchId" = ${this.req.getChurchId()}`;
+  async delete(dto: z.infer<typeof IdSchema>) {
+    return res(
+      200,
+      await sql`delete from members where id = ${dto.id} and "churchId" = ${this.req.getChurchId()}`,
+    );
   }
 
   async getStats() {
@@ -92,7 +99,7 @@ export class MembersService {
       await sql`select count(*) from members WHERE "churchId" = ${this.req.getChurchId()} AND EXTRACT(MONTH FROM birthday) = ${new Date().getMonth() + 1}`
     )[0].count;
 
-    return { active, total, birthdays };
+    return res(200, { active, total, birthdays });
   }
 
   async import(file: File) {
