@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { useEffect, useState } from 'react';
 import '@/lib/boilerplate';
 import { Input } from '@/components/ui/input';
 import type { z } from 'zod';
@@ -11,22 +10,41 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { saveUserData } from '@/lib/accountFunctions';
 import { useUserConfigSchema, type UserConfigSchema } from './config.models';
 import CreateChurchDialog from './CreateChurchDialog';
+import { useEffect } from 'react';
 
 const Account = () => {
-    const [churches, setChurches]: any = useState([]);
-    const [isOwner, setIsOwner] = useState();
     const userConfigForm = useUserConfigSchema();
 
-    const fetchData = async () => {
-        const result = (await api.get('/users')).data;
-        console.log(result);
-        setChurches(result.churches);
+    const { data: { body: data } = {} } = tsr.users.getUser.useQuery({
+        queryKey: ['user'],
+    });
 
-        userConfigForm.setValue('churchId', result.user.churchId ? result.user.churchId.toString() : '0');
-        userConfigForm.setValue('username', result.user.username);
-        userConfigForm.setValue('email', result.user.email);
-        setIsOwner(result.user.isOwner);
-    };
+    useEffect(() => {
+        userConfigForm.reset({
+            churchId: data?.user?.churchId ? data?.user?.churchId.toString() : '0',
+            username: data?.user?.username,
+            email: data?.user?.email,
+        });
+    }, [data]);
+
+    // const fetchData = async () => {
+    //     const result = (await api.get('/users')).data;
+    //     console.log(result);
+    //     setChurches(result.churches);
+
+    //     userConfigForm.setValue('churchId', result.user.churchId ? result.user.churchId.toString() : '0');
+    //     userConfigForm.setValue('username', result.user.username);
+    //     userConfigForm.setValue('email', result.user.email);
+    //     setIsOwner(result.user.isOwner);
+    // };
+
+    // useEffect(() => {
+    //     fetchData();
+    // }, []);
+
+    // useEffect(() => {
+    //     console.log(isOwner);
+    // }, [isOwner]);
 
     const handleSubmit: any = async (values: z.infer<typeof UserConfigSchema>) => {
         const userData = (await api.put('/users', { ...values })).data;
@@ -35,14 +53,6 @@ const Account = () => {
 
         location.reload();
     };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        console.log(isOwner);
-    }, [isOwner]);
 
     return (
         <Card>
@@ -99,8 +109,8 @@ const Account = () => {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {(churches.length &&
-                                                        churches.map((church: any, i: number) => (
+                                                    {(data?.churches.length &&
+                                                        data?.churches.map((church: any, i: number) => (
                                                             <SelectItem key={i} value={church.id.toString()}>
                                                                 {church.name}
                                                             </SelectItem>
@@ -112,7 +122,7 @@ const Account = () => {
                                     </FormItem>
                                 )}
                             />
-                            {!isOwner && <CreateChurchDialog />}
+                            {data?.user?.isOwner && <CreateChurchDialog />}
                         </div>
 
                         <div className="w-full">{/* <Button variant="outline">Cambiar contraseña</Button> */}</div>

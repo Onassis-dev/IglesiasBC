@@ -11,23 +11,15 @@ export const PostInventorySchema = z.object({
   name: z.string(),
   brand: z.string().optional().nullable(),
   model: z.string().optional().nullable(),
-  price: z.number(),
+  price: z.string().regex(/^\d+(\.\d+)?$/),
   serie: z.string().optional().nullable(),
-  amount: z.number(),
+  amount: z.string().regex(/^[1-9]\d*$/),
   bill: z.string().optional().nullable(),
   observations: z.string().optional().nullable(),
 });
 
-export const EditInventorySchema = z.object({
+export const PutInventorySchema = PostInventorySchema.extend({
   id: z.number(),
-  name: z.string().optional().nullable(),
-  brand: z.string().optional().nullable(),
-  model: z.string().optional().nullable(),
-  price: z.number().optional().nullable(),
-  serie: z.string().optional().nullable(),
-  amount: z.number().optional().nullable(),
-  bill: z.string().optional().nullable(),
-  observations: z.string().optional().nullable(),
 });
 
 // Contract
@@ -82,7 +74,7 @@ export const inventoryContract = c.router(
       responses: {
         200: z.any(),
       },
-      body: EditInventorySchema,
+      body: PutInventorySchema,
     },
     delete: {
       path: "/:id",

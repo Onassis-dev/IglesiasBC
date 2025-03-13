@@ -1,8 +1,7 @@
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { DialogHeader } from '@/components/ui/dialog';
 import { Badge } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
 
 interface props {
     id?: string | number;
@@ -11,18 +10,21 @@ interface props {
 }
 
 const InventoryCard = ({ id, open, setOpen }: props) => {
-    const { data: item } = useQuery({
+    const { data: { body: item } = {} } = tsr.inventory.getOne.useQuery({
         queryKey: ['item', id],
-        queryFn: async () => (await api.get(`/inventory/${id}`)).data,
-        initialData: {},
-        enabled: !!id,
+        enabled: !!id && open,
+        queryData: {
+            params: {
+                id: String(id),
+            },
+        },
     });
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className="w-xl">
                 <DialogHeader>
-                    <DialogTitle>{item.name}</DialogTitle>
+                    <DialogTitle>{item?.name}</DialogTitle>
                 </DialogHeader>
 
                 <div className="grid grid-cols-2 gap-6 mt-4">
@@ -32,7 +34,7 @@ const InventoryCard = ({ id, open, setOpen }: props) => {
                         </div>
                         <div>
                             <p className="text-sm font-medium">Marca</p>
-                            <p className="text-muted-foreground text-sm">{item.brand}</p>
+                            <p className="text-muted-foreground text-sm">{item?.brand}</p>
                         </div>
                     </div>
 
@@ -42,7 +44,7 @@ const InventoryCard = ({ id, open, setOpen }: props) => {
                         </div>
                         <div>
                             <p className="text-sm font-medium">Modelo</p>
-                            <p className="text-muted-foreground text-sm">{item.model}</p>
+                            <p className="text-muted-foreground text-sm">{item?.model}</p>
                         </div>
                     </div>
 
@@ -52,7 +54,7 @@ const InventoryCard = ({ id, open, setOpen }: props) => {
                         </div>
                         <div>
                             <p className="text-sm font-medium">Factura</p>
-                            <p className="text-muted-foreground text-sm">{item.bill}</p>
+                            <p className="text-muted-foreground text-sm">{item?.bill}</p>
                         </div>
                     </div>
 
@@ -62,7 +64,7 @@ const InventoryCard = ({ id, open, setOpen }: props) => {
                         </div>
                         <div>
                             <p className="text-sm font-medium">Serie</p>
-                            <p className="text-muted-foreground text-sm">{item.serie}</p>
+                            <p className="text-muted-foreground text-sm">{item?.serie}</p>
                         </div>
                     </div>
 
@@ -72,7 +74,7 @@ const InventoryCard = ({ id, open, setOpen }: props) => {
                         </div>
                         <div>
                             <p className="text-sm font-medium">Cantidad</p>
-                            <p className="text-muted-foreground text-sm">{item.amount}</p>
+                            <p className="text-muted-foreground text-sm">{item?.amount}</p>
                         </div>
                     </div>
 
@@ -82,7 +84,7 @@ const InventoryCard = ({ id, open, setOpen }: props) => {
                         </div>
                         <div>
                             <p className="text-sm font-medium">Precio unitario</p>
-                            <p className="text-muted-foreground text-sm">${item.price}</p>
+                            <p className="text-muted-foreground text-sm">${item?.price}</p>
                         </div>
                     </div>
 
@@ -92,7 +94,7 @@ const InventoryCard = ({ id, open, setOpen }: props) => {
                         </div>
                         <div>
                             <p className="text-sm font-medium">Precio total</p>
-                            <p className="text-muted-foreground text-sm">${item.price * item.amount}</p>
+                            <p className="text-muted-foreground text-sm">${item?.price * item?.amount}</p>
                         </div>
                     </div>
 
@@ -102,7 +104,7 @@ const InventoryCard = ({ id, open, setOpen }: props) => {
                         </div>
                         <div>
                             <p className="text-sm font-medium">Observaciones</p>
-                            <p className="text-muted-foreground text-sm">{item.observations}</p>
+                            <p className="text-muted-foreground text-sm">{item?.observations}</p>
                         </div>
                     </div>
                 </div>

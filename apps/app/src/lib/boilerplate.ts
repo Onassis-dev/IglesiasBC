@@ -33,3 +33,19 @@ export const tsr = initTsrReactQuery(contract, {
     baseUrl: import.meta.env.VITE_API_BASE,
     credentials: 'include',
 });
+
+interface Result<TResult> {
+    status: number;
+    body: TResult;
+}
+
+interface Mutation<TVariables = any, TResult = any> {
+    mutate: (variables: { body: TVariables }) => Promise<Result<TResult>>;
+}
+
+export const api2 = async <TVariables, TResult>(mutation: Mutation<TVariables, TResult>, variables: TVariables): Promise<Result<TResult>['body']> => {
+    const result = await mutation.mutate({ body: variables });
+    if (result.status !== 200) throw new Error((result.body as any)?.message);
+
+    return result.body;
+};

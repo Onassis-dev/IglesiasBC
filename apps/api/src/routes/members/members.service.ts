@@ -67,15 +67,9 @@ export class MembersService {
   }
 
   async put(dto: z.infer<typeof PutMemberSchema>) {
-    dto.birthday = dto.birthday.split('T')[0];
-    const date = new Date(dto.birthday);
-
-    dto.joinDate = dto.joinDate.split('T')[0];
-    const date1 = new Date(dto.joinDate);
-
     return res(
       200,
-      await sql`update members set ${sql({ ...dto, birthday: date, joinDate: date1 })} where id = ${dto.id} and "churchId" = ${this.req.getChurchId()}`,
+      await sql`update members set ${sql({ ...dto })} where id = ${dto.id} and "churchId" = ${this.req.getChurchId()}`,
     );
   }
 
@@ -148,9 +142,7 @@ export class MembersService {
       members.push({
         name: row.values[1],
         cellphone: row.values[2] || null,
-        baptized: (row.values[3] === 'si'
-          ? 'true'
-          : 'false') as unknown as boolean,
+        baptized: row.values[3] === 'si' ? 'true' : 'false',
         email: row.values[4]?.text || row.values[4] || null,
         genre: row.values[5]?.toUpperCase(),
         civilStatus: civilStatus[row.values[6]?.toUpperCase() || ''],

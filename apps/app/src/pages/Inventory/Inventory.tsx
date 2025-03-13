@@ -13,8 +13,6 @@ import InventoryForm from './InventoryForm';
 import InventoryCard from './InventoryCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { downloadFile } from '@/lib/downloadFile';
-import { keepPreviousData } from '@tanstack/react-query';
-
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 
 export function Inventory() {
@@ -27,7 +25,6 @@ export function Inventory() {
 
     const { data: { body: inventory } = {}, status } = tsr.inventory.get.useQuery({
         queryKey: ['inventory', page, filters],
-        placeholderData: keepPreviousData,
         queryData: {
             query: {
                 page,

@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { saveUserData } from '@/lib/accountFunctions';
 import AreaGraph from '@/components/common/charts/AreaGraph';
 import InfoCard2 from '@/components/common/InfoCard2';
@@ -16,38 +16,16 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const Dashboard = () => {
-    const [members, setMembers] = useState<Record<string, any>[]>([]);
-    const [movements, setMovements] = useState<Record<string, any>[]>([]);
-    const [stats, setStats] = useState<Record<string, any>>([]);
-
-    const [lastMovements, setLastMovements] = useState<Record<string, any>[]>([]);
-    const [lastMembers, setLastMembers] = useState<Record<string, any>[]>([]);
-    const [lastMaterials, setLastMaterials] = useState<Record<string, any>[]>([]);
-    const [lastCertificates, setLastCertificates] = useState<Record<string, any>[]>([]);
-    const [lastSubjects, setLastSubjects] = useState<Record<string, any>[]>([]);
+    const [filteredMovements, setFilteredMovements] = useState<Record<string, any>[]>([]);
+    const { data: { body } = {} } = tsr.dashboard.getOwner.useQuery({
+        queryKey: ['user-dashboard'],
+    });
 
     useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        const result = (await api.get('/dashboard/owner')).data;
-
-        saveUserData(result.userData);
-
-        setStats(result.stats || []);
-
-        setMembers(result.members || []);
-        setMovements(result.movements.map((v: any) => ({ ...v, Ingresos: parseFloat(v.Ingresos), Egresos: parseFloat(v.Egresos) })) || []);
-
-        setLastMovements(result.lastMovements || []);
-        setLastMembers(result.lastMembers || []);
-        setLastMaterials(result.lastMaterials || []);
-        setLastCertificates(result.lastCertificates || []);
-        setLastSubjects(result.lastSubjects || []);
-
-        document.dispatchEvent(new CustomEvent('astro:after-swap'));
-    };
+        if (body?.userData) saveUserData(body.userData);
+        if (body?.movements)
+            setFilteredMovements(body.movements.map((v: any) => ({ ...v, Ingresos: parseFloat(v.Ingresos), Egresos: parseFloat(v.Egresos) })));
+    }, [body]);
 
     return (
         <div className="grid lg:grid-cols-[1fr_20rem] gap-6">
@@ -55,7 +33,7 @@ const Dashboard = () => {
                 <div className="grid gap-6">
                     <AreaGraph
                         title="Miembros nuevos registrados"
-                        data={members}
+                        data={body?.members || []}
                         config={chartConfig}
                         lines={[{ key: 'Registros', color: 'purple' }]}
                     />
@@ -75,7 +53,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {lastMembers.map((row, i) => (
+                                    {body?.lastMembers.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.name}</TableCell>
                                             <TableCell>
@@ -100,7 +78,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {lastCertificates.map((row, i) => (
+                                    {body?.lastCertificates.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.name}</TableCell>
                                             <TableCell>
@@ -124,7 +102,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {lastSubjects.map((row, i) => (
+                                    {body?.lastSubjects.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.title}</TableCell>
                                         </TableRow>
@@ -137,7 +115,7 @@ const Dashboard = () => {
 
                 <AreaGraph
                     title="Movimientos mensuales"
-                    data={movements}
+                    data={filteredMovements || []}
                     config={chartConfig}
                     lines={[
                         { key: 'Egresos', color: 'destructive' },
@@ -160,7 +138,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {lastMovements.map((row, i) => (
+                                    {body?.lastMovements.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.concept}</TableCell>
                                             <TableCell>
@@ -168,7 +146,7 @@ const Dashboard = () => {
                                                     {!row.isIncome && '-'} ${row.amount}
                                                 </Badge>
                                             </TableCell>
-                                            <TableCell>{displayDate(row.date ,'dd/MM/yyyy')}</TableCell>
+                                            <TableCell>{displayDate(row.date, 'dd/MM/yyyy')}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -189,7 +167,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {lastMaterials.map((row, i) => (
+                                    {body?.lastMaterials.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.name}</TableCell>
                                             <TableCell>${row.price}</TableCell>
@@ -208,7 +186,7 @@ const Dashboard = () => {
                     <CardTitle className="text-xl">Estadísticas</CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-6">
-                    <InfoCard2 href="/members" color="purple" title="Miembros activos" data={stats.members} perm="perm_members">
+                    <InfoCard2 href="/members" color="purple" title="Miembros activos" data={body?.stats.members} perm="perm_members">
                         <Users2 />
                     </InfoCard2>
                     {/* <InfoCard2 href="/certificates" color="cyan" title="Total de certificados" data={stats.certificates} perm="perm_certificates">
@@ -219,19 +197,19 @@ const Dashboard = () => {
                         <GraduationCap />
                     </InfoCard2> */}
 
-                    <InfoCard2 href="/finances" color="green" title="Balance general" data={stats.balance} perm="perm_finances">
+                    <InfoCard2 href="/finances" color="green" title="Balance general" data={body?.stats.balance} perm="perm_finances">
                         <DollarSign />
                     </InfoCard2>
 
-                    <InfoCard2 href="/inventory" color="yellow" title="Total en inventario" data={stats.inventory} perm="perm_inventory">
+                    <InfoCard2 href="/inventory" color="yellow" title="Total en inventario" data={body?.stats.inventory} perm="perm_inventory">
                         <Box />
                     </InfoCard2>
 
-                    <InfoCard2 href="/blog" color="orange" title="Total de visitas al blog" data={stats.blog} perm="perm_blog">
+                    <InfoCard2 href="/blog" color="orange" title="Total de visitas al blog" data={body?.stats.blog} perm="perm_blog">
                         <MessageSquareQuote />
                     </InfoCard2>
 
-                    <InfoCard2 href="/website" color="gray" title="Total de visitas a la pagina" data={stats.website} perm="perm_website">
+                    <InfoCard2 href="/website" color="gray" title="Total de visitas a la pagina" data={body?.stats.website} perm="perm_website">
                         <AppWindow />
                     </InfoCard2>
                 </CardContent>

@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { api } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -7,11 +7,11 @@ import { useEffect } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button, RegisterButton } from '@/components/ui/button';
 import { formatToTZ, formatToUTC } from '@/lib/timeFunctions';
-import { useMemberSchema, type MemberSchema } from './members.models';
 import DatePicker from '@/components/common/DatePicker';
-import { useQuery } from '@tanstack/react-query';
-import { useQueryStore } from '@/lib/store';
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { PostMemberSchema } from '@iglesiasbc/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 interface props {
     id: string | number;
@@ -20,52 +20,54 @@ interface props {
 }
 
 const MembersForm = ({ id, open, setOpen }: props) => {
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
-    const membersForm = useMemberSchema();
-
-    const { data: member } = useQuery({
-        queryKey: ['member', id],
-        queryFn: async () => (await api.get(`/members/${id}`)).data,
-        initialData: {},
-        enabled: !!id,
+    const client = tsr.useQueryClient();
+    const membersForm = useForm<z.infer<typeof PostMemberSchema>>({
+        resolver: zodResolver(PostMemberSchema),
     });
 
-    const handleSubmit = async (values: z.infer<typeof MemberSchema>) => {
-        values.birthday = values.id ? formatToUTC(values.birthday) || values.birthday : values.birthday;
-        values.joinDate = values.id ? formatToUTC(values.joinDate) || values.joinDate : values.joinDate;
-        if (id) {
-            await api.put('/members', values);
-        } else {
-            await api.post('/members', values);
-        }
+    const { data: { body: member } = {} } = tsr.members.getOne.useQuery({
+        queryKey: ['member', id],
+        enabled: !!id && open,
+        queryData: {
+            params: {
+                id: String(id),
+            },
+        },
+    });
 
-        client.refetchQueries({ queryKey: ['members'] });
-        setOpen(false);
+    async function sendData(values: z.infer<typeof PostMemberSchema>) {
+        const body = {
+            ...values,
+            birthday: formatToUTC(values.birthday) || values.birthday,
+            joinDate: formatToUTC(values.joinDate) || values.joinDate,
+        };
+
+        if (id) await api2(tsr.members.put, { ...body, id: Number(id) });
+        if (!id) await api2(tsr.members.post, body);
+
+        client.invalidateQueries({ queryKey: ['members'] });
         membersForm.reset();
-    };
+        setOpen(false);
+    }
 
     useEffect(() => {
-        if (member) {
-            membersForm.setValue('name', member.name);
-            membersForm.setValue('baptized', member.baptized?.toString());
-            membersForm.setValue('birthday', member.birthday ? formatToTZ(member.birthday) || '' : '');
-            membersForm.setValue('joinDate', member.joinDate ? formatToTZ(member.joinDate) || '' : '');
-            membersForm.setValue('cellphone', member.cellphone);
-            membersForm.setValue('civilStatus', member.civilStatus);
-            membersForm.setValue('email', member.email);
-            membersForm.setValue('genre', member.genre);
-            membersForm.setValue('positionId', member.positionId?.toString());
-            membersForm.setValue('id', member.id);
-        }
+        if (!member) return;
+
+        membersForm.reset({
+            ...member,
+            birthday: member.birthday ? formatToTZ(member.birthday) || '' : '',
+            joinDate: member.joinDate ? formatToTZ(member.joinDate) || '' : '',
+            baptized: member.baptized?.toString(),
+            positionId: member.positionId?.toString(),
+        });
     }, [member]);
 
-    const { data: positions } = useQuery({
-        queryKey: ['positions'],
-        queryFn: async () => (await api.get('/options/positions')).data,
+    const { data: { body: positions } = {} } = tsr.options.getPositions.useQuery({
+        queryKey: ['positionsObj'],
     });
 
-    const submit = membersForm.handleSubmit((values: z.infer<typeof MemberSchema>) =>
-        showPromise(handleSubmit(values), id ? 'Información actualizada' : 'Miembro registrado')
+    const submit = membersForm.handleSubmit((values: z.infer<typeof PostMemberSchema>) =>
+        showPromise(sendData(values), id ? 'Información actualizada' : 'Miembro registrado')
     );
 
     return (

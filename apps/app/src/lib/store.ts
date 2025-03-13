@@ -1,4 +1,4 @@
-import { QueryClient } from '@tanstack/react-query';
+import { keepPreviousData, QueryClient } from '@tanstack/react-query';
 import { create } from 'zustand';
 
 interface UIState {
@@ -24,7 +24,13 @@ interface QueryState {
 }
 
 export const useQueryStore = create<QueryState>(() => ({
-    queryClient: new QueryClient(),
+    queryClient: new QueryClient({
+        defaultOptions: {
+            queries: {
+                placeholderData: keepPreviousData,
+            },
+        },
+    }),
 }));
 
 interface PathState {

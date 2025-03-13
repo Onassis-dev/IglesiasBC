@@ -12,38 +12,41 @@ export const SelectChurchSchema = z.object({
 
 const c = initContract();
 
-export const usersContract = c.router({
-  getUser: {
-    method: "GET",
-    path: "/users",
-    responses: {
-      200: z.any(),
+export const usersContract = c.router(
+  {
+    getUser: {
+      method: "GET",
+      path: "",
+      responses: {
+        200: z.any(),
+      },
     },
-  },
 
-  getData: {
-    method: "GET",
-    path: "/users/data",
-    responses: {
-      200: z.any(),
+    getData: {
+      method: "GET",
+      path: "/data",
+      responses: {
+        200: z.any(),
+      },
     },
-  },
 
-  editUser: {
-    method: "PUT",
-    path: "/users",
-    responses: {
-      200: z.any(),
+    editUser: {
+      method: "PUT",
+      path: "",
+      responses: {
+        200: z.any(),
+      },
+      body: UserSchema,
     },
-    body: UserSchema,
-  },
 
-  selectChurch: {
-    method: "PUT",
-    path: "/users/church",
-    responses: {
-      200: z.any(),
+    selectChurch: {
+      method: "PUT",
+      path: "/church",
+      responses: {
+        200: z.any(),
+      },
+      body: SelectChurchSchema,
     },
-    body: SelectChurchSchema,
   },
-});
+  { pathPrefix: "/users" }
+);

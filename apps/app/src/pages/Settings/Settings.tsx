@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { useEffect, useState } from 'react';
 import '@/lib/boilerplate';
@@ -17,7 +17,6 @@ import UserInvite from './UserInvite';
 import { SettingsSchema, UserSchema, useSettingsSchema } from './settings.models';
 import { Link } from 'react-router';
 import { displayDate } from '@/lib/timeFunctions';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 const planNames = ['Plan Gratuito', 'Plan básico', 'Plan avanzado'];
 
@@ -25,23 +24,19 @@ const Settings = () => {
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
     const [selectedUser, setSelectedUser] = useState<z.infer<typeof UserSchema>>();
-    const [churchData, setChurchData] = useState({
-        plan: 0,
-        name: '',
-        expirationDate: '',
-    });
+
     const settingsForm = useSettingsSchema();
 
-    const fetchData = async () => {
-        const result1 = (await api.get('/churches')).data;
-        settingsForm.setValue('name', result1.name);
-        setChurchData(result1);
-    };
+    const { data: { body: church } = {} } = tsr.churches.get.useQuery({
+        queryKey: ['churches'],
+    });
 
-    const { data: users } = useQuery({
+    useEffect(() => {
+        settingsForm.setValue('name', church?.name);
+    }, [church]);
+
+    const { data: { body: users } = {} } = tsr.permissions.get.useQuery({
         queryKey: ['permissions'],
-        queryFn: async () => (await api.get('/permissions')).data,
-        placeholderData: keepPreviousData,
     });
 
     const handlePortal = async () => {
@@ -52,10 +47,6 @@ const Settings = () => {
     const handleSubmit: any = async (values: z.infer<typeof SettingsSchema>) => {
         await api.put('/churches', values);
     };
-
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     return (
         <div className="space-y-4 w-full">
@@ -98,13 +89,13 @@ const Settings = () => {
                     <CardHeader>
                         <CardTitle>Facturación</CardTitle>
                     </CardHeader>
-                    {churchData.plan > 0 ? (
+                    {church?.plan > 0 ? (
                         <CardContent className="flex flex-col h-full items-start gap-4">
                             <p>
-                                <span className="font-semibold">Plan activo:</span> {planNames[churchData.plan]}
+                                <span className="font-semibold">Plan activo:</span> {planNames[church?.plan]}
                             </p>
                             <p>
-                                <span className="font-semibold">Fecha de expiración:</span> {displayDate(churchData.expirationDate)}
+                                <span className="font-semibold">Fecha de expiración:</span> {displayDate(church?.expirationDate)}
                             </p>
                             <Button onClick={handlePortal} size="sm" className="mt-auto">
                                 Actualizar el plan
@@ -113,7 +104,7 @@ const Settings = () => {
                     ) : (
                         <CardContent className="flex flex-col h-full items-start gap-4">
                             <p>
-                                <span className="font-semibold">Plan activo:</span> {planNames[churchData.plan]}
+                                <span className="font-semibold">Plan activo:</span> {planNames[church?.plan]}
                             </p>
 
                             <Button asChild size="sm" className="mt-auto text-yellow" variant={'outline'}>

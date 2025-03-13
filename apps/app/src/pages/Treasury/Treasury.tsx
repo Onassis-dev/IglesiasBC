@@ -1,6 +1,6 @@
 import '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { CircleDollarSign, MinusCircle, PlusCircle } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,8 +9,6 @@ import PaginationMenu from '@/components/common/PaginationMenu';
 import InfoCard from '@/components/common/InfoCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { displayDate } from '@/lib/timeFunctions';
-
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import TransactionsForm from './TransactionsForm';
 import { usePathStore } from '@/lib/store';
@@ -29,22 +27,31 @@ export const Treasury = () => {
         setId(queryParams.get('id') || '');
     }, []);
 
-    const { data: treasury, status } = useQuery({
-        queryKey: ['transactions', page, filters, id],
-        queryFn: async () => (await api.get('/transactions', { params: { ...filters, page, id } })).data,
+    const { data: { body: treasury } = {}, status } = tsr.transactions.get.useQuery({
+        queryKey: ['transactions', page, filters],
         enabled: !!id,
-        placeholderData: keepPreviousData,
+        queryData: {
+            query: {
+                ...filters,
+                page,
+                id,
+            },
+        },
+    });
+
+    const { data: { body: stats } = {} } = tsr.transactions.getStats.useQuery({
+        queryKey: ['transactions', 'stats', id],
+        queryData: {
+            params: {
+                id,
+            },
+        },
+        enabled: !!id,
     });
 
     useEffect(() => {
         if (treasury?.name) setPath(treasury.name);
     }, [treasury]);
-
-    const { data: stats } = useQuery({
-        queryKey: ['transactions', 'stats', id],
-        queryFn: async () => (await api.get('/transactions/stats/' + id)).data,
-        enabled: !!id,
-    });
 
     useEffect(() => {
         if (!open && !open1) setTimeout(() => setSelectedTransaction({}), 200);

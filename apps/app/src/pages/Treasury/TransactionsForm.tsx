@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { api } from '@/lib/boilerplate';
+import { api, api2, tsr } from '@/lib/boilerplate';
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -8,54 +8,53 @@ import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button, RegisterButton } from '@/components/ui/button';
 import { formatToTZ, formatToUTC } from '@/lib/timeFunctions';
 import { Textarea } from '@/components/ui/textarea';
-import { z } from 'zod';
-import { TransactionSchema, useTransactionSchema } from '../Finances/finances.models';
 import DatePicker from '@/components/common/DatePicker';
-import { useQueryStore } from '@/lib/store';
+import { PostTransactionSchema } from '@iglesiasbc/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 interface Props {
-    transaction: z.infer<typeof TransactionSchema> | null;
+    transaction: (z.infer<typeof PostTransactionSchema> & { id?: number }) | null;
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
 const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
-    const transactionsForm = useTransactionSchema();
+    const client = tsr.useQueryClient();
+    const transactionForm = useForm<z.infer<typeof PostTransactionSchema>>({
+        resolver: zodResolver(PostTransactionSchema),
+    });
+
     const [categories, setCategories] = useState<{ name: string; isIncome: boolean; id: number }[]>([]);
     const [filteredCategories, setFilteredCategories] = useState<any[]>([]);
     const [isIncome, setIsIncome] = useState<boolean | undefined>();
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
 
-    const handleSubmit = async (values: z.infer<typeof TransactionSchema>) => {
-        values.date = values.id ? formatToUTC(values.date) || values.date : values.date;
-        console.log(transaction);
-        if (transaction?.id) {
-            await api.put('/transactions', { ...values, categoryId: parseFloat(values.categoryId) });
-        } else {
-            const queryParams = new URLSearchParams(window.location.search);
-            const id = queryParams.get('id');
-            await api.post('/transactions', { ...values, categoryId: parseFloat(values.categoryId), treasuryId: parseInt(id || '') });
-        }
+    const handleSubmit = async (values: z.infer<typeof PostTransactionSchema>) => {
+        const data = { ...values, date: formatToUTC(values.date) || values.date };
+
+        if (transaction?.id) await api2(tsr.transactions.put, { ...data, id: transaction.id });
+        if (!transaction?.id) await api2(tsr.transactions.post, { ...data });
         client.refetchQueries({ queryKey: ['transactions'] });
         setOpen(false);
     };
 
     useEffect(() => {
-        if (transaction) {
-            transactionsForm.setValue('date', transaction.date ? formatToTZ(transaction.date) || '' : '');
-            transactionsForm.setValue('notes', transaction.notes);
-            transactionsForm.setValue('amount', transaction.amount);
-            transactionsForm.setValue('concept', transaction.concept);
-            transactionsForm.setValue('categoryId', transaction.categoryId?.toString());
-            transactionsForm.setValue('id', transaction.id);
-            setIsIncome(categories.filter((v) => v.id === parseInt(transaction.categoryId))[0]?.isIncome);
-        }
+        if (!transaction) return;
+
+        transactionForm.reset({
+            ...transaction,
+            date: transaction.date ? formatToTZ(transaction.date) || '' : '',
+            categoryId: transaction.categoryId?.toString(),
+        });
+
+        setIsIncome(categories.filter((v) => v.id === parseInt(transaction.categoryId))[0]?.isIncome);
     }, [transaction]);
 
     useEffect(() => {
         setFilteredCategories(categories.filter((v) => v.isIncome === isIncome));
-        if (categories.filter((v) => v.id === parseInt(transactionsForm.getValues('categoryId')))[0]?.isIncome !== isIncome) {
-            transactionsForm.setValue('categoryId', '');
+        if (categories.filter((v) => v.id === parseInt(transactionForm.getValues('categoryId')))[0]?.isIncome !== isIncome) {
+            transactionForm.setValue('categoryId', '');
         }
     }, [isIncome]);
 
@@ -67,9 +66,9 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
         setCategories((await api.get('/options/categories')).data);
     };
 
-    const submit = transactionsForm.handleSubmit((values: z.infer<typeof TransactionSchema>) =>
-        showPromise(handleSubmit(values), transaction ? 'Información actualizada' : 'Transacción registrada')
-    );
+    const submit = transactionForm.handleSubmit((values: z.infer<typeof PostTransactionSchema>) => {
+        showPromise(handleSubmit(values), transaction ? 'Información actualizada' : 'Transacción registrada');
+    });
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -82,10 +81,10 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
                         <SheetTitle>{transaction ? 'Actualizar transacción' : 'Registrar nueva transacción'}</SheetTitle>
                     </SheetHeader>
 
-                    <Form {...transactionsForm}>
+                    <Form {...transactionForm}>
                         <form onSubmit={submit}>
                             <FormField
-                                control={transactionsForm.control}
+                                control={transactionForm.control}
                                 name="concept"
                                 render={({ field }) => (
                                     <FormItem>
@@ -114,7 +113,7 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
                             </FormItem>
 
                             <FormField
-                                control={transactionsForm.control}
+                                control={transactionForm.control}
                                 name="categoryId"
                                 render={({ field }) => (
                                     <FormItem>
@@ -139,7 +138,7 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
                             />
 
                             <FormField
-                                control={transactionsForm.control}
+                                control={transactionForm.control}
                                 name="amount"
                                 render={({ field }) => (
                                     <FormItem>
@@ -152,7 +151,7 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
                                 )}
                             />
                             <FormField
-                                control={transactionsForm.control}
+                                control={transactionForm.control}
                                 name="date"
                                 render={({ field }) => (
                                     <FormItem>
@@ -165,7 +164,7 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
                                 )}
                             />
                             <FormField
-                                control={transactionsForm.control}
+                                control={transactionForm.control}
                                 name="notes"
                                 render={({ field }) => (
                                     <FormItem>

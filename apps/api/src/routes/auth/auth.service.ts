@@ -20,9 +20,10 @@ export class AuthService {
 
     response
       .cookie('session', body.token, httpCookieConfig)
-      .cookie('refresh', body.refreshToken, httpCookieConfig);
+      .cookie('refresh', body.refreshToken, httpCookieConfig)
+      .send(data);
 
-    return res(201, data);
+    return res(201, null);
   }
 
   async signup(body: z.infer<typeof signUpSchema>, response) {
@@ -34,7 +35,8 @@ export class AuthService {
   async logout(response) {
     response
       .cookie('session', '', httpCookieConfig)
-      .cookie('refresh', '', httpCookieConfig);
+      .cookie('refresh', '', httpCookieConfig)
+      .send();
 
     return res(201, null);
   }

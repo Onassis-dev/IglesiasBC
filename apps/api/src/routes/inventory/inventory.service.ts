@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
-  EditInventorySchema,
+  PutInventorySchema,
   IdSchema,
   PostInventorySchema,
   getInventorySchema,
@@ -41,7 +41,7 @@ export class InventoryService {
     return res(200, result);
   }
 
-  async edit(body: z.infer<typeof EditInventorySchema>) {
+  async edit(body: z.infer<typeof PutInventorySchema>) {
     const result =
       await sql`update inventory set ${sql(body)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
     return res(200, result);

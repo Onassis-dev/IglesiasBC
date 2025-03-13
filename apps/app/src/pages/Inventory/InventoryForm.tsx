@@ -1,14 +1,14 @@
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { api } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useEffect } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button, RegisterButton } from '@/components/ui/button';
-import { useItemSchema, type ItemSchema } from './inventory.models';
-import { useQuery } from '@tanstack/react-query';
-import { useQueryStore } from '@/lib/store';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { PostInventorySchema } from '@iglesiasbc/schemas';
+import { useForm } from 'react-hook-form';
 
 interface props {
     id: string | number;
@@ -17,42 +17,35 @@ interface props {
 }
 
 const InventoryForm = ({ id, open, setOpen }: props) => {
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
-    const itemForm = useItemSchema();
-
-    const { data: item } = useQuery({
-        queryKey: ['item', id],
-        queryFn: async () => (await api.get(`/inventory/${id}`)).data,
-        initialData: {},
-        enabled: !!id,
+    const client = tsr.useQueryClient();
+    const itemForm = useForm<z.infer<typeof PostInventorySchema>>({
+        resolver: zodResolver(PostInventorySchema),
     });
 
-    const handleSubmit = async (values: z.infer<typeof ItemSchema>) => {
-        if (id) {
-            await api.put('/inventory', values);
-        } else {
-            await api.post('/inventory', values);
-        }
+    const { data: { body: item } = {} } = tsr.inventory.getOne.useQuery({
+        queryKey: ['item', id],
+        enabled: !!id && open,
+        queryData: {
+            params: {
+                id: String(id),
+            },
+        },
+    });
 
-        client.refetchQueries({ queryKey: ['inventory'] });
+    const handleSubmit = async (values: z.infer<typeof PostInventorySchema>) => {
+        if (id) await api2(tsr.inventory.put, { ...values, id: Number(id) });
+        else await api2(tsr.inventory.post, values);
+
+        client.invalidateQueries({ queryKey: ['inventory'] });
         setOpen(false);
     };
 
     useEffect(() => {
-        if (item) {
-            itemForm.setValue('id', item.id);
-            itemForm.setValue('name', item.name);
-            itemForm.setValue('amount', item.amount);
-            itemForm.setValue('price', item.price);
-            itemForm.setValue('bill', item.bill);
-            itemForm.setValue('brand', item.brand);
-            itemForm.setValue('model', item.model);
-            itemForm.setValue('serie', item.serie);
-            itemForm.setValue('observations', item.observations);
-        }
+        if (!item) return;
+        itemForm.reset({ ...item });
     }, [item]);
 
-    const submit = itemForm.handleSubmit((values: z.infer<typeof ItemSchema>) =>
+    const submit = itemForm.handleSubmit((values: z.infer<typeof PostInventorySchema>) =>
         showPromise(handleSubmit(values), id ? 'Información actualizada' : 'Artículo registrado')
     );
 

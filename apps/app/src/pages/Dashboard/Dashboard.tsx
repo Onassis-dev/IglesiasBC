@@ -1,26 +1,16 @@
 import '@/lib/boilerplate';
 import { AppWindow, Box, DollarSign, Inbox, MessageSquareQuote, Users2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { saveUserData } from '@/lib/accountFunctions';
 import InfoCard from '@/components/common/InfoCard';
 
 const Dashboard = () => {
-    const [stats, setStats] = useState<Record<string, any>>([]);
-    const [userName, setUserName] = useState('');
     const [greeting, setGreeting] = useState('Buenas tardes');
 
-    useEffect(() => {
-        fetchData();
-        updateGreeting();
-    }, []);
-
-    const fetchData = async () => {
-        const result = (await api.get('/dashboard/user')).data;
-        saveUserData(result.userData);
-        setStats(result.stats || []);
-        setUserName(result.userData.username || '');
-    };
+    const { data: { body: { stats, userData } } = {} } = tsr.dashboard.getUser.useQuery({
+        queryKey: ['user-dashboard'],
+    });
 
     const updateGreeting = () => {
         const currentHour = new Date().getHours();
@@ -31,10 +21,18 @@ const Dashboard = () => {
         }
     };
 
+    useEffect(() => {
+        updateGreeting();
+    }, []);
+
+    useEffect(() => {
+        if (userData) saveUserData(userData);
+    }, [userData]);
+
     return (
         <div className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-semibold mb-6 pl-0.5">
-                {greeting} {userName}
+                {greeting} {userData?.username}
             </h2>
             <div className="grid grid-cols-1 gap-6">
                 {stats.members && (

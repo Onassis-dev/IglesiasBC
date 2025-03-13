@@ -11,7 +11,6 @@ import InfoCard from '@/components/common/InfoCard';
 import MembersCard from './MembersCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { displayDate } from '@/lib/timeFunctions';
-import { keepPreviousData } from '@tanstack/react-query';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import { calculateAge } from './members.lib';
 import MembersForm from './MembersForm';
@@ -27,7 +26,6 @@ export function Members() {
 
     const { data: { body: members } = {}, status } = tsr.members.get.useQuery({
         queryKey: ['members', page, filters],
-        placeholderData: keepPreviousData,
         queryData: {
             query: {
                 page,

@@ -9,20 +9,15 @@ export const getTransactionsSchema = z.object({
 });
 
 export const PostTransactionSchema = z.object({
-  date: z.string(),
+  date: z.string().date().or(z.date()),
   notes: z.string().optional().nullable(),
   concept: z.string(),
-  categoryId: z.number(),
+  categoryId: z.string(),
   treasuryId: z.number(),
-  amount: z.number(),
+  amount: z.string().regex(/^\d+(\.\d+)?$/),
 });
 
-export const EditTransactionSchema = z.object({
-  date: z.string(),
-  notes: z.string().optional().nullable(),
-  concept: z.string(),
-  categoryId: z.number(),
-  amount: z.number(),
+export const EditTransactionSchema = PostTransactionSchema.extend({
   id: z.number(),
 });
 

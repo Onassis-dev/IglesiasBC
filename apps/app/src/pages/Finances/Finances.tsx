@@ -1,6 +1,6 @@
 import '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { CircleDollarSign, MinusCircle, PlusCircle } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,8 +8,6 @@ import { SearchInput } from '@/components/ui/input';
 import PaginationMenu from '@/components/common/PaginationMenu';
 import InfoCard from '@/components/common/InfoCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
-
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import TreasuriesForm from './TreasuriesForm';
 
@@ -20,13 +18,18 @@ export const Finances = () => {
     const [filters, setFilters] = useState<any>({ name: '' });
     const [page, setPage] = useState(1);
 
-    const { data: treasuries, status } = useQuery({
+    const { data: { body: treasuries } = {}, status } = tsr.treasuries.get.useQuery({
         queryKey: ['treasuries', page, filters],
-        queryFn: async () => (await api.get('/treasuries', { params: { ...filters, page } })).data,
-        placeholderData: keepPreviousData,
+        queryData: {
+            query: {
+                ...filters,
+                page,
+            },
+        },
     });
-    const { data: stats } = useQuery({ queryKey: ['treasuries', 'stats'], queryFn: async () => (await api.get('/treasuries/stats')).data });
-
+    const { data: { body: stats } = {} } = tsr.treasuries.getStats.useQuery({
+        queryKey: ['treasuries', 'stats'],
+    });
     useEffect(() => {
         if (!open && !open1) setTimeout(() => setSelectedTreasury({}), 200);
     }, [open, open1]);

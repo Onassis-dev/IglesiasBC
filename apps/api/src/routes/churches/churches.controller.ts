@@ -9,23 +9,23 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 export class ChurchesController {
   constructor(private readonly churchesService: ChurchesService) {}
 
-  @TsRestHandler(churchesContract.getChurch)
+  @TsRestHandler(churchesContract.get)
   getChurch() {
-    return tsRestHandler(churchesContract.getChurch, async () =>
+    return tsRestHandler(churchesContract.get, async () =>
       this.churchesService.getChurch(),
     );
   }
 
-  @TsRestHandler(churchesContract.createChurch)
+  @TsRestHandler(churchesContract.create)
   createChurch() {
-    return tsRestHandler(churchesContract.createChurch, async ({ body }) => {
+    return tsRestHandler(churchesContract.create, async ({ body }) => {
       return this.churchesService.createChurch(body);
     });
   }
 
-  @TsRestHandler(churchesContract.editChurch)
+  @TsRestHandler(churchesContract.edit)
   editChurch() {
-    return tsRestHandler(churchesContract.editChurch, async ({ body }) => {
+    return tsRestHandler(churchesContract.edit, async ({ body }) => {
       return this.churchesService.editChurch(body);
     });
   }

@@ -22,40 +22,43 @@ export const EditPermissionSchema = z.object({
 
 const c = initContract();
 
-export const permissionsContract = c.router({
-  getPermissions: {
-    method: "GET",
-    path: "/permissions",
-    responses: {
-      200: z.any(),
+export const permissionsContract = c.router(
+  {
+    get: {
+      method: "GET",
+      path: "",
+      responses: {
+        200: z.any(),
+      },
     },
-  },
 
-  createPermission: {
-    method: "POST",
-    path: "/permissions",
-    responses: {
-      201: z.any(),
+    create: {
+      method: "POST",
+      path: "",
+      responses: {
+        201: z.any(),
+      },
+      body: PostPermissionSchema,
     },
-    body: PostPermissionSchema,
-  },
 
-  editPermission: {
-    method: "PUT",
-    path: "/permissions",
-    responses: {
-      200: z.any(),
+    edit: {
+      method: "PUT",
+      path: "",
+      responses: {
+        200: z.any(),
+      },
+      body: EditPermissionSchema,
     },
-    body: EditPermissionSchema,
-  },
 
-  deletePermission: {
-    method: "DELETE",
-    path: "/permissions/:id",
-    responses: {
-      200: z.any(),
+    delete: {
+      method: "DELETE",
+      path: "/:id",
+      responses: {
+        200: z.any(),
+      },
+      pathParams: IdSchema,
+      body: null,
     },
-    pathParams: IdSchema,
-    body: null,
   },
-});
+  { pathPrefix: "/permissions" }
+);

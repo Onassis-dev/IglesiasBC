@@ -1,7 +1,7 @@
 import '@/lib/boilerplate';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { CalendarPlus, EditIcon, Eye, EyeIcon, Inbox, MessageSquarePlus, Trash } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +9,6 @@ import { SearchInput } from '@/components/ui/input';
 import PaginationMenu from '@/components/common/PaginationMenu';
 import BlogForm from './BlogForm';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { displayDate } from '@/lib/timeFunctions';
 import BlogAlert from './BlogAlert';
 import InfoCard from '@/components/common/InfoCard';
@@ -22,19 +21,22 @@ export function Blog() {
     const [filters, setFilters] = useState<any>({ title: '' });
     const [page, setPage] = useState(1);
 
-    const { data: posts } = useQuery({
+    const { data: { body: posts } = {} } = tsr.posts.get.useQuery({
         queryKey: ['posts', page, filters],
-        queryFn: async () => (await api.get('/posts', { params: { ...filters, page } })).data,
-        placeholderData: keepPreviousData,
+        queryData: {
+            query: {
+                page,
+                ...filters,
+            },
+        },
     });
-    const { data: stats } = useQuery({
+
+    const { data: { body: stats } = {} } = tsr.posts.getStats.useQuery({
         queryKey: ['posts', 'stats'],
-        queryFn: async () => (await api.get('/posts/stats')).data,
     });
-    const { data: [websiteData] = [] } = useQuery({
+
+    const { data: { body: websiteData } = {} } = tsr.builder.getWebsite.useQuery({
         queryKey: ['websiteData'],
-        queryFn: async () => (await api.get('/builder/website')).data,
-        placeholderData: keepPreviousData,
     });
 
     useEffect(() => {

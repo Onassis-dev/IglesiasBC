@@ -4,13 +4,12 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { z } from 'zod';
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Textarea } from '@/components/ui/textarea';
 import { WebsiteSchema, useWebsiteSchema } from './websites.models';
 import ColorPicker from '@/components/common/ColorPicker';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useQueryStore } from '@/lib/store';
 
 const WebSiteForm = () => {
@@ -18,10 +17,8 @@ const WebSiteForm = () => {
     const client = useQueryStore((queryClient) => queryClient.queryClient);
     const [color, setColor] = useState('#000000');
 
-    const { data: [websiteData] = [], isLoading } = useQuery({
+    const { data: { body: [websiteData] = [] } = {}, isLoading } = tsr.builder.getWebsite.useQuery({
         queryKey: ['websiteData'],
-        queryFn: async () => (await api.get('/builder/website')).data,
-        placeholderData: keepPreviousData,
     });
 
     useEffect(() => {

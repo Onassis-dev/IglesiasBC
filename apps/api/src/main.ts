@@ -12,6 +12,7 @@ import { DBFilter } from './interceptors/db/db.filter';
 import { contract } from '@iglesiasbc/schemas';
 import * as dotenv from 'dotenv';
 dotenv.config();
+process.env.TZ = 'UTC';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

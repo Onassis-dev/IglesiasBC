@@ -10,11 +10,24 @@ export const getMembersSchema = z.object({
 export const PostMemberSchema = z.object({
   name: z.string(),
   cellphone: z.string().optional().nullable(),
-  baptized: z.string().transform((value) => value === "true"),
-  email: z.string().email().optional().nullable(),
-  birthday: z.string(),
-  joinDate: z.string(),
-  genre: z.string(),
+  baptized: z.string(),
+  email: z
+    .string()
+    .transform((v) => (v === "" ? null : v))
+    .nullable()
+    .optional()
+    .refine(
+      (v) =>
+        v === null ||
+        v === undefined ||
+        z.string().email().safeParse(v).success,
+      {
+        message: "El correo electrónico es invalido",
+      }
+    ),
+  birthday: z.string().date().or(z.date()),
+  joinDate: z.string().date().or(z.date()),
+  genre: z.string().length(1),
   civilStatus: z.string(),
   positionId: z.string(),
 });
@@ -48,7 +61,7 @@ export const membersContract = c.router(
       path: "/:id",
       method: "GET",
       responses: {
-        200: z.any(),
+        200: z.record(z.string(), z.any()),
       },
       pathParams: IdSchema,
     },
@@ -75,10 +88,10 @@ export const membersContract = c.router(
       body: PostMemberSchema,
     },
     put: {
-      path: "/:id",
+      path: "",
       method: "PUT",
       responses: {
-        200: z.any(),
+        200: null,
       },
       body: PutMemberSchema,
     },

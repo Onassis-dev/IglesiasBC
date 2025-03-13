@@ -11,8 +11,7 @@ export const PostTreasurySchema = z.object({
   name: z.string(),
 });
 
-export const EditTreasurySchema = z.object({
-  name: z.string(),
+export const EditTreasurySchema = PostTreasurySchema.extend({
   id: z.number(),
 });
 

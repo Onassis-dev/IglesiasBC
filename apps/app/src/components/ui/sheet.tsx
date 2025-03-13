@@ -72,7 +72,7 @@ const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
 SheetHeader.displayName = 'SheetHeader';
 
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn('flex border-t pb-3 pt-3 rounded-b-md px-8 mt-auto left-0 right-0 bg-background flex-row space-x-2', className)} {...props} />
+    <div className={cn('flex border-t pb-3 pt-3 rounded-b-xl px-8 mt-auto left-0 right-0 bg-background flex-row space-x-2', className)} {...props} />
 );
 SheetFooter.displayName = 'SheetFooter';
 

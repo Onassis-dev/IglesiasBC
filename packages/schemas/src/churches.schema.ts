@@ -7,33 +7,36 @@ export const ChurchSchema = z.object({
 
 const c = initContract();
 
-export const churchesContract = c.router({
-  getChurch: {
-    method: "GET",
-    path: "/churches",
-    responses: {
-      200: z.any(),
+export const churchesContract = c.router(
+  {
+    get: {
+      method: "GET",
+      path: "",
+      responses: {
+        200: z.any(),
+      },
     },
-  },
 
-  createChurch: {
-    method: "POST",
-    path: "/churches",
-    responses: {
-      201: z.any(),
-      400: z.object({
-        message: z.string(),
-      }),
+    create: {
+      method: "POST",
+      path: "",
+      responses: {
+        201: z.any(),
+        400: z.object({
+          message: z.string(),
+        }),
+      },
+      body: ChurchSchema,
     },
-    body: ChurchSchema,
-  },
 
-  editChurch: {
-    method: "PUT",
-    path: "/churches",
-    responses: {
-      200: z.null(),
+    edit: {
+      method: "PUT",
+      path: "",
+      responses: {
+        200: z.null(),
+      },
+      body: ChurchSchema,
     },
-    body: ChurchSchema,
   },
-});
+  { pathPrefix: "/churches" }
+);
