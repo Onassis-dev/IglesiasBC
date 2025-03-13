@@ -105,10 +105,10 @@ async function validateSession(
     if (!requiredPermission) return true;
     return data['perm_' + requiredPermission];
   } catch (err) {
-    if (err.status === 400) throw new HttpException('NOCHURCH', 400);
-    if (err.status === 401)
+    if (err?.status === 400) throw new HttpException('NOCHURCH', 400);
+    if (err?.status === 401)
       throw new HttpException('Tu sesión ah expirado', 401);
-    if (err.status === 403)
+    if (err?.status === 403)
       throw new HttpException(
         'Esta función no esta disponible en tu plan',
         403,

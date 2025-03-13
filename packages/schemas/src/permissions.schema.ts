@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { initContract } from "@ts-rest/core";
+import { IdSchema } from "./general.schema";
 
 export const PostPermissionSchema = z.object({
   email: z
@@ -16,4 +18,44 @@ export const EditPermissionSchema = z.object({
   perm_classes: z.boolean().optional(),
   perm_website: z.boolean().optional(),
   perm_blog: z.boolean().optional(),
+});
+
+const c = initContract();
+
+export const permissionsContract = c.router({
+  getPermissions: {
+    method: "GET",
+    path: "/permissions",
+    responses: {
+      200: z.any(),
+    },
+  },
+
+  createPermission: {
+    method: "POST",
+    path: "/permissions",
+    responses: {
+      201: z.any(),
+    },
+    body: PostPermissionSchema,
+  },
+
+  editPermission: {
+    method: "PUT",
+    path: "/permissions",
+    responses: {
+      200: z.any(),
+    },
+    body: EditPermissionSchema,
+  },
+
+  deletePermission: {
+    method: "DELETE",
+    path: "/permissions/:id",
+    responses: {
+      200: z.any(),
+    },
+    pathParams: IdSchema,
+    body: null,
+  },
 });

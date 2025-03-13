@@ -1,31 +1,38 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import { loginSchema, googleSchema, signUpSchema } from '@iglesiasbc/schemas';
-import { ApiTags } from '@nestjs/swagger';
+import { authContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
+import { Response } from 'express';
 
-@ApiTags('Auth')
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
-  login(@Body(new ZodPiPe(loginSchema)) body, @Res() res) {
-    return this.authService.login(body, res);
+  @TsRestHandler(authContract.login)
+  login(@Res() response: Response) {
+    return tsRestHandler(authContract.login, async ({ body }) => {
+      return this.authService.login(body, response);
+    });
   }
 
-  @Post('signup')
-  signup(@Body(new ZodPiPe(signUpSchema)) body, @Res() res) {
-    return this.authService.signup(body, res);
+  @TsRestHandler(authContract.signup)
+  signup(@Res() response: Response) {
+    return tsRestHandler(authContract.signup, async ({ body }) => {
+      return this.authService.signup(body, response);
+    });
   }
 
-  @Post('google')
-  signInWithGoogle(@Body(new ZodPiPe(googleSchema)) body, @Res() res) {
-    return this.authService.signInWithGoogle(body, res);
+  @TsRestHandler(authContract.google)
+  signInWithGoogle(@Res() response: Response) {
+    return tsRestHandler(authContract.google, async ({ body }) => {
+      return this.authService.signInWithGoogle(body, response);
+    });
   }
 
-  @Post('logout')
-  logout(@Res() res) {
-    return this.authService.logout(res);
+  @TsRestHandler(authContract.logout)
+  logout(@Res() response: Response) {
+    return tsRestHandler(authContract.logout, async () => {
+      return this.authService.logout(response);
+    });
   }
 }

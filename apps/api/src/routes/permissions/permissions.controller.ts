@@ -1,46 +1,48 @@
-import {
-  Controller,
-  UseGuards,
-  Get,
-  Post,
-  Body,
-  Delete,
-  Param,
-  Put,
-} from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  DeleteSchema,
-  EditPermissionSchema,
-  PostPermissionSchema,
-} from '@iglesiasbc/schemas';
+import { permissionsContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Permissions')
-@Controller('permissions')
+@Controller()
 @UseGuards(new AuthGuard())
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
-  @Get()
-  getPermission() {
-    return this.permissionsService.getPermissions();
+  @TsRestHandler(permissionsContract.getPermissions)
+  getPermissions() {
+    return tsRestHandler(permissionsContract.getPermissions, async () => {
+      return this.permissionsService.getPermissions();
+    });
   }
 
-  @Post()
-  createPermission(@Body(new ZodPiPe(PostPermissionSchema)) body) {
-    return this.permissionsService.createPermission(body);
+  @TsRestHandler(permissionsContract.createPermission)
+  createPermission() {
+    return tsRestHandler(
+      permissionsContract.createPermission,
+      async ({ body }) => {
+        return this.permissionsService.createPermission(body);
+      },
+    );
   }
 
-  @Put()
-  editPermission(@Body(new ZodPiPe(EditPermissionSchema)) body) {
-    return this.permissionsService.editPermission(body);
+  @TsRestHandler(permissionsContract.editPermission)
+  editPermission() {
+    return tsRestHandler(
+      permissionsContract.editPermission,
+      async ({ body }) => {
+        return this.permissionsService.editPermission(body);
+      },
+    );
   }
 
-  @Delete(':id')
-  deletePermission(@Param(new ZodPiPe(DeleteSchema)) param) {
-    return this.permissionsService.deletePermission(param);
+  @TsRestHandler(permissionsContract.deletePermission)
+  deletePermission() {
+    return tsRestHandler(
+      permissionsContract.deletePermission,
+      async ({ params }) => {
+        return this.permissionsService.deletePermission(params);
+      },
+    );
   }
 }

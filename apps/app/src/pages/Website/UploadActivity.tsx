@@ -33,9 +33,14 @@ const UploadActivity = ({ activity }: any) => {
 
     const handleSubmit = async (values: z.infer<typeof ActivitySchema>) => {
         const formData = new FormData();
+
+        formData.append('title', values.title);
+        formData.append('text', values.text);
+
         if (activity) {
+            formData.append('id', activity.id);
             formData.append('image', selectedFile);
-            await api.put(`/builder/activity?title=${values.title}&text=${values.text}&id=${activity.id}`, formData, {
+            await api.put(`/builder/activity`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -52,7 +57,6 @@ const UploadActivity = ({ activity }: any) => {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
-                params: values,
             });
 
             setOpen(false);
@@ -61,7 +65,9 @@ const UploadActivity = ({ activity }: any) => {
         }
     };
 
-    const submit = activitiesForm.handleSubmit((values: z.infer<typeof ActivitySchema>) => showPromise(handleSubmit(values), activity ? 'Información actualizada' : 'Actividad registrada'));
+    const submit = activitiesForm.handleSubmit((values: z.infer<typeof ActivitySchema>) =>
+        showPromise(handleSubmit(values), activity ? 'Información actualizada' : 'Actividad registrada')
+    );
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -111,7 +117,7 @@ const UploadActivity = ({ activity }: any) => {
                             <FormItem>
                                 <FormLabel>Imagen</FormLabel>
                                 <FormControl>
-                                    <Input type="file" accept='image/*' id="username" onChange={(e) => handleFile(e)} />
+                                    <Input type="file" accept="image/*" id="username" onChange={(e) => handleFile(e)} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

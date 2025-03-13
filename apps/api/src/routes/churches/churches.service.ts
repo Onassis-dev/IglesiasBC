@@ -1,9 +1,10 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import { ChurchSchema } from '@iglesiasbc/schemas';
 import { getUserData } from 'src/utils/getUserData';
+import { res, error } from 'src/utils/response';
 
 @Injectable()
 export class ChurchesService {
@@ -14,15 +15,17 @@ export class ChurchesService {
       await sql`select users.plan, users."expirationDate", churches.name from
       users join churches on users.id = churches."ownerId"
       where churches.id = ${this.req.getChurchId()}`;
-    return church;
+
+    return res(200, church);
   }
 
   async createChurch(body: z.infer<typeof ChurchSchema>) {
     const [church] =
       await sql`select 1 from churches where "ownerId" = ${this.req.getUserId()}`;
 
-    if (church)
-      throw new HttpException('Ya tienes registrada una iglesia', 400);
+    if (church) {
+      return error('Ya tienes registrada una iglesia', 400);
+    }
 
     await sql.begin(async (sql) => {
       const [{ id }] =
@@ -33,11 +36,11 @@ export class ChurchesService {
     });
 
     const data = await getUserData(this.req.getUserId());
-    return data;
+    return res(201, data);
   }
 
   async editChurch(body: z.infer<typeof ChurchSchema>) {
     await sql`update "churches" set ${sql(body)} where id = ${this.req.getChurchId()} returning 1`;
-    return;
+    return res(200, null);
   }
 }

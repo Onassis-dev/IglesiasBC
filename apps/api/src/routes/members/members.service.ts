@@ -216,5 +216,7 @@ export class MembersService {
         await sql`insert into members ${sql(data)}`;
       }
     });
+
+    return res(200, '');
   }
 }

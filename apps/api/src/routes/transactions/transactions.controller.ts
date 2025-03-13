@@ -1,11 +1,10 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
+
 import { transactionsContract } from '@iglesiasbc/schemas';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Transactions')
 @Controller()
 @UseGuards(new AuthGuard('finances'))
 export class TransactionsController {

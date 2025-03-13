@@ -26,7 +26,7 @@ export class DBFilter<T extends PostgresError> {
     console.log(exception.message);
     console.log(exception.detail);
 
-    response.status(HttpStatus.BAD_REQUEST).send({
+    response?.status(HttpStatus.BAD_REQUEST).send({
       errors: exception,
       message: message,
       statusCode: HttpStatus.BAD_REQUEST,

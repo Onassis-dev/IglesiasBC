@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { authSchema, registerSchema } from '@iglesiasbc/schemas';
+import { loginSchema, signUpSchema, googleSchema } from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { httpCookieConfig } from 'src/utils/cookiesConfig';
 import { getUserData } from 'src/utils/getUserData';
+import { res } from 'src/utils/response';
 
 @Injectable()
 export class AuthService {
-  async login(body: z.infer<typeof authSchema>, res) {
+  async login(body: z.infer<typeof loginSchema>, response) {
     let data: any = await getUserData(body.email);
 
     if (!data?.userId) {
@@ -17,26 +18,28 @@ export class AuthService {
       data.owner = data.userId === data.ownerId;
     }
 
-    res
+    response
       .cookie('session', body.token, httpCookieConfig)
-      .cookie('refresh', body.refreshToken, httpCookieConfig)
-      .send(data);
+      .cookie('refresh', body.refreshToken, httpCookieConfig);
+
+    return res(201, data);
   }
 
-  async signup(body: z.infer<typeof registerSchema>, res) {
+  async signup(body: z.infer<typeof signUpSchema>, response) {
     await sql`insert into "users" ("email", "username") values (${body.email}, ${body.username})`;
 
-    return this.login(body, res);
+    return this.login(body, response);
   }
 
-  async logout(res) {
-    res
+  async logout(response) {
+    response
       .cookie('session', '', httpCookieConfig)
-      .cookie('refresh', '', httpCookieConfig)
-      .send();
+      .cookie('refresh', '', httpCookieConfig);
+
+    return res(201, null);
   }
 
-  async signInWithGoogle(body: z.infer<typeof authSchema>, res) {
+  async signInWithGoogle(body: z.infer<typeof googleSchema>, response) {
     let data: any = await getUserData(body.email);
 
     if (!data?.userId) {
@@ -46,7 +49,7 @@ export class AuthService {
       if (data) data.owner = data.userId === data.ownerId;
     }
 
-    if (!data?.userId) return this.signup(body, res);
-    return this.login(body, res);
+    if (!data?.userId) return this.signup(body, response);
+    return this.login(body, response);
   }
 }

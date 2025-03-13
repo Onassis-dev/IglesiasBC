@@ -3,6 +3,7 @@ import { getWebsitePostSchema, getWebsiteSchema } from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { parseTitle } from 'src/utils/commonUtils';
+import { res } from 'src/utils/response';
 
 @Injectable()
 export class WebsitesService {
@@ -18,9 +19,9 @@ export class WebsitesService {
 
       await sql`insert into websiteviews ("websiteId") values (${website.id})`;
 
-      return { ...website, images };
+      return res(200, { ...website, images });
     } catch (err) {
-      throw new HttpException('', 404);
+      throw new HttpException('No se encontro la pagina', 404);
     }
   }
 
@@ -34,9 +35,9 @@ export class WebsitesService {
       const events =
         await sql`select "title","date","img" from "events" where "churchId" = ${website.churchId} order by date desc`;
 
-      return { ...website, events };
+      return res(200, { ...website, events });
     } catch (err) {
-      throw new HttpException('', 404);
+      throw new HttpException('No se encontro la pagina', 404);
     }
   }
 
@@ -50,9 +51,9 @@ export class WebsitesService {
       const posts =
         await sql`select title, img, description from posts where "churchId" = ${website.churchId} order by publication desc, id desc`;
 
-      return { ...website, posts };
+      return res(200, { ...website, posts });
     } catch (err) {
-      throw new HttpException('', 404);
+      throw new HttpException('No se encontro la pagina', 404);
     }
   }
 
@@ -66,9 +67,9 @@ export class WebsitesService {
       const activities =
         await sql`select "title","text","img" from "activities" where "churchId" = ${website.churchId}`;
 
-      return { ...website, activities };
+      return res(200, { ...website, activities });
     } catch (err) {
-      throw new HttpException('', 404);
+      throw new HttpException('No se encontro la pagina', 404);
     }
   }
 
@@ -85,9 +86,9 @@ export class WebsitesService {
 
       await sql`insert into postviews ("postId") values (${post.id})`;
 
-      return { website, post };
+      return res(200, { website, post });
     } catch (err) {
-      throw new HttpException('', 404);
+      throw new HttpException('No se encontro la pagina', 404);
     }
   }
 }

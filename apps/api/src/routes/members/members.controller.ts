@@ -3,16 +3,14 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
-  Post,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
+
 import { FileInterceptor } from '@nest-lab/fastify-multer';
 import { membersContract } from '@iglesiasbc/schemas';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Members')
 @Controller()
 @UseGuards(new AuthGuard('members'))
 export class MembersController {
@@ -67,9 +65,11 @@ export class MembersController {
     );
   }
 
-  @Post('import')
+  @TsRestHandler(membersContract.import)
   @UseInterceptors(FileInterceptor('file'))
   import(@UploadedFile() file) {
-    return this.membersService.import(file);
+    return tsRestHandler(membersContract.import, async () =>
+      this.membersService.import(file),
+    );
   }
 }

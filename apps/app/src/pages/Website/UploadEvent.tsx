@@ -31,12 +31,13 @@ const UploadEvent = ({}: any) => {
         const formData = new FormData();
 
         formData.append('image', selectedFile);
+        formData.append('title', values.title);
+        formData.append('date', format(values.date, 'yyyy-MM-dd'));
 
         await api.post('/builder/event', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
-            params: { ...values, date: format(values.date, 'yyyy-MM-dd') },
         });
 
         setOpen(false);
@@ -51,7 +52,7 @@ const UploadEvent = ({}: any) => {
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <button className="rounded-xl aspect-square  border-input border flex justify-center items-center">
-                    <PlusIcon className="w-14 h-14"></PlusIcon>
+                    <PlusIcon strokeWidth={1} className="w-14 h-14"></PlusIcon>
                 </button>
             </SheetTrigger>
             <SheetContent className="sm:max-w-[425px]">
@@ -91,7 +92,7 @@ const UploadEvent = ({}: any) => {
                             <FormItem>
                                 <FormLabel>Imagen</FormLabel>
                                 <FormControl>
-                                    <Input type="file" accept='image/*' id="username" onChange={(e) => handleFile(e)} />
+                                    <Input type="file" accept="image/*" id="username" onChange={(e) => handleFile(e)} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

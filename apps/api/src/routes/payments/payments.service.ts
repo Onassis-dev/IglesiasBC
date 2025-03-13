@@ -1,9 +1,11 @@
-import { FastifyRequest } from 'fastify';
 import { HttpException, Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import Stripe from 'stripe';
 import sql from 'src/utils/db';
 import { ContextProvider } from 'src/interceptors/contextProvider';
+import { res } from 'src/utils/response';
+import { z } from 'zod';
+import { CheckoutSchema } from '@iglesiasbc/schemas';
 
 dotenv.config();
 
@@ -38,7 +40,8 @@ export class PaymentsService {
       event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
     } catch (err) {
       console.log(err);
-      throw new HttpException(`Webhook Error: ${err.message}`, 400);
+
+      throw new HttpException(`Webhook Error: ${(err as any).message}`, 400);
     }
 
     const paymentIntent = event.data.object;
@@ -111,12 +114,14 @@ export class PaymentsService {
     return;
   }
 
-  async checkout(body, req: FastifyRequest) {
+  async checkout(body: z.infer<typeof CheckoutSchema>, headers: any) {
     const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
     const [{ email }] =
       await sql`select email from "users" where id = ${this.req.getUserId()}`;
-    if (!email) throw new HttpException('No tienes una cuenta', 400);
+    if (!email) {
+      return res(400, { message: 'No tienes una cuenta' });
+    }
 
     const session = await stripe.checkout.sessions.create({
       ui_mode: 'embedded',
@@ -133,27 +138,27 @@ export class PaymentsService {
         },
       ],
       mode: 'subscription',
-      return_url: req.headers.origin,
+      return_url: headers.origin,
     });
 
-    return { clientSecret: session.client_secret };
+    return res(200, { clientSecret: session.client_secret });
   }
 
-  async portal(req: FastifyRequest) {
+  async portal(headers: any) {
     const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
     const [{ stripeId }] =
       await sql`select "stripeId" from "users" where id = ${this.req.getUserId()}`;
-    if (!stripeId) throw new HttpException('No tienes una suscripción', 400);
-
-    console.log(stripeId);
+    if (!stripeId) {
+      return res(400, { message: 'No tienes una suscripción' });
+    }
 
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: stripeId,
-      return_url: req.headers.origin,
+      return_url: headers.origin,
       locale: 'es',
     });
 
-    return { id: portalSession.id, url: portalSession.url };
+    return res(200, { id: portalSession.id, url: portalSession.url });
   }
 }

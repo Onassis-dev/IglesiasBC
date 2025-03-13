@@ -1,28 +1,32 @@
-import { Controller, Put, Body, UseGuards, Post, Get } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { ChurchesService } from './churches.service';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
-import { ChurchSchema } from '@iglesiasbc/schemas';
+import { churchesContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Churches')
-@Controller('churches')
+@Controller()
 @UseGuards(new AuthGuard())
 export class ChurchesController {
   constructor(private readonly churchesService: ChurchesService) {}
 
-  @Get()
+  @TsRestHandler(churchesContract.getChurch)
   getChurch() {
-    return this.churchesService.getChurch();
+    return tsRestHandler(churchesContract.getChurch, async () =>
+      this.churchesService.getChurch(),
+    );
   }
 
-  @Post()
-  createChurch(@Body(new ZodPiPe(ChurchSchema)) body) {
-    return this.churchesService.createChurch(body);
+  @TsRestHandler(churchesContract.createChurch)
+  createChurch() {
+    return tsRestHandler(churchesContract.createChurch, async ({ body }) => {
+      return this.churchesService.createChurch(body);
+    });
   }
 
-  @Put()
-  editChurch(@Body(new ZodPiPe(ChurchSchema)) body) {
-    return this.churchesService.editChurch(body);
+  @TsRestHandler(churchesContract.editChurch)
+  editChurch() {
+    return tsRestHandler(churchesContract.editChurch, async ({ body }) => {
+      return this.churchesService.editChurch(body);
+    });
   }
 }

@@ -1,11 +1,10 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { InventoryService } from './inventory.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
+
 import { inventoryContract } from '@iglesiasbc/schemas';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Inventory')
 @Controller()
 @UseGuards(new AuthGuard('inventory'))
 export class InventoryController {

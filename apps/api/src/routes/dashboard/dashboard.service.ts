@@ -1,8 +1,9 @@
 import { formatMonths } from 'src/utils/commonUtils';
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import sql from 'src/utils/db';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import { getUserData } from 'src/utils/getUserData';
+import { res } from 'src/utils/response';
 
 @Injectable()
 export class DashboardService {
@@ -14,7 +15,11 @@ export class DashboardService {
       await sql`SELECT "ownerId" from churches where id = ${churchId}`
     )[0];
 
-    if (ownerId !== this.req.getUserId()) throw new HttpException('', 403);
+    if (ownerId !== this.req.getUserId()) {
+      return res(403, {
+        message: 'No tienes permiso para ver esta información',
+      });
+    }
 
     const userData = await getUserData(this.req.getUserId());
 
@@ -41,7 +46,7 @@ export class DashboardService {
       WHERE treasuries."churchId" = ${churchId}`
     )[0];
 
-    stats.balance = stats.income - stats.expense;
+    stats.balance = (stats.income - stats.expense).toString();
 
     const lastMembers =
       await sql`SELECT name, (SELECT name from positions where id = "positionId") as position from members where "churchId" = ${churchId} order by id desc limit 6`;
@@ -53,7 +58,7 @@ export class DashboardService {
       await sql`SELECT "title" from subjects where (SELECT "churchId" from classes where id = "classId") = ${churchId} order by id desc limit 6`;
 
     const lastMovements =
-      await sql`SELECT "concept", date, amount, (SELECT "isIncome" from financescategories where id = "categoryId") from transactions where (SELECT "churchId" from treasuries where id = "treasuryId") = ${churchId} order by id desc limit 8`;
+      await sql`SELECT "concept", date, amount, (SELECT "isIncome" from financescategories where id = "categoryId") as "isIncome" from transactions where (SELECT "churchId" from treasuries where id = "treasuryId") = ${churchId} order by id desc limit 8`;
 
     const lastMaterials =
       await sql`SELECT "name", amount, price from inventory where "churchId" = ${churchId} order by id desc limit 8`;
@@ -98,7 +103,7 @@ export class DashboardService {
     ORDER BY 
       month;`;
 
-    return {
+    return res(200, {
       stats,
       lastMembers,
       lastCertificates,
@@ -108,12 +113,11 @@ export class DashboardService {
       members: formatMonths(members, ['Registros']),
       movements: formatMonths(movements, ['Egresos', 'Ingresos']),
       userData,
-    };
+    });
   }
 
   async getUser() {
     const churchId = this.req.getChurchId();
-
     const userData = await getUserData(this.req.getUserId());
 
     const stats = (
@@ -124,29 +128,9 @@ export class DashboardService {
       ${userData.perm_finances ? sql`COALESCE(SUM(CASE WHEN financescategories."isIncome" = true THEN amount ELSE 0 END), 0) as income,` : sql``}
       ${userData.perm_finances ? sql`COALESCE(SUM(CASE WHEN financescategories."isIncome" = false THEN amount ELSE 0 END), 0) as expense,` : sql``}
       ${userData.perm_inventory ? sql`COALESCE((SELECT SUM(price * amount) FROM inventory WHERE "churchId" = ${churchId}), 0) as inventory,` : sql``}
-
-      ${
-        userData.perm_classes
-          ? sql` (SELECT count(*) FROM subjects 
-          JOIN classes ON subjects."classId" = classes.id
-          WHERE classes."churchId" = ${churchId}) as students,`
-          : sql``
-      }
-      ${
-        userData.perm_blog
-          ? sql`(SELECT count(*) FROM postviews
-          JOIN posts ON posts.id = postviews."postId"
-          WHERE posts."churchId" = ${churchId}) as blog,`
-          : sql``
-      }
-          ${
-            userData.perm_website
-              ? sql`(SELECT count(*) FROM websiteviews
-            JOIN websites ON websites.id = websiteviews."websiteId"
-            WHERE websites."churchId" = ${churchId}) as website`
-              : sql``
-          }
-
+      ${userData.perm_classes ? sql`(SELECT count(*) FROM subjects JOIN classes ON subjects."classId" = classes.id WHERE classes."churchId" = ${churchId}) as students,` : sql``}
+      ${userData.perm_blog ? sql`(SELECT count(*) FROM postviews JOIN posts ON posts.id = postviews."postId" WHERE posts."churchId" = ${churchId}) as blog,` : sql``}
+      ${userData.perm_website ? sql`(SELECT count(*) FROM websiteviews JOIN websites ON websites.id = websiteviews."websiteId" WHERE websites."churchId" = ${churchId}) as website` : sql``}
       FROM transactions
       JOIN financescategories ON financescategories.id = transactions."categoryId"
       JOIN treasuries ON treasuries.id = transactions."treasuryId"
@@ -157,6 +141,6 @@ export class DashboardService {
       stats.balance = (stats.income - stats.expense).toString();
     }
 
-    return { stats, userData };
+    return res(200, { stats, userData });
   }
 }

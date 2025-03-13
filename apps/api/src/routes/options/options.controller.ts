@@ -1,24 +1,36 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
 import sql from 'src/utils/db';
+import { optionsContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
+import { res } from 'src/utils/response';
 
-@ApiTags('Options')
-@Controller('options')
+@Controller()
 @UseGuards(new AuthGuard())
 export class OptionsController {
-  @Get('positions')
-  async getPositions() {
-    return await sql`select id, name as value from positions`;
+  @TsRestHandler(optionsContract.getPositions)
+  getPositions() {
+    return tsRestHandler(optionsContract.getPositions, async () => {
+      const positions = await sql`select id, name as value from positions`;
+      return res(200, positions);
+    });
   }
 
-  @Get('categories')
-  async getCategories() {
-    return await sql`select id, name as value, "isIncome" from financescategories`;
+  @TsRestHandler(optionsContract.getCategories)
+  getCategories() {
+    return tsRestHandler(optionsContract.getCategories, async () => {
+      const categories =
+        await sql`select id, name as value, "isIncome" from financescategories`;
+      return res(200, categories);
+    });
   }
 
-  @Get('certificates')
-  async getCertificateTypes() {
-    return await sql`select id, name as value from certificatetypes`;
+  @TsRestHandler(optionsContract.getCertificateTypes)
+  getCertificateTypes() {
+    return tsRestHandler(optionsContract.getCertificateTypes, async () => {
+      const certificateTypes =
+        await sql`select id, name as value from certificatetypes`;
+      return res(200, certificateTypes);
+    });
   }
 }

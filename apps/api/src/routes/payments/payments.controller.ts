@@ -1,28 +1,28 @@
-import { Controller, Body, Req, Post, UseGuards } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { CheckoutSchema } from '@iglesiasbc/schemas';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
+import { paymentsContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Payments')
-@Controller('payments')
+@Controller()
+@UseGuards(new AuthGuard())
 export class PaymentsController {
-  constructor(private readonly webhooksService: PaymentsService) {}
+  constructor(private readonly paymentsService: PaymentsService) {}
 
-  @Post('webhook')
-  webhooks(@Req() req) {
-    return this.webhooksService.webhooks(req);
-  }
-  @Post('checkout')
-  @UseGuards(new AuthGuard())
-  checkout(@Body(new ZodPiPe(CheckoutSchema)) body, @Req() req) {
-    return this.webhooksService.checkout(body, req);
+  @TsRestHandler(paymentsContract.checkout)
+  checkout() {
+    return tsRestHandler(
+      paymentsContract.checkout,
+      async ({ body, headers }) => {
+        return this.paymentsService.checkout(body, headers);
+      },
+    );
   }
 
-  @Post('portal')
-  @UseGuards(new AuthGuard())
-  portal(@Req() req) {
-    return this.webhooksService.portal(req);
+  @TsRestHandler(paymentsContract.portal)
+  portal() {
+    return tsRestHandler(paymentsContract.portal, async ({ headers }) => {
+      return this.paymentsService.portal(headers);
+    });
   }
 }

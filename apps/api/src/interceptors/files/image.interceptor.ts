@@ -6,7 +6,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 import { map } from 'rxjs/operators';
 
 @Injectable()

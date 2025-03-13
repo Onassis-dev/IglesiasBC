@@ -30,6 +30,7 @@ export const StartSchema = z.object({
 export const UploadEventSchema = z.object({
   title: z.string().min(6).max(40),
   date: z.string().min(5).max(30),
+  image: z.any(),
 });
 
 export const DeleteEventSchema = z.object({
@@ -47,12 +48,19 @@ export const DeleteActivitySchema = z.object({
 export const UploadActivitySchema = z.object({
   title: z.string().min(6).max(40),
   text: z.string().min(10).max(300),
+  image: z.any(),
 });
 
 export const EditActivitySchema = z.object({
   title: z.string().min(6).max(40),
   text: z.string().min(10).max(300),
   id: z.string().max(6),
+  image: z.any(),
+});
+
+// For file uploads
+export const FileUploadSchema = z.object({
+  image: z.any(),
 });
 
 // Contract
@@ -112,12 +120,30 @@ export const builderContract = c.router(
         200: z.any(),
       },
     },
+    uploadLogo: {
+      path: "/logo",
+      method: "POST",
+      responses: {
+        200: z.any(),
+      },
+      contentType: "multipart/form-data",
+      body: FileUploadSchema,
+    },
     getPastorsImg: {
       path: "/pastorsimg",
       method: "GET",
       responses: {
         200: z.any(),
       },
+    },
+    uploadPastorsImg: {
+      path: "/pastorsimg",
+      method: "POST",
+      responses: {
+        200: z.any(),
+      },
+      contentType: "multipart/form-data",
+      body: FileUploadSchema,
     },
     getCoverImg: {
       path: "/coverimg",
@@ -126,12 +152,30 @@ export const builderContract = c.router(
         200: z.any(),
       },
     },
+    uploadCoverImg: {
+      path: "/coverimg",
+      method: "POST",
+      responses: {
+        200: z.any(),
+      },
+      contentType: "multipart/form-data",
+      body: FileUploadSchema,
+    },
     getEvents: {
       path: "/events",
       method: "GET",
       responses: {
         200: z.any(),
       },
+    },
+    uploadEvent: {
+      path: "/event",
+      method: "POST",
+      responses: {
+        200: z.any(),
+      },
+      contentType: "multipart/form-data",
+      body: UploadEventSchema,
     },
     deleteEvent: {
       path: "/event",
@@ -148,6 +192,15 @@ export const builderContract = c.router(
         200: z.any(),
       },
     },
+    uploadChurchImage: {
+      path: "/image",
+      method: "POST",
+      responses: {
+        200: z.any(),
+      },
+      contentType: "multipart/form-data",
+      body: FileUploadSchema,
+    },
     deleteChurchImage: {
       path: "/image",
       method: "DELETE",
@@ -162,6 +215,24 @@ export const builderContract = c.router(
       responses: {
         200: z.any(),
       },
+    },
+    uploadActivity: {
+      path: "/activity",
+      method: "POST",
+      responses: {
+        200: z.any(),
+      },
+      contentType: "multipart/form-data",
+      body: UploadActivitySchema,
+    },
+    editActivity: {
+      path: "/activity",
+      method: "PUT",
+      responses: {
+        200: z.any(),
+      },
+      contentType: "multipart/form-data",
+      body: EditActivitySchema,
     },
     deleteActivity: {
       path: "/activity",

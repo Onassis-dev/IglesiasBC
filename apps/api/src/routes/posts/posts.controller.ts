@@ -6,13 +6,13 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
+
 import { FileInterceptor } from '@nest-lab/fastify-multer';
 import { File } from '@nest-lab/fastify-multer';
 import { postsContract } from '@iglesiasbc/schemas';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
+import { ImageHandler } from 'src/interceptors/files/image.interceptor';
 
-@ApiTags('Posts')
 @Controller()
 @UseGuards(new AuthGuard('blog'))
 export class PostsController {
@@ -33,7 +33,7 @@ export class PostsController {
   }
 
   @TsRestHandler(postsContract.post)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file'), new ImageHandler(1000))
   create(@UploadedFile() file: File) {
     return tsRestHandler(postsContract.post, async ({ body }) => {
       console.log(body, file);
@@ -42,7 +42,7 @@ export class PostsController {
   }
 
   @TsRestHandler(postsContract.put)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file'), new ImageHandler(1000))
   edit(@UploadedFile() file: File) {
     return tsRestHandler(postsContract.put, async ({ body }) => {
       return this.postsService.edit(body, file);

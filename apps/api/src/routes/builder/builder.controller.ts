@@ -1,27 +1,16 @@
 import {
   Controller,
-  Post,
-  Put,
-  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { BuilderService } from './builder.service';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
-import {
-  EditActivitySchema,
-  UploadActivitySchema,
-  UploadEventSchema,
-  builderContract,
-} from '@iglesiasbc/schemas';
+import { builderContract } from '@iglesiasbc/schemas';
 import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 import { ImageHandler } from 'src/interceptors/files/image.interceptor';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Builder')
 @Controller()
 @UseGuards(new AuthGuard('website'))
 export class BuilderController {
@@ -76,10 +65,12 @@ export class BuilderController {
     );
   }
 
-  @Post('builder/logo')
+  @TsRestHandler(builderContract.uploadLogo)
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(300, 100, true))
   uploadLogo(@UploadedFile() file: File) {
-    return this.builderService.uploadLogo(file);
+    return tsRestHandler(builderContract.uploadLogo, async () =>
+      this.builderService.uploadLogo(file),
+    );
   }
 
   @TsRestHandler(builderContract.getPastorsImg)
@@ -89,10 +80,12 @@ export class BuilderController {
     );
   }
 
-  @Post('builder/pastorsimg')
+  @TsRestHandler(builderContract.uploadPastorsImg)
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(700))
   uploadPastorsImg(@UploadedFile() file: File) {
-    return this.builderService.uploadPastorsImg(file);
+    return tsRestHandler(builderContract.uploadPastorsImg, async () =>
+      this.builderService.uploadPastorsImg(file),
+    );
   }
 
   @TsRestHandler(builderContract.getCoverImg)
@@ -102,10 +95,12 @@ export class BuilderController {
     );
   }
 
-  @Post('builder/coverimg')
+  @TsRestHandler(builderContract.uploadCoverImg)
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(1400))
   uploadCoverImg(@UploadedFile() file: File) {
-    return this.builderService.uploadCoverImg(file);
+    return tsRestHandler(builderContract.uploadCoverImg, async () =>
+      this.builderService.uploadCoverImg(file),
+    );
   }
 
   @TsRestHandler(builderContract.getEvents)
@@ -115,13 +110,12 @@ export class BuilderController {
     );
   }
 
-  @Post('builder/event')
+  @TsRestHandler(builderContract.uploadEvent)
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(800))
-  uploadEvent(
-    @Query(new ZodPiPe(UploadEventSchema)) query,
-    @UploadedFile() file: File,
-  ) {
-    return this.builderService.uploadEvent(query, file);
+  uploadEvent(@UploadedFile() file: File) {
+    return tsRestHandler(builderContract.uploadEvent, async ({ body }) =>
+      this.builderService.uploadEvent(body, file),
+    );
   }
 
   @TsRestHandler(builderContract.deleteEvent)
@@ -138,10 +132,12 @@ export class BuilderController {
     );
   }
 
-  @Post('builder/image')
+  @TsRestHandler(builderContract.uploadChurchImage)
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(600))
   uploadChurchImage(@UploadedFile() file: File) {
-    return this.builderService.uploadChurchImage(file);
+    return tsRestHandler(builderContract.uploadChurchImage, async () =>
+      this.builderService.uploadChurchImage(file),
+    );
   }
 
   @TsRestHandler(builderContract.deleteChurchImage)
@@ -158,22 +154,20 @@ export class BuilderController {
     );
   }
 
-  @Post('builder/activity')
+  @TsRestHandler(builderContract.uploadActivity)
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(600))
-  uploadActivity(
-    @Query(new ZodPiPe(UploadActivitySchema)) query,
-    @UploadedFile() file: File,
-  ) {
-    return this.builderService.uploadActivity(query, file);
+  uploadActivity(@UploadedFile() file: File) {
+    return tsRestHandler(builderContract.uploadActivity, async ({ body }) =>
+      this.builderService.uploadActivity(body, file),
+    );
   }
 
-  @Put('builder/activity')
+  @TsRestHandler(builderContract.editActivity)
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(600))
-  editActivity(
-    @Query(new ZodPiPe(EditActivitySchema)) query,
-    @UploadedFile() file: File,
-  ) {
-    return this.builderService.editActivity(query, file);
+  editActivity(@UploadedFile() file: File) {
+    return tsRestHandler(builderContract.editActivity, async ({ body }) =>
+      this.builderService.editActivity(body, file),
+    );
   }
 
   @TsRestHandler(builderContract.deleteActivity)

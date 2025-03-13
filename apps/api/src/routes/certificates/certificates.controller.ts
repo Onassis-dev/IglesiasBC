@@ -12,10 +12,9 @@ import {
 } from '@nestjs/common';
 import { CertificatesService } from './certificates.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
-  DeleteSchema,
+  IdSchema,
   DownloadSchema,
   PostCertificateSchema,
   getCertificateSchema,
@@ -23,7 +22,6 @@ import {
 import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 import { ImageHandler } from 'src/interceptors/files/image.interceptor';
 
-@ApiTags('Certificates')
 @Controller('certificates')
 @UseGuards(new AuthGuard('certificates'))
 export class CertificatesController {
@@ -45,7 +43,7 @@ export class CertificatesController {
   }
 
   @Delete(':id')
-  delete(@Param(new ZodPiPe(DeleteSchema)) param) {
+  delete(@Param(new ZodPiPe(IdSchema)) param) {
     return this.certificatesService.delete(param);
   }
 

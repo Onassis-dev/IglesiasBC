@@ -59,6 +59,7 @@ export class PostsService {
     const url = await uploadImage(file);
 
     const result = await sql`insert into posts ${sql({ ...data, img: url })}`;
+
     return res(200, result);
   }
 
@@ -91,6 +92,7 @@ export class PostsService {
 
     const result =
       await sql`update posts set ${sql(values)} where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
+
     return res(200, result);
   }
 
@@ -105,6 +107,7 @@ export class PostsService {
 
     const deleteResult =
       await sql`delete from posts where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
+
     return res(200, deleteResult);
   }
 

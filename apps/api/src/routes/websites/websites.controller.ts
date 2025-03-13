@@ -1,36 +1,45 @@
-import { Controller, Query, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { WebsitesService } from './websites.service';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import { getWebsitePostSchema, getWebsiteSchema } from '@iglesiasbc/schemas';
-import { ApiTags } from '@nestjs/swagger';
+import { websitesContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Websites')
-@Controller('websites')
+@Controller()
 export class WebsitesController {
   constructor(private readonly websitesService: WebsitesService) {}
 
-  @Get('start')
-  getWebsiteStart(@Query(new ZodPiPe(getWebsiteSchema)) query) {
-    return this.websitesService.getWebsiteStart(query);
+  @TsRestHandler(websitesContract.getWebsiteStart)
+  getWebsiteStart() {
+    return tsRestHandler(websitesContract.getWebsiteStart, async ({ query }) =>
+      this.websitesService.getWebsiteStart(query),
+    );
   }
 
-  @Get('services')
-  getWebsiteServices(@Query(new ZodPiPe(getWebsiteSchema)) query) {
-    return this.websitesService.getWebsiteServices(query);
+  @TsRestHandler(websitesContract.getWebsiteServices)
+  getWebsiteServices() {
+    return tsRestHandler(
+      websitesContract.getWebsiteServices,
+      async ({ query }) => this.websitesService.getWebsiteServices(query),
+    );
   }
 
-  @Get('events')
-  getWebsiteEvents(@Query(new ZodPiPe(getWebsiteSchema)) query) {
-    return this.websitesService.getWebsiteEvents(query);
+  @TsRestHandler(websitesContract.getWebsiteEvents)
+  getWebsiteEvents() {
+    return tsRestHandler(websitesContract.getWebsiteEvents, async ({ query }) =>
+      this.websitesService.getWebsiteEvents(query),
+    );
   }
 
-  @Get('posts')
-  getWebsitePosts(@Query(new ZodPiPe(getWebsiteSchema)) query) {
-    return this.websitesService.getWebsitePosts(query);
+  @TsRestHandler(websitesContract.getWebsitePosts)
+  getWebsitePosts() {
+    return tsRestHandler(websitesContract.getWebsitePosts, async ({ query }) =>
+      this.websitesService.getWebsitePosts(query),
+    );
   }
 
-  @Get('post')
-  getPost(@Query(new ZodPiPe(getWebsitePostSchema)) query) {
-    return this.websitesService.getPost(query);
+  @TsRestHandler(websitesContract.getPost)
+  getPost() {
+    return tsRestHandler(websitesContract.getPost, async ({ query }) =>
+      this.websitesService.getPost(query),
+    );
   }
 }

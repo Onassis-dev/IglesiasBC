@@ -33,7 +33,7 @@ export class ValidationFilter<T extends ZodError> {
     const bodyExists = !!exception.errors[0].path[0];
     message = `${getTraduction(exception.errors[0].path[0])} ${getError(exception.errors[0])}`;
 
-    response.status(HttpStatus.BAD_REQUEST).send({
+    response?.status(HttpStatus.BAD_REQUEST).send({
       errors: bodyExists ? exception.errors : 'No se ah mandado ningún dato',
       message: bodyExists ? message : 'No se ah mandado ningún dato',
       statusCode: HttpStatus.BAD_REQUEST,

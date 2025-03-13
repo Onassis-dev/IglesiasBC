@@ -1,46 +1,39 @@
-import {
-  Controller,
-  UseGuards,
-  Res,
-  Post,
-  Body,
-  Put,
-  Get,
-} from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import { SelectChurchSchema, UserSchema } from '@iglesiasbc/schemas';
+import { usersContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 
-@ApiTags('Users')
-@Controller('users')
+@Controller()
 @UseGuards(new AuthGuard())
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
+  @TsRestHandler(usersContract.getUser)
   getUser() {
-    return this.usersService.getOne();
+    return tsRestHandler(usersContract.getUser, async () => {
+      return this.usersService.getOne();
+    });
   }
 
-  @Get('data')
+  @TsRestHandler(usersContract.getData)
   getData() {
-    return this.usersService.getData();
+    return tsRestHandler(usersContract.getData, async () => {
+      return this.usersService.getData();
+    });
   }
 
-  @Post('checkplan')
-  checkPlan(@Res() res) {
-    return this.usersService.checkPlan(res);
+  @TsRestHandler(usersContract.editUser)
+  editUser() {
+    return tsRestHandler(usersContract.editUser, async ({ body }) => {
+      return this.usersService.edit(body);
+    });
   }
 
-  @Put()
-  edituser(@Body(new ZodPiPe(UserSchema)) body) {
-    return this.usersService.edit(body);
-  }
-
-  @Put('church')
-  selectChurch(@Body(new ZodPiPe(SelectChurchSchema)) body) {
-    return this.usersService.selectChurch(body);
+  @TsRestHandler(usersContract.selectChurch)
+  selectChurch() {
+    return tsRestHandler(usersContract.selectChurch, async ({ body }) => {
+      return this.usersService.selectChurch(body);
+    });
   }
 }

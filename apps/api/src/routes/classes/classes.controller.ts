@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import { ClassesService } from './classes.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ApiTags } from '@nestjs/swagger';
+
 import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
 import {
-  DeleteSchema,
+  IdSchema,
   EditClassSchema,
   PostClassSchema,
   PostStudentSchema,
@@ -22,7 +22,6 @@ import {
   getClassesSchema,
 } from '@iglesiasbc/schemas';
 
-@ApiTags('Classes')
 @Controller('classes')
 @UseGuards(new AuthGuard('classes'))
 export class ClassesController {
@@ -34,17 +33,17 @@ export class ClassesController {
   }
 
   @Get(':id')
-  readOne(@Param(new ZodPiPe(DeleteSchema)) params) {
+  readOne(@Param(new ZodPiPe(IdSchema)) params) {
     return this.classesService.readOne(params);
   }
 
   @Get('data/:id')
-  readData(@Param(new ZodPiPe(DeleteSchema)) params) {
+  readData(@Param(new ZodPiPe(IdSchema)) params) {
     return this.classesService.readData(params);
   }
 
   @Get('list/:id')
-  downloadAssistanceList(@Param(new ZodPiPe(DeleteSchema)) params) {
+  downloadAssistanceList(@Param(new ZodPiPe(IdSchema)) params) {
     return this.classesService.downloadAssistanceList(params);
   }
 
@@ -69,17 +68,17 @@ export class ClassesController {
   }
 
   @Delete(':id')
-  delete(@Param(new ZodPiPe(DeleteSchema)) param) {
+  delete(@Param(new ZodPiPe(IdSchema)) param) {
     return this.classesService.delete(param);
   }
 
   @Delete('subjects/:id')
-  deleteClass(@Param(new ZodPiPe(DeleteSchema)) param) {
+  deleteClass(@Param(new ZodPiPe(IdSchema)) param) {
     return this.classesService.deleteSubject(param);
   }
 
   @Delete('students/:id')
-  deleteStudent(@Param(new ZodPiPe(DeleteSchema)) param) {
+  deleteStudent(@Param(new ZodPiPe(IdSchema)) param) {
     return this.classesService.deleteStudent(param);
   }
 

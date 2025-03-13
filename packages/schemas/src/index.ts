@@ -5,6 +5,14 @@ import { transactionsContract } from "./transactions.schema.js";
 import { treasuriesContract } from "./treasuries.schema.js";
 import { builderContract } from "./builder.schema.js";
 import { postsContract } from "./posts.schema.js";
+import { optionsContract } from "./options.schema.js";
+import { websitesContract } from "./websites.schema.js";
+import { authContract } from "./auth.schema.js";
+import { churchesContract } from "./churches.schema.js";
+import { dashboardContract } from "./dashboard.schema.js";
+import { usersContract } from "./users.schema.js";
+import { permissionsContract } from "./permissions.schema.js";
+import { paymentsContract } from "./payments.schema.js";
 
 export * from "./auth.schema.js";
 export * from "./members.schema.js";
@@ -21,6 +29,8 @@ export * from "./churches.schema.js";
 export * from "./treasuries.schema.js";
 export * from "./certificates.schema.js";
 export * from "./general.schema.js";
+export * from "./options.schema.js";
+export * from "./dashboard.schema.js";
 
 const c = initContract();
 
@@ -31,4 +41,12 @@ export const contract = c.router({
   treasuries: treasuriesContract,
   builder: builderContract,
   posts: postsContract,
+  websites: websitesContract,
+  options: optionsContract,
+  auth: authContract,
+  churches: churchesContract,
+  dashboard: dashboardContract,
+  users: usersContract,
+  permissions: permissionsContract,
+  payments: paymentsContract,
 });
