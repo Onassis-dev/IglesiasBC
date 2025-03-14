@@ -84,7 +84,10 @@ export function Blog() {
                                 <p>{post.description}</p>
                             </CardContent>
                             <CardFooter className="gap-2">
-                                <a href={`${import.meta.env.VITE_WEBSITES_URL}/${posts.websiteTitle}/blog/${post.title}`} target="_blank">
+                                <a
+                                    href={`${import.meta.env.VITE_WEBSITES_URL}/${encodeURIComponent(posts.websiteTitle)}/blog/${encodeURIComponent(post.title)}`}
+                                    target="_blank"
+                                >
                                     <Button className="h-8 px-2" variant="outline">
                                         <EyeIcon className="size-4 mr-2" />
                                         Ver

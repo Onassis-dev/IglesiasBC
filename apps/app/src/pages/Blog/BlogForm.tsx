@@ -1,4 +1,4 @@
-import { api } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import type { z } from 'zod';
 import { DialogHeader } from '@/components/ui/dialog';
@@ -8,14 +8,14 @@ import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button, RegisterButton } from '@/components/ui/button';
 import { Bold, Check, HeadingIcon, Image, Italic, LoaderIcon, Strikethrough, Upload, X } from 'lucide-react';
-import { usePostSchema, type PostSchema } from './posts.models';
-import { useQuery } from '@tanstack/react-query';
-import { useQueryStore } from '@/lib/store';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import { Toggle } from '@/components/ui/toggle';
 import './tiptap.css';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { PostPostSchema } from '@iglesiasbc/schemas';
 
 interface props {
     id: string | number;
@@ -24,10 +24,12 @@ interface props {
 }
 
 const BlogForm = ({ id, open, setOpen }: props) => {
+    const blogForm = useForm<z.infer<typeof PostPostSchema>>({
+        resolver: zodResolver(PostPostSchema),
+    });
     const [showEditor, setShowEditor] = useState(false);
     const [selectedFile, setSelectedFile]: any = useState(null);
-    const blogForm = usePostSchema();
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
+    const client = tsr.useQueryClient();
 
     const editor = useEditor({
         extensions: [
@@ -47,35 +49,22 @@ const BlogForm = ({ id, open, setOpen }: props) => {
         },
     });
 
-    const { data: post } = useQuery({
+    const { data: { body: post } = {} } = tsr.posts.getOne.useQuery({
         queryKey: ['posts', id],
-        queryFn: async () => (await api.get(`/posts/${id}`)).data,
-        initialData: {},
-        enabled: !!id,
+        enabled: !!id && open,
+        queryData: {
+            params: {
+                id: String(id),
+            },
+        },
     });
 
-    const handleSubmit = async (values: z.infer<typeof PostSchema>) => {
-        const formData = new FormData();
-
-        formData.append('file', selectedFile);
-        formData.append('title', values.title);
-        formData.append('description', values.description);
-        formData.append('body', values.body);
-
-        if (id) {
-            await api.put('/posts', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-        } else {
-            if (!selectedFile) throw new Error('Por favor, elija una imagen para la portada.');
-            await api.post('/posts', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-        }
+    const handleSubmit = async (values: z.infer<typeof PostPostSchema>) => {
+        console.log(values.title);
+        const formdata = new FormData();
+        formdata.append('title', values.title);
+        if (id) await api2(tsr.posts.put, { ...values, id: Number(id) });
+        else await api2(tsr.posts.post, { ...values, file: selectedFile });
 
         client.refetchQueries({ queryKey: ['posts'] });
         setOpen(false);
@@ -89,14 +78,11 @@ const BlogForm = ({ id, open, setOpen }: props) => {
     };
 
     useEffect(() => {
-        blogForm.setValue('id', post.id);
-        blogForm.setValue('title', post.title);
-        blogForm.setValue('body', post.body);
-        blogForm.setValue('description', post.description);
+        blogForm.reset({ ...post });
         setSelectedFile(null);
-        editor?.commands.setContent(post.body);
+        editor?.commands.setContent(post?.body);
 
-        if (post.id) return setShowEditor(true);
+        if (post?.id) return setShowEditor(true);
         if (open && !id) return setShowEditor(true);
         setShowEditor(false);
     }, [post, open]);
@@ -148,7 +134,7 @@ const BlogForm = ({ id, open, setOpen }: props) => {
                     </label>
 
                     <Button
-                        onClick={blogForm.handleSubmit((values: z.infer<typeof PostSchema>) =>
+                        onClick={blogForm.handleSubmit((values: z.infer<typeof PostPostSchema>) =>
                             showPromise(handleSubmit(values), id ? 'Post actualizado' : 'Post publicado')
                         )}
                         className="max-w-32 h-8 gap-2"
@@ -163,7 +149,7 @@ const BlogForm = ({ id, open, setOpen }: props) => {
                 </DialogHeader>
                 <Form {...blogForm}>
                     <form
-                        onSubmit={blogForm.handleSubmit((values: z.infer<typeof PostSchema>) =>
+                        onSubmit={blogForm.handleSubmit((values: z.infer<typeof PostPostSchema>) =>
                             showPromise(handleSubmit(values), id ? 'Post actualizado' : 'Post publicado')
                         )}
                         className="grid h-full overflow-y-auto p-2 sm:p-6 pt-1 "

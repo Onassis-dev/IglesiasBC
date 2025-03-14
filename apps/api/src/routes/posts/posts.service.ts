@@ -64,6 +64,7 @@ export class PostsService {
   }
 
   async edit(body: z.infer<typeof EditPostSchema>, file: File) {
+    delete body.file;
     const [isTheSame] = await sql`select 1 from "posts" where ${parseTitle(
       (await sql`(select "title" from "posts" where id = ${body.id})`)[0].title,
       false,
@@ -80,7 +81,7 @@ export class PostsService {
 
     if (file) {
       const [{ img }] =
-        await sql`select "img" from "activities" where "id" =  ${body.id}`;
+        await sql`select "img" from "posts" where "id" =  ${body.id}`;
       if (img) {
         await deleteImage(img);
       }

@@ -36,7 +36,7 @@ export class ChurchesService {
     });
 
     const data = await getUserData(this.req.getUserId());
-    return res(201, data);
+    return res(200, data);
   }
 
   async editChurch(body: z.infer<typeof ChurchSchema>) {

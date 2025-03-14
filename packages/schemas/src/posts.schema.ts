@@ -2,6 +2,10 @@ import { z } from "zod";
 import { initContract } from "@ts-rest/core";
 import { IdSchema } from "./general.schema";
 
+const parsedString = z.string().transform((val) => {
+  return val.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+});
+
 export const GetOnePostSchema = z.object({
   id: z.string(),
 });
@@ -18,12 +22,18 @@ export const PostPostSchema = z.object({
   file: z.any(),
 });
 
-export const EditPostSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  body: z.string(),
-  description: z.string(),
-  file: z.any(),
+export const EditPostSchema = PostPostSchema.extend({
+  id: z.coerce.number(),
+});
+
+const SerializedPostSchema = PostPostSchema.extend({
+  title: parsedString,
+  body: parsedString,
+  description: parsedString,
+});
+
+const serializedEditSchema = SerializedPostSchema.extend({
+  id: z.coerce.number(),
 });
 
 // Contract
@@ -68,7 +78,7 @@ export const postsContract = c.router(
       responses: {
         200: z.any(),
       },
-      body: PostPostSchema,
+      body: SerializedPostSchema,
       contentType: "multipart/form-data",
     },
     put: {
@@ -77,7 +87,7 @@ export const postsContract = c.router(
       responses: {
         200: z.any(),
       },
-      body: EditPostSchema,
+      body: serializedEditSchema,
       contentType: "multipart/form-data",
     },
     delete: {

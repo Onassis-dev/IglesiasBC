@@ -38,7 +38,7 @@ export const authContract = c.router({
     method: "POST",
     path: "/login/login",
     responses: {
-      201: z.string(),
+      200: z.string(),
     },
     body: loginSchema,
   },
@@ -47,7 +47,7 @@ export const authContract = c.router({
     method: "POST",
     path: "/auth/signup",
     responses: {
-      201: z.any(),
+      200: z.any(),
     },
     body: signUpSchema,
   },
@@ -56,7 +56,7 @@ export const authContract = c.router({
     method: "POST",
     path: "/auth/google",
     responses: {
-      201: z.any(),
+      200: z.any(),
     },
     body: googleSchema,
   },
@@ -65,7 +65,7 @@ export const authContract = c.router({
     method: "POST",
     path: "/auth/logout",
     responses: {
-      201: z.any(),
+      200: z.any(),
     },
     body: null,
   },

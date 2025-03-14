@@ -23,7 +23,7 @@ export class AuthService {
       .cookie('refresh', body.refreshToken, httpCookieConfig)
       .send(data);
 
-    return res(201, null);
+    return res(200, null);
   }
 
   async signup(body: z.infer<typeof signUpSchema>, response) {
@@ -38,7 +38,7 @@ export class AuthService {
       .cookie('refresh', '', httpCookieConfig)
       .send();
 
-    return res(201, null);
+    return res(200, null);
   }
 
   async signInWithGoogle(body: z.infer<typeof googleSchema>, response) {

@@ -36,7 +36,7 @@ export const permissionsContract = c.router(
       method: "POST",
       path: "",
       responses: {
-        201: z.any(),
+        200: z.any(),
       },
       body: PostPermissionSchema,
     },

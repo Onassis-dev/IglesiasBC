@@ -21,7 +21,7 @@ export const churchesContract = c.router(
       method: "POST",
       path: "",
       responses: {
-        201: z.any(),
+        200: z.any(),
         400: z.object({
           message: z.string(),
         }),

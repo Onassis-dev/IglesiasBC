@@ -64,7 +64,7 @@ export class PermissionsService {
 
     const result =
       await sql`insert into permissions ${sql({ userId: user.id, churchId: this.req.getChurchId() })}`;
-    return res(201, result);
+    return res(200, result);
   }
 
   async editPermission(body: z.infer<typeof EditPermissionSchema>) {
