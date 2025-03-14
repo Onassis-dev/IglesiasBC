@@ -1,16 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import UploadActivity from './UploadActivity';
 import Activity from './Activity';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 const ActivitiesForm = () => {
     const limit = 8;
 
-    const { data: activities = [] } = useQuery({
+    const { data: { body: activities = [] } = {} } = tsr.builder.getActivities.useQuery({
         queryKey: ['activities'],
-        queryFn: async () => (await api.get('/builder/activities')).data,
-        placeholderData: keepPreviousData,
     });
 
     return (

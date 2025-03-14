@@ -1,16 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import Event from './Event';
 import UploadEvent from './UploadEvent';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 const EventsForm = () => {
     const limit = 20;
 
-    const { data: events = [] } = useQuery({
+    const { data: { body: events = [] } = {} } = tsr.builder.getEvents.useQuery({
         queryKey: ['events'],
-        queryFn: async () => (await api.get('/builder/events')).data,
-        placeholderData: keepPreviousData,
     });
 
     return (

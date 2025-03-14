@@ -3,17 +3,17 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from '@/components/ui/input';
 import { PlusIcon } from 'lucide-react';
 
-interface Props {
-    uploadImage: Function;
+interface Props<TApiPath> {
+    uploadImage: (apiPath: TApiPath) => void;
     setSelectedFile: Function;
     text: string;
-    apiPath: string;
+    apiPath: TApiPath;
     edit?: boolean;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ImageUpload = ({ uploadImage, setSelectedFile, text, apiPath, edit = false, open, setOpen }: Props) => {
+const ImageUpload = <TApiPath,>({ uploadImage, setSelectedFile, text, apiPath, edit = false, open, setOpen }: Props<TApiPath>) => {
     const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
 
@@ -37,7 +37,7 @@ const ImageUpload = ({ uploadImage, setSelectedFile, text, apiPath, edit = false
                 <DialogHeader>
                     <DialogTitle>{text}</DialogTitle>
                 </DialogHeader>
-                <Input type="file" accept='image/*' onChange={handleFile} />
+                <Input type="file" accept="image/*" onChange={handleFile} />
                 <DialogFooter>
                     <Button onClick={() => uploadImage(apiPath)}>Subir</Button>
                 </DialogFooter>

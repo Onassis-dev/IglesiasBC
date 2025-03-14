@@ -1,10 +1,6 @@
 import { z } from "zod";
 import { initContract } from "@ts-rest/core";
-import { IdSchema } from "./general.schema";
-
-const parsedString = z.string().transform((val) => {
-  return val.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
-});
+import { IdSchema, parsedString } from "./general.schema";
 
 export const GetOnePostSchema = z.object({
   id: z.string(),

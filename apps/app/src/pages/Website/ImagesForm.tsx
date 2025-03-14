@@ -1,70 +1,64 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { api } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import ChurchImage from './ChurchImage';
 import ImageUpload from './ImageUpload';
-import { useQueryStore } from '@/lib/store';
+
+type ApiPath = 'uploadChurchImage' | 'uploadPastorsImg' | 'uploadCoverImg' | 'uploadLogo';
 
 const ImagesForm = () => {
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
+    const client = tsr.useQueryClient();
     const [selectedFile, setSelectedFile]: any = useState(null);
     const [open, setOpen] = useState(false);
     const [open2, setOpen2] = useState(false);
     const [open3, setOpen3] = useState(false);
     const [open4, setOpen4] = useState(false);
 
-    const [images, setImages]: any = useState([]);
-    const [pastorsImg, setPastorsImg] = useState('');
-    const [coverImg, setCoverImg] = useState('');
-    const [logo, setLogo] = useState('');
-
     const limit = 12;
 
-    const func = async () => {
-        const resultI = await api.get('/builder/images');
-        setImages(resultI.data);
-        const resultII = await api.get('/builder/pastorsimg');
-        setPastorsImg(resultII.data[0]?.pastorsImg);
-        const resultIII = await api.get('/builder/coverimg');
-        setCoverImg(resultIII.data[0]?.coverImg);
-        const resultIV = await api.get('/builder/logo');
-        setLogo(resultIV.data[0]?.logo);
-    };
+    const { data: imagesData } = tsr.builder.getChurchImages.useQuery({
+        queryKey: ['churchImages'],
+    });
+    const images = imagesData?.body || [];
 
-    useEffect(() => {
-        func();
-    }, []);
+    const { data: pastorsImgData } = tsr.builder.getPastorsImg.useQuery({
+        queryKey: ['pastorsImg'],
+    });
+    const pastorsImg = pastorsImgData?.body?.[0]?.pastorsImg || '';
 
-    const fetchData = async () => {
-        func();
+    const { data: coverImgData } = tsr.builder.getCoverImg.useQuery({
+        queryKey: ['coverImg'],
+    });
+    const coverImg = coverImgData?.body?.[0]?.coverImg || '';
+
+    const { data: logoData } = tsr.builder.getLogo.useQuery({
+        queryKey: ['logo'],
+    });
+    const logo = logoData?.body?.[0]?.logo || '';
+
+    const fetchData = () => {
+        client.refetchQueries({ queryKey: ['churchImages'] });
+        client.refetchQueries({ queryKey: ['pastorsImg'] });
+        client.refetchQueries({ queryKey: ['coverImg'] });
+        client.refetchQueries({ queryKey: ['logo'] });
         client.refetchQueries({ queryKey: ['pageInfo'] });
     };
 
-    const sendPromise = (path: string) => showPromise(uploadImage(path), 'Imagen subida', 'Error al subir la imagen', 'Subiendo imagen');
+    const sendPromise = (apiPath: ApiPath) => showPromise(uploadImage(apiPath), 'Imagen subida', 'Error al subir la imagen', 'Subiendo imagen');
 
-    const uploadImage = async (path: string) => {
-        const formData = new FormData();
-        formData.append('image', selectedFile);
-
-        console.log(selectedFile);
+    const uploadImage = async (apiPath: ApiPath) => {
         if (!selectedFile) throw new Error('No se seleccionó ninguna imagen');
 
-        await api.post(path, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        await api2(tsr.builder[apiPath], { image: selectedFile });
 
         setOpen(false);
         setOpen2(false);
         setOpen3(false);
         setOpen4(false);
 
-        client.refetchQueries({ queryKey: ['pageInfo'] });
-
         setSelectedFile(null);
-        await fetchData();
+        fetchData();
     };
 
     useEffect(() => {
@@ -81,7 +75,7 @@ const ImagesForm = () => {
                     <img src={logo} alt="" className="w-flex" />
                     <ImageUpload
                         text="Subir logo"
-                        apiPath="/builder/logo"
+                        apiPath="uploadLogo"
                         edit={!!logo}
                         setSelectedFile={setSelectedFile}
                         uploadImage={sendPromise}
@@ -98,7 +92,7 @@ const ImagesForm = () => {
                     <img src={coverImg} alt="" className="w-flex" />
                     <ImageUpload
                         text="Subir imagen de fondo"
-                        apiPath="/builder/coverimg"
+                        apiPath="uploadCoverImg"
                         edit={!!coverImg}
                         setSelectedFile={setSelectedFile}
                         uploadImage={sendPromise}
@@ -115,7 +109,7 @@ const ImagesForm = () => {
                     <img src={pastorsImg} alt="" className="w-flex" />
                     <ImageUpload
                         text="Subir imagen del pastorado"
-                        apiPath="/builder/pastorsimg"
+                        apiPath="uploadPastorsImg"
                         edit={!!pastorsImg}
                         setSelectedFile={setSelectedFile}
                         uploadImage={sendPromise}
@@ -136,7 +130,7 @@ const ImagesForm = () => {
                     {images.length < limit ? (
                         <ImageUpload
                             text="Subir imagen"
-                            apiPath="/builder/image"
+                            apiPath="uploadChurchImage"
                             setSelectedFile={setSelectedFile}
                             uploadImage={sendPromise}
                             open={open}

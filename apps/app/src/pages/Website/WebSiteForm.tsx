@@ -4,17 +4,20 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { z } from 'zod';
-import { api, tsr } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Textarea } from '@/components/ui/textarea';
-import { WebsiteSchema, useWebsiteSchema } from './websites.models';
+import { WebsiteSchema } from '@iglesiasbc/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import ColorPicker from '@/components/common/ColorPicker';
-import { useQueryStore } from '@/lib/store';
 
 const WebSiteForm = () => {
-    const websiteForm = useWebsiteSchema();
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
+    const websiteForm = useForm<z.infer<typeof WebsiteSchema>>({
+        resolver: zodResolver(WebsiteSchema),
+    });
+    const client = tsr.useQueryClient();
     const [color, setColor] = useState('#000000');
 
     const { data: { body: [websiteData] = [] } = {}, isLoading } = tsr.builder.getWebsite.useQuery({
@@ -23,24 +26,7 @@ const WebSiteForm = () => {
 
     useEffect(() => {
         if (!isLoading && websiteData) {
-            websiteForm.setValue('title', websiteData.title);
-            websiteForm.setValue('mission', websiteData.mission);
-            websiteForm.setValue('style', websiteData.style);
-            websiteForm.setValue('language', websiteData.language);
-            websiteForm.setValue('structure', websiteData.structure);
-            websiteForm.setValue('pastors', websiteData.pastors);
-            websiteForm.setValue('servicesDates', websiteData.servicesDates);
-            websiteForm.setValue('facebookLink', websiteData.facebookLink);
-            websiteForm.setValue('instagramLink', websiteData.instagramLink);
-            websiteForm.setValue('whatsappLink', websiteData.whatsappLink);
-            websiteForm.setValue('mapsLink', websiteData.mapsLink);
-            websiteForm.setValue('youtubeLink', websiteData.youtubeLink);
-            websiteForm.setValue('preachLink', websiteData.preachLink);
-            websiteForm.setValue('donationLink', websiteData.donationLink);
-            websiteForm.setValue('animations', websiteData.animations);
-            websiteForm.setValue('description', websiteData.description);
-            websiteForm.setValue('ubication', websiteData.ubication);
-            websiteForm.setValue('about', websiteData.about);
+            websiteForm.reset({ ...websiteData });
 
             setColor(websiteData.color || '#000000');
         }
@@ -48,9 +34,9 @@ const WebSiteForm = () => {
 
     const handleSubmit: any = async (values: z.infer<typeof WebsiteSchema>) => {
         if (websiteData) {
-            await api.put('/builder/website', { ...values, color });
+            await api2(tsr.builder.editWebsite, { ...values, color });
         } else {
-            await api.post('/builder/website', { ...values, color });
+            await api2(tsr.builder.createWebsite, { ...values, color });
         }
         client.refetchQueries({ queryKey: ['pageInfo'] });
         client.refetchQueries({ queryKey: ['websiteData'] });

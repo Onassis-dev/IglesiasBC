@@ -5,20 +5,22 @@ import { useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import type { z } from 'zod';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { api } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import { format } from 'date-fns';
 import { PlusIcon } from 'lucide-react';
-import { UploadEventSchema, useUploadEventSchema } from './websites.models';
 import DatePicker from '@/components/common/DatePicker';
-import { useQueryStore } from '@/lib/store';
+import { UploadEventSchema } from '@iglesiasbc/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 const UploadEvent = ({}: any) => {
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
+    const client = tsr.useQueryClient();
+    const eventsForm = useForm<z.infer<typeof UploadEventSchema>>({
+        resolver: zodResolver(UploadEventSchema),
+    });
 
     const [selectedFile, setSelectedFile]: any = useState(null);
     const [open, setOpen] = useState(false);
-
-    const eventsForm = useUploadEventSchema();
 
     const handleFile = (e: any) => {
         const files = e.target.files;
@@ -28,21 +30,14 @@ const UploadEvent = ({}: any) => {
     };
 
     const handleSubmit = async (values: z.infer<typeof UploadEventSchema>) => {
-        const formData = new FormData();
-
-        formData.append('image', selectedFile);
-        formData.append('title', values.title);
-        formData.append('date', format(values.date, 'yyyy-MM-dd'));
-
-        await api.post('/builder/event', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+        await api2(tsr.builder.uploadEvent, {
+            title: values.title,
+            date: format(values.date, 'yyyy-MM-dd'),
+            image: selectedFile,
         });
 
         setOpen(false);
         client.refetchQueries({ queryKey: ['events'] });
-
         setSelectedFile(null);
     };
 

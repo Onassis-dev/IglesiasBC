@@ -5,24 +5,25 @@ import { useEffect, useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import type { z } from 'zod';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { api } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import { PlusIcon } from 'lucide-react';
-import { useActivitySchema, type ActivitySchema } from './websites.models';
-import { useQueryStore } from '@/lib/store';
+import { PostActivitySchema } from '@iglesiasbc/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 const UploadActivity = ({ activity }: any) => {
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
-    const activitiesForm = useActivitySchema();
+    const client = tsr.useQueryClient();
+    const activitiesForm = useForm<z.infer<typeof PostActivitySchema>>({
+        resolver: zodResolver(PostActivitySchema),
+    });
 
     const [selectedFile, setSelectedFile]: any = useState(null);
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        if (activity) {
-            activitiesForm.setValue('title', activity.title);
-            activitiesForm.setValue('text', activity.text);
-        }
-    }, []);
+        if (!activity) return;
+        activitiesForm.reset({ ...activity });
+    }, [activity]);
 
     const handleFile = (e: any) => {
         const files = e.target.files;
@@ -31,41 +32,28 @@ const UploadActivity = ({ activity }: any) => {
         }
     };
 
-    const handleSubmit = async (values: z.infer<typeof ActivitySchema>) => {
-        const formData = new FormData();
-
-        formData.append('title', values.title);
-        formData.append('text', values.text);
-
+    const handleSubmit = async (values: z.infer<typeof PostActivitySchema>) => {
         if (activity) {
-            formData.append('id', activity.id);
-            formData.append('image', selectedFile);
-            await api.put(`/builder/activity`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            await api2(tsr.builder.editActivity, {
+                ...values,
+                id: String(activity.id),
+                image: selectedFile,
             });
-
-            setOpen(false);
-            client.refetchQueries({ queryKey: ['activities'] });
-            setSelectedFile(null);
         } else {
             if (!selectedFile) throw new Error('No se seleccionó una imagen');
-            formData.append('image', selectedFile);
 
-            await api.post(`/builder/activity`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            await api2(tsr.builder.uploadActivity, {
+                ...values,
+                image: selectedFile,
             });
-
-            setOpen(false);
-            client.refetchQueries({ queryKey: ['activities'] });
-            setSelectedFile(null);
         }
+
+        setOpen(false);
+        client.refetchQueries({ queryKey: ['activities'] });
+        setSelectedFile(null);
     };
 
-    const submit = activitiesForm.handleSubmit((values: z.infer<typeof ActivitySchema>) =>
+    const submit = activitiesForm.handleSubmit((values: z.infer<typeof PostActivitySchema>) =>
         showPromise(handleSubmit(values), activity ? 'Información actualizada' : 'Actividad registrada')
     );
 

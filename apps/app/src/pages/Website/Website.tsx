@@ -1,6 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ExternalLinkIcon, RefreshCcwIcon, Rocket, Share2Icon } from 'lucide-react';
-import { api } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { useEffect } from 'react';
 import {
@@ -12,19 +11,19 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import WebSiteForm from './WebSiteForm';
 import EventsForm from './EventsForm';
 import ActivitiesForm from './ActivitiesForm';
 import ImagesForm from './ImagesForm';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData } from '@tanstack/react-query';
 import { useQueryStore } from '@/lib/store';
 
 const Website = () => {
     const client = useQueryStore((queryClient) => queryClient.queryClient);
 
-    const { data: [pageInfo] = [], isFetching } = useQuery({
+    const { data: { body: [pageInfo] = [] } = {}, isFetching } = tsr.builder.getWebsiteInfo.useQuery({
         queryKey: ['pageInfo'],
-        queryFn: async () => (await api.get('/builder/website/info')).data,
         placeholderData: keepPreviousData,
     });
 
