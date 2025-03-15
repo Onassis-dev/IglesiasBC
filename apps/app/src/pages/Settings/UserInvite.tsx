@@ -1,4 +1,4 @@
-import { api } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import type { z } from 'zod';
 import { DialogHeader } from '@/components/ui/dialog';
@@ -7,17 +7,19 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button, RegisterButton } from '@/components/ui/button';
-import { InviteSchema, useInviteSchema } from './settings.models';
-import { useQueryStore } from '@/lib/store';
+import { PostPermissionSchema } from '@iglesiasbc/schemas';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const UserInvite = () => {
     const [open, setOpen] = useState(false);
-    const inviteForm = useInviteSchema();
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
+    const inviteForm = useForm<z.infer<typeof PostPermissionSchema>>({
+        resolver: zodResolver(PostPermissionSchema),
+    });
+    const client = tsr.useQueryClient();
 
-    const handleSubmit = async (values: z.infer<typeof InviteSchema>) => {
-        await api.post('/permissions', values);
-
+    const handleSubmit = async (values: z.infer<typeof PostPermissionSchema>) => {
+        await api2(tsr.permissions.create, values);
         client.refetchQueries({ queryKey: ['permissions'] });
         setOpen(false);
     };
@@ -34,7 +36,7 @@ const UserInvite = () => {
 
                 <Form {...inviteForm}>
                     <form
-                        onSubmit={inviteForm.handleSubmit((values: z.infer<typeof InviteSchema>) =>
+                        onSubmit={inviteForm.handleSubmit((values: z.infer<typeof PostPermissionSchema>) =>
                             showPromise(handleSubmit(values), 'Usuario agregado')
                         )}
                     >

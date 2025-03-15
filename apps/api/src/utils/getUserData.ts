@@ -36,7 +36,7 @@ export const getUserData = async (userData: number | string) => {
   if (new Date() > new Date(data?.expirationDate)) data.plan = 0;
 
   Object.keys(requiredPlans).forEach((key) => {
-    if (requiredPlans[key] > data.plan) data[key] = '0';
+    if (requiredPlans[key] > data.plan) data[key] = false;
   });
 
   return data;

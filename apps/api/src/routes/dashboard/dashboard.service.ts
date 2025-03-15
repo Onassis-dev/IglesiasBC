@@ -120,8 +120,9 @@ export class DashboardService {
     const churchId = this.req.getChurchId();
     const userData = await getUserData(this.req.getUserId());
 
-    const stats = (
-      await sql`
+    const stats =
+      (
+        await sql`
       SELECT 
       ${userData.perm_members ? sql`(SELECT count(*) from members  WHERE "churchId" = ${this.req.getChurchId()} and "positionId" not in (2, 7)) as members,` : sql``}
       ${userData.perm_certificates ? sql`(SELECT count(*) FROM certificates WHERE "churchId" = ${churchId}) as certificates,` : sql``}
@@ -130,16 +131,19 @@ export class DashboardService {
       ${userData.perm_inventory ? sql`COALESCE((SELECT SUM(price * amount) FROM inventory WHERE "churchId" = ${churchId}), 0) as inventory,` : sql``}
       ${userData.perm_classes ? sql`(SELECT count(*) FROM subjects JOIN classes ON subjects."classId" = classes.id WHERE classes."churchId" = ${churchId}) as students,` : sql``}
       ${userData.perm_blog ? sql`(SELECT count(*) FROM postviews JOIN posts ON posts.id = postviews."postId" WHERE posts."churchId" = ${churchId}) as blog,` : sql``}
-      ${userData.perm_website ? sql`(SELECT count(*) FROM websiteviews JOIN websites ON websites.id = websiteviews."websiteId" WHERE websites."churchId" = ${churchId}) as website` : sql``}
+      ${userData.perm_website ? sql`(SELECT count(*) FROM websiteviews JOIN websites ON websites.id = websiteviews."websiteId" WHERE websites."churchId" = ${churchId}) as website,` : sql``}
+      1 as none
       FROM transactions
       JOIN financescategories ON financescategories.id = transactions."categoryId"
       JOIN treasuries ON treasuries.id = transactions."treasuryId"
       WHERE treasuries."churchId" = ${churchId}`
-    )[0];
+      )[0] || {};
 
-    if (stats.income) {
+    if (stats?.income) {
       stats.balance = (stats.income - stats.expense).toString();
     }
+
+    console.log(stats);
 
     return res(200, { stats, userData });
   }

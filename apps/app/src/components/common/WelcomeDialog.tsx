@@ -7,7 +7,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { api } from '@/lib/boilerplate';
+import { api, api2, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -22,11 +22,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 const WelcomeDialog = ({ open }: { open: boolean }) => {
     const [show, setShow] = useState(false);
     const [email, setEmail] = useState('');
-    const [churches, setChurches]: any = useState([]);
     const [isCreatingChurch, setIsCreatingChurch] = useState(false);
     const [isJoiningChurch, setIsJoiningChurch] = useState(false);
     const churchForm = useChurchSchema();
     const selectChurchForm = useSelectChurchSchema();
+    const client = tsr.useQueryClient();
 
     const createChurch = async (values: any) => {
         const userData = (await api.post('/churches', values)).data;
@@ -36,25 +36,28 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
 
     const selectChurch = async (values: any) => {
         if (!values.churchId) throw new Error('No haz seleccionado una iglesia');
-        const userData = (await api.put('/users/church', values)).data;
+        const userData: any = await api2(tsr.users.selectChurch, { ...values, churchId: values.churchId });
         saveUserData(userData);
-        location.reload();
+        location.pathname = '/';
     };
 
     const copyLink = async () => {
         await navigator.clipboard.writeText(email);
     };
 
-    const fetchData = async () => {
-        const result = (await api.get('/users')).data;
-        setChurches(result.churches);
-        setEmail(result.user.email);
-        if (!result.user.churchId) return setShow(true);
-    };
+    const { data: { body: data } = {} } = tsr.users.get.useQuery({
+        queryKey: ['start'],
+        enabled: open,
+    });
 
     useEffect(() => {
-        if (!open) return;
-        fetchData();
+        if (!data) return;
+        setEmail(data?.user?.email);
+        if (!data?.user?.churchId) return setShow(true);
+    }, [data]);
+
+    useEffect(() => {
+        if (open) setShow(true);
     }, [open]);
 
     return (
@@ -65,7 +68,7 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
                         <>
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="text-center text-3xl font-bold">
-                                    Te damos la bienvenida, {localStorage.getItem('username')}
+                                    Te damos la bienvenida {localStorage.getItem('username')}
                                 </AlertDialogTitle>
                                 <AlertDialogDescription className="text-center">
                                     Antes de empezar, deberas ser parte de una iglesia.
@@ -166,7 +169,7 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
                                                                 <SelectTrigger>
                                                                     <SelectValue
                                                                         placeholder={
-                                                                            churches.length > 0
+                                                                            data?.churches?.length > 0
                                                                                 ? 'Selecciona una iglesia'
                                                                                 : 'No tienes ninguna iglesia disponible'
                                                                         }
@@ -174,7 +177,7 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
                                                                 </SelectTrigger>
                                                             </FormControl>
                                                             <SelectContent>
-                                                                {churches.map((church: any, i: number) => (
+                                                                {data?.churches?.map((church: any, i: number) => (
                                                                     <SelectItem key={i} value={church.id.toString()}>
                                                                         {church.name}
                                                                     </SelectItem>
@@ -189,7 +192,7 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
                                         <Button
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                showPromise(fetchData(), 'Datos actualizados');
+                                                client.invalidateQueries({ queryKey: ['start'] });
                                             }}
                                             variant={'ghost'}
                                             size={'sm'}

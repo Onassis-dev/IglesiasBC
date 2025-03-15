@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { api, tsr } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { useEffect, useState } from 'react';
 import '@/lib/boilerplate';
@@ -14,18 +14,22 @@ import { CircleMinus, CircleCheck, EditIcon, MoreHorizontal, Trash, Award } from
 import DeleteDialog from '@/components/common/DeleteDialog';
 import UserForm from './UserForm';
 import UserInvite from './UserInvite';
-import { SettingsSchema, UserSchema, useSettingsSchema } from './settings.models';
 import { Link } from 'react-router';
 import { displayDate } from '@/lib/timeFunctions';
+import { ChurchSchema, EditPermissionSchema } from '@iglesiasbc/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 const planNames = ['Plan Gratuito', 'Plan básico', 'Plan avanzado'];
 
 const Settings = () => {
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<z.infer<typeof UserSchema>>();
+    const [selectedUser, setSelectedUser] = useState<z.infer<typeof EditPermissionSchema>>();
 
-    const settingsForm = useSettingsSchema();
+    const settingsForm = useForm<z.infer<typeof ChurchSchema>>({
+        resolver: zodResolver(ChurchSchema),
+    });
 
     const { data: { body: church } = {} } = tsr.churches.get.useQuery({
         queryKey: ['churches'],
@@ -40,12 +44,13 @@ const Settings = () => {
     });
 
     const handlePortal = async () => {
-        const { data } = await api.post('/payments/portal');
-        window.location.href = data.url;
+        // @ts-ignore - The headers are automatically sent by the browser
+        const data: { url: string } = await api2(tsr.payments.portal, null);
+        if (data?.url) window.location.href = data.url;
     };
 
-    const handleSubmit: any = async (values: z.infer<typeof SettingsSchema>) => {
-        await api.put('/churches', values);
+    const handleSubmit: any = async (values: z.infer<typeof ChurchSchema>) => {
+        api2(tsr.churches.edit, values);
     };
 
     return (
@@ -59,7 +64,7 @@ const Settings = () => {
                         <Form {...settingsForm}>
                             <form
                                 className="space-y-4"
-                                onSubmit={settingsForm.handleSubmit((values: z.infer<typeof SettingsSchema>) =>
+                                onSubmit={settingsForm.handleSubmit((values: z.infer<typeof ChurchSchema>) =>
                                     showPromise(handleSubmit(values), 'Datos actualizados')
                                 )}
                             >

@@ -9,9 +9,9 @@ import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @TsRestHandler(usersContract.getUser)
-  getUser() {
-    return tsRestHandler(usersContract.getUser, async () => {
+  @TsRestHandler(usersContract.get)
+  get() {
+    return tsRestHandler(usersContract.get, async () => {
       return this.usersService.getOne();
     });
   }

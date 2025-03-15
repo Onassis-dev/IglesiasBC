@@ -25,7 +25,9 @@ export const paymentsContract = c.router(
       method: "POST",
       path: "/portal",
       responses: {
-        200: z.any(),
+        200: z.object({
+          url: z.string(),
+        }),
       },
       headers: z.object({
         origin: z.string(),

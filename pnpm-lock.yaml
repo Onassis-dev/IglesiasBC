@@ -274,6 +274,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.10.4
         version: 2.11.5
+      '@ts-rest/core':
+        specifier: ^3.52.1
+        version: 3.52.1(@types/node@22.13.9)(zod@3.24.2)
       '@ts-rest/react-query':
         specifier: ^3.52.1
         version: 3.52.1(@tanstack/react-query@5.67.3(react@18.3.1))(@ts-rest/core@3.52.1(@types/node@22.13.9)(zod@3.24.2))(react@18.3.1)(zod@3.24.2)

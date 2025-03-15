@@ -1,4 +1,4 @@
-import { api } from '@/lib/boilerplate';
+import { api2, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type { z } from 'zod';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -6,36 +6,32 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useEffect } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button } from '@/components/ui/button';
-import { useUserSchema, type UserSchema } from './settings.models';
 import { Switch } from '@/components/ui/switch';
-import { useQueryStore } from '@/lib/store';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { EditPermissionSchema } from '@iglesiasbc/schemas';
 
 interface props {
-    user: z.infer<typeof UserSchema> | undefined;
+    user: z.infer<typeof EditPermissionSchema> | undefined;
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
 const UserForm = ({ user, open, setOpen }: props) => {
-    const userForm = useUserSchema();
-    const client = useQueryStore((queryClient) => queryClient.queryClient);
+    const userForm = useForm<z.infer<typeof EditPermissionSchema>>({
+        resolver: zodResolver(EditPermissionSchema),
+    });
+    const client = tsr.useQueryClient();
 
-    const handleSubmit = async (values: z.infer<typeof UserSchema>) => {
-        await api.put('/permissions', values);
+    const handleSubmit = async (values: z.infer<typeof EditPermissionSchema>) => {
+        await api2(tsr.permissions.edit, values);
         client.refetchQueries({ queryKey: ['permissions'] });
         setOpen(false);
     };
 
     useEffect(() => {
         if (!user) return;
-        userForm.setValue('id', user.id);
-        userForm.setValue('perm_members', user.perm_members);
-        userForm.setValue('perm_finances', user.perm_finances);
-        userForm.setValue('perm_inventory', user.perm_inventory);
-        userForm.setValue('perm_certificates', user.perm_certificates);
-        userForm.setValue('perm_classes', user.perm_classes);
-        userForm.setValue('perm_website', user.perm_website);
-        userForm.setValue('perm_blog', user.perm_blog);
+        userForm.reset({ ...user });
     }, [user]);
 
     return (
@@ -47,7 +43,7 @@ const UserForm = ({ user, open, setOpen }: props) => {
 
                 <Form {...userForm}>
                     <form
-                        onSubmit={userForm.handleSubmit((values: z.infer<typeof UserSchema>) =>
+                        onSubmit={userForm.handleSubmit((values: z.infer<typeof EditPermissionSchema>) =>
                             showPromise(handleSubmit(values), 'Información actualizada')
                         )}
                         className="grid md:grid-cols-2 gap-x-12"

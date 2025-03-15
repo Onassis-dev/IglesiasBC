@@ -14,7 +14,7 @@ const c = initContract();
 
 export const usersContract = c.router(
   {
-    getUser: {
+    get: {
       method: "GET",
       path: "",
       responses: {

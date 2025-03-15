@@ -3,18 +3,18 @@ import DashboardHeader from './DashboardHeader';
 import SideBar from './SideBar';
 import { useEffect, useState } from 'react';
 import WelcomeDialog from '../WelcomeDialog';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { saveUserData } from '@/lib/accountFunctions';
+import { useUIStore } from '@/lib/store';
 
 export const Layout = () => {
     const [isChecking, setIsChecking] = useState(false);
-    const [openChurchMessage, setOpenChurchMessage] = useState(false);
     const [forceRefresh, setForceRefresh] = useState(0);
     const navigate = useNavigate();
+    const { registerOpen, setRegisterOpen } = useUIStore((state) => state);
 
     async function checkUserData() {
-        const newData = (await api.get('/users/data')).data;
-
+        const newData: any = await tsr.users.getData.query();
         let changed = false;
         for (const key in newData) {
             if (newData[key]?.toString() !== localStorage.getItem(key)) changed = true;
@@ -27,8 +27,9 @@ export const Layout = () => {
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         const churchId = localStorage.getItem('churchId');
+
         if (!userId) navigate('/login');
-        if (!churchId && userId) setOpenChurchMessage(true);
+        if (!churchId && userId) setRegisterOpen(true);
         setIsChecking(false);
 
         checkUserData();
@@ -38,7 +39,7 @@ export const Layout = () => {
 
     return (
         <>
-            <WelcomeDialog open={openChurchMessage} />
+            <WelcomeDialog open={registerOpen} />
             <SideBar key={forceRefresh} />
 
             <div className="flex flex-col flex-1 relative w-1 bg-dashboardbg min-h-[100lvh] h-screen">

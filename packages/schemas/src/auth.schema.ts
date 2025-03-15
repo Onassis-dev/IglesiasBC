@@ -33,40 +33,43 @@ export const signUpSchema = z.object({
 // Contract
 const c = initContract();
 
-export const authContract = c.router({
-  login: {
-    method: "POST",
-    path: "/login/login",
-    responses: {
-      200: z.string(),
+export const authContract = c.router(
+  {
+    login: {
+      method: "POST",
+      path: "/login",
+      responses: {
+        200: z.string(),
+      },
+      body: loginSchema,
     },
-    body: loginSchema,
-  },
 
-  signup: {
-    method: "POST",
-    path: "/auth/signup",
-    responses: {
-      200: z.any(),
+    signup: {
+      method: "POST",
+      path: "/signup",
+      responses: {
+        200: z.any(),
+      },
+      body: signUpSchema,
     },
-    body: signUpSchema,
-  },
 
-  google: {
-    method: "POST",
-    path: "/auth/google",
-    responses: {
-      200: z.any(),
+    google: {
+      method: "POST",
+      path: "/google",
+      responses: {
+        200: z.any(),
+      },
+      body: googleSchema,
     },
-    body: googleSchema,
-  },
 
-  logout: {
-    method: "POST",
-    path: "/auth/logout",
-    responses: {
-      200: z.any(),
+    logout: {
+      method: "POST",
+      path: "/logout",
+      responses: {
+        200: z.any(),
+      },
+      body: null,
     },
-    body: null,
   },
-});
+  { pathPrefix: "/auth" }
+);

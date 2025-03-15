@@ -8,12 +8,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { saveUserData } from '@/lib/accountFunctions';
-import { useUserConfigSchema, type UserConfigSchema } from './config.models';
 import CreateChurchDialog from './CreateChurchDialog';
 import { useEffect } from 'react';
+import { UserSchema } from '@iglesiasbc/schemas';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const Account = () => {
-    const userConfigForm = useUserConfigSchema();
+    const userConfigForm = useForm<z.infer<typeof UserSchema>>({
+        resolver: zodResolver(UserSchema),
+    });
 
     const { data: { body: data } = {} } = tsr.users.getUser.useQuery({
         queryKey: ['user'],
@@ -23,7 +27,6 @@ const Account = () => {
         userConfigForm.reset({
             churchId: data?.user?.churchId ? data?.user?.churchId.toString() : '0',
             username: data?.user?.username,
-            email: data?.user?.email,
         });
     }, [data]);
 
@@ -46,7 +49,7 @@ const Account = () => {
     //     console.log(isOwner);
     // }, [isOwner]);
 
-    const handleSubmit: any = async (values: z.infer<typeof UserConfigSchema>) => {
+    const handleSubmit: any = async (values: z.infer<typeof UserSchema>) => {
         const userData = (await api.put('/users', { ...values })).data;
 
         saveUserData(userData);
@@ -63,7 +66,7 @@ const Account = () => {
                 <Form {...userConfigForm}>
                     <form
                         className="space-y-4"
-                        onSubmit={userConfigForm.handleSubmit((values: z.infer<typeof UserConfigSchema>) =>
+                        onSubmit={userConfigForm.handleSubmit((values: z.infer<typeof UserSchema>) =>
                             showPromise(handleSubmit(values), 'Datos actualizados')
                         )}
                     >
@@ -80,19 +83,14 @@ const Account = () => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={userConfigForm.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Correo electrónico</FormLabel>
-                                    <FormControl>
-                                        <Input value={field.value} readOnly />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+
+                        <FormItem>
+                            <FormLabel>Correo electrónico</FormLabel>
+                            <FormControl>
+                                <Input value={data?.user?.email} readOnly />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
 
                         <div className="w-full flex gap-2 sm:items-center items-start flex-col sm:flex-row">
                             <FormField
