@@ -120,30 +120,90 @@ export class DashboardService {
     const churchId = this.req.getChurchId();
     const userData = await getUserData(this.req.getUserId());
 
-    const stats =
-      (
-        await sql`
-      SELECT 
-      ${userData.perm_members ? sql`(SELECT count(*) from members  WHERE "churchId" = ${this.req.getChurchId()} and "positionId" not in (2, 7)) as members,` : sql``}
-      ${userData.perm_certificates ? sql`(SELECT count(*) FROM certificates WHERE "churchId" = ${churchId}) as certificates,` : sql``}
-      ${userData.perm_finances ? sql`COALESCE(SUM(CASE WHEN financescategories."isIncome" = true THEN amount ELSE 0 END), 0) as income,` : sql``}
-      ${userData.perm_finances ? sql`COALESCE(SUM(CASE WHEN financescategories."isIncome" = false THEN amount ELSE 0 END), 0) as expense,` : sql``}
-      ${userData.perm_inventory ? sql`COALESCE((SELECT SUM(price * amount) FROM inventory WHERE "churchId" = ${churchId}), 0) as inventory,` : sql``}
-      ${userData.perm_classes ? sql`(SELECT count(*) FROM subjects JOIN classes ON subjects."classId" = classes.id WHERE classes."churchId" = ${churchId}) as students,` : sql``}
-      ${userData.perm_blog ? sql`(SELECT count(*) FROM postviews JOIN posts ON posts.id = postviews."postId" WHERE posts."churchId" = ${churchId}) as blog,` : sql``}
-      ${userData.perm_website ? sql`(SELECT count(*) FROM websiteviews JOIN websites ON websites.id = websiteviews."websiteId" WHERE websites."churchId" = ${churchId}) as website,` : sql``}
-      1 as none
-      FROM transactions
-      JOIN financescategories ON financescategories.id = transactions."categoryId"
-      JOIN treasuries ON treasuries.id = transactions."treasuryId"
-      WHERE treasuries."churchId" = ${churchId}`
-      )[0] || {};
+    // Create an array to hold all the fields we want to select
+    const selectFields = [];
 
-    if (stats?.income) {
-      stats.balance = (stats.income - stats.expense).toString();
+    if (userData.perm_members) {
+      selectFields.push(
+        sql`(SELECT count(*) from members WHERE "churchId" = ${churchId} and "positionId" not in (2, 7)) as members`,
+      );
     }
 
-    console.log(stats);
+    if (userData.perm_certificates) {
+      selectFields.push(
+        sql`(SELECT count(*) FROM certificates WHERE "churchId" = ${churchId}) as certificates`,
+      );
+    }
+
+    if (userData.perm_finances) {
+      selectFields.push(sql`COALESCE((
+        SELECT SUM(CASE WHEN fc."isIncome" = true THEN t.amount ELSE 0 END)
+        FROM transactions t
+        JOIN financescategories fc ON fc.id = t."categoryId"
+        JOIN treasuries tr ON tr.id = t."treasuryId"
+        WHERE tr."churchId" = ${churchId}
+      ), 0) as income`);
+
+      selectFields.push(sql`COALESCE((
+        SELECT SUM(CASE WHEN fc."isIncome" = false THEN t.amount ELSE 0 END)
+        FROM transactions t
+        JOIN financescategories fc ON fc.id = t."categoryId"
+        JOIN treasuries tr ON tr.id = t."treasuryId"
+        WHERE tr."churchId" = ${churchId}
+      ), 0) as expense`);
+    }
+
+    if (userData.perm_inventory) {
+      selectFields.push(
+        sql`COALESCE((SELECT SUM(price * amount) FROM inventory WHERE "churchId" = ${churchId}), 0) as inventory`,
+      );
+    }
+
+    if (userData.perm_classes) {
+      selectFields.push(sql`(
+        SELECT count(*) FROM subjects 
+        JOIN classes ON subjects."classId" = classes.id
+        WHERE classes."churchId" = ${churchId}
+      ) as students`);
+    }
+
+    if (userData.perm_blog) {
+      selectFields.push(sql`(
+        SELECT count(*) FROM postviews
+        JOIN posts ON posts.id = postviews."postId"
+        WHERE posts."churchId" = ${churchId}
+      ) as blog`);
+    }
+
+    if (userData.perm_website) {
+      selectFields.push(sql`(
+        SELECT count(*) FROM websiteviews
+        JOIN websites ON websites.id = websiteviews."websiteId"
+        WHERE websites."churchId" = ${churchId}
+      ) as website`);
+    }
+
+    // If no permissions, return an empty object
+    if (selectFields.length === 0) {
+      return res(200, { stats: {}, userData });
+    }
+
+    // Join all fields with commas
+    const selectQuery = selectFields.reduce(
+      (acc, field, index) => {
+        if (index === 0) return field;
+        return sql`${acc}, ${field}`;
+      },
+      sql``,
+    );
+
+    // Build the final query using a dummy table to ensure we always get a result
+    const stats =
+      (await sql`SELECT ${selectQuery} FROM (SELECT 1) as dummy`)[0] || {};
+
+    if (stats.income && stats.expense) {
+      stats.balance = (stats.income - stats.expense).toString();
+    }
 
     return res(200, { stats, userData });
   }

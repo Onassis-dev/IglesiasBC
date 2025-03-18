@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
 import { saveUserData } from '@/lib/accountFunctions';
 import InfoCard from '@/components/common/InfoCard';
+import { Link } from 'react-router';
 
 const Dashboard = () => {
     const [greeting, setGreeting] = useState('Buenas tardes');
@@ -36,53 +37,53 @@ const Dashboard = () => {
             </h2>
             <div className="grid grid-cols-1 gap-6">
                 {data?.stats?.members && (
-                    <a href="/members">
+                    <Link to="/members">
                         <InfoCard color="purple" title="Miembros activos" data={data?.stats?.members}>
                             <Users2 />
                         </InfoCard>
-                    </a>
+                    </Link>
                 )}
                 {/* {data?.stats?.certificates && (
-                    <a href="/certificates">
+                    <Link to="/certificates">
                         <InfoCard color="cyan" title="Total de certificados" data={data?.stats?.certificates}>
                             <FileBadge />
                         </InfoCard>
-                    </a>
+                    </Link>
                 )}
                 {data?.stats?.students && (
-                    <a href="/classes">
+                    <Link to="/classes">
                         <InfoCard color="blue" title="Total de alumnos" data={data?.stats?.students}>
                             <GraduationCap />
                         </InfoCard>
-                    </a>
+                    </Link>
                 )} */}
                 {data?.stats?.balance && (
-                    <a href="/finances">
+                    <Link to="/finances">
                         <InfoCard color="green" title="Balance general" data={data?.stats?.balance}>
                             <DollarSign />
                         </InfoCard>
-                    </a>
+                    </Link>
                 )}
                 {data?.stats?.inventory && (
-                    <a href="/inventory">
+                    <Link to="/inventory">
                         <InfoCard color="yellow" title="Total en inventario" data={data?.stats?.inventory}>
                             <Box />
                         </InfoCard>
-                    </a>
+                    </Link>
                 )}
                 {data?.stats?.blog && (
-                    <a href="/blog">
+                    <Link to="/blog">
                         <InfoCard color="orange" title="Total de visitas al blog" data={data?.stats?.blog}>
                             <MessageSquareQuote />
                         </InfoCard>
-                    </a>
+                    </Link>
                 )}
                 {data?.stats?.website && (
-                    <a href="/website">
+                    <Link to="/website">
                         <InfoCard color="gray" title="Total de visitas a la pagina" data={data?.stats?.website}>
                             <AppWindow />
                         </InfoCard>
-                    </a>
+                    </Link>
                 )}
                 {data?.stats && Object.keys(data?.stats).length === 0 && (
                     <div className="w-full justify-center flex flex-col items-center text-muted-foreground mt-48">
