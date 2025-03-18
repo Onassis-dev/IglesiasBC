@@ -1,4 +1,4 @@
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import type { z } from 'zod';
 import { DialogHeader } from '@/components/ui/dialog';
@@ -63,8 +63,8 @@ const BlogForm = ({ id, open, setOpen }: props) => {
         console.log(values.title);
         const formdata = new FormData();
         formdata.append('title', values.title);
-        if (id) await api2(tsr.posts.put, { ...values, id: Number(id) });
-        else await api2(tsr.posts.post, { ...values, file: selectedFile });
+        if (id) await api(tsr.posts.put, { ...values, id: Number(id) });
+        else await api(tsr.posts.post, { ...values, file: selectedFile });
 
         client.refetchQueries({ queryKey: ['posts'] });
         setOpen(false);

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import type { z } from 'zod';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { PlusIcon } from 'lucide-react';
 import { PostActivitySchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,7 +34,7 @@ const UploadActivity = ({ activity }: any) => {
 
     const handleSubmit = async (values: z.infer<typeof PostActivitySchema>) => {
         if (activity) {
-            await api2(tsr.builder.editActivity, {
+            await api(tsr.builder.editActivity, {
                 ...values,
                 id: String(activity.id),
                 image: selectedFile,
@@ -42,7 +42,7 @@ const UploadActivity = ({ activity }: any) => {
         } else {
             if (!selectedFile) throw new Error('No se seleccionó una imagen');
 
-            await api2(tsr.builder.uploadActivity, {
+            await api(tsr.builder.uploadActivity, {
                 ...values,
                 image: selectedFile,
             });

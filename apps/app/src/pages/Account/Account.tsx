@@ -19,7 +19,7 @@ const Account = () => {
         resolver: zodResolver(UserSchema),
     });
 
-    const { data: { body: data } = {} } = tsr.users.getUser.useQuery({
+    const { data: { body: data } = {} } = tsr.users.get.useQuery({
         queryKey: ['user'],
     });
 
@@ -30,30 +30,9 @@ const Account = () => {
         });
     }, [data]);
 
-    // const fetchData = async () => {
-    //     const result = (await api.get('/users')).data;
-    //     console.log(result);
-    //     setChurches(result.churches);
-
-    //     userConfigForm.setValue('churchId', result.user.churchId ? result.user.churchId.toString() : '0');
-    //     userConfigForm.setValue('username', result.user.username);
-    //     userConfigForm.setValue('email', result.user.email);
-    //     setIsOwner(result.user.isOwner);
-    // };
-
-    // useEffect(() => {
-    //     fetchData();
-    // }, []);
-
-    // useEffect(() => {
-    //     console.log(isOwner);
-    // }, [isOwner]);
-
     const handleSubmit: any = async (values: z.infer<typeof UserSchema>) => {
-        const userData = (await api.put('/users', { ...values })).data;
-
+        const userData: any = await api(tsr.users.editUser, { ...values });
         saveUserData(userData);
-
         location.reload();
     };
 
@@ -120,7 +99,7 @@ const Account = () => {
                                     </FormItem>
                                 )}
                             />
-                            {data?.user?.isOwner && <CreateChurchDialog />}
+                            {!data?.user?.isOwner && <CreateChurchDialog />}
                         </div>
 
                         <div className="w-full">{/* <Button variant="outline">Cambiar contraseña</Button> */}</div>

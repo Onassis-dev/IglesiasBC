@@ -1,4 +1,4 @@
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import type { z } from 'zod';
 import { DialogHeader } from '@/components/ui/dialog';
@@ -7,9 +7,9 @@ import { Input } from '@/components/ui/input';
 import { useEffect } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button, RegisterButton } from '@/components/ui/button';
-import { useTreasurySchema, type TreasurySchema } from '../Finances/finances.models';
-
-import { useQuery } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { PostTreasurySchema } from '@iglesiasbc/schemas';
 import { useQueryStore } from '@/lib/store';
 
 interface Props {
@@ -20,20 +20,25 @@ interface Props {
 
 const TreasuriesForm = ({ open, setOpen, id }: Props) => {
     const client = useQueryStore((queryClient) => queryClient.queryClient);
-    const treasuryForm = useTreasurySchema();
-
-    const { data: item } = useQuery({
-        queryKey: ['treasuryData', id],
-        queryFn: async () => (await api.get(`/treasuries/${id}`)).data,
-        initialData: {},
-        enabled: !!id,
+    const treasuryForm = useForm<z.infer<typeof PostTreasurySchema>>({
+        resolver: zodResolver(PostTreasurySchema),
     });
 
-    const handleSubmit = async (values: z.infer<typeof TreasurySchema>) => {
+    const { data: { body: item } = {} } = tsr.treasuries.getOne.useQuery({
+        queryKey: ['treasuryData', id],
+        enabled: !!id,
+        queryData: {
+            params: {
+                id: String(id),
+            },
+        },
+    });
+
+    const handleSubmit = async (values: z.infer<typeof PostTreasurySchema>) => {
         if (id) {
-            await api.put('/treasuries', values);
+            await api(tsr.treasuries.put, { ...values, id: Number(id) });
         } else {
-            await api.post('/treasuries', values);
+            await api(tsr.treasuries.post, values);
         }
 
         client.refetchQueries({ queryKey: ['treasuries'] });
@@ -41,10 +46,9 @@ const TreasuriesForm = ({ open, setOpen, id }: Props) => {
     };
 
     useEffect(() => {
-        if (item) {
-            treasuryForm.setValue('id', item.id);
-            treasuryForm.setValue('name', item.name);
-        }
+        if (!item) return;
+
+        treasuryForm.setValue('name', item.name);
     }, [item]);
 
     return (
@@ -59,7 +63,7 @@ const TreasuriesForm = ({ open, setOpen, id }: Props) => {
 
                 <Form {...treasuryForm}>
                     <form
-                        onSubmit={treasuryForm.handleSubmit((values: z.infer<typeof TreasurySchema>) =>
+                        onSubmit={treasuryForm.handleSubmit((values: z.infer<typeof PostTreasurySchema>) =>
                             showPromise(handleSubmit(values), id ? 'Información actualizada' : 'Tesorería registrada')
                         )}
                         className="flex flex-col gap-4"

@@ -23,7 +23,7 @@ const InfoCard2 = ({ title, data, children, color, href, perm }: props) => {
     };
 
     const [isAvailable, setIsAvailable] = useState(true);
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setIsAvailable(localStorage.getItem(perm) === 'true');

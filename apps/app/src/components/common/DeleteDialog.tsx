@@ -6,27 +6,30 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
 } from '@/components/ui/alert-dialog';
-import { api } from '@/lib/boilerplate';
+import { tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions';
 import { useQueryStore } from '@/lib/store';
-
 import { AlertTriangle } from 'lucide-react';
+
+type DeleteMethodPaths = {
+    [method in keyof typeof tsr]: (typeof tsr)[method] extends { delete: any } ? method : never;
+}[keyof typeof tsr];
 
 interface props {
     text: string;
     onClick?: () => any;
     open: boolean;
     setOpen: any;
-    path: string;
-    id: string | number;
+    path: DeleteMethodPaths;
+    id: string;
     successMessage: string;
 }
 
-const DeleteDialog = ({ text, setOpen, open, path, id, successMessage }: props) => {
+const DeleteDialog = ({ text, setOpen, open, id, successMessage, path }: props) => {
     const client = useQueryStore((queryClient) => queryClient.queryClient);
 
     const fetchDelete = async () => {
-        await api.delete(`/${path}/${id}`);
+        await tsr[path].delete.mutate({ params: { id } });
 
         client.refetchQueries({ queryKey: [path] });
     };

@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -42,8 +42,8 @@ const MembersForm = ({ id, open, setOpen }: props) => {
             joinDate: formatToUTC(values.joinDate) || values.joinDate,
         };
 
-        if (id) await api2(tsr.members.put, { ...body, id: Number(id) });
-        if (!id) await api2(tsr.members.post, body);
+        if (id) await api(tsr.members.put, { ...body, id: Number(id) });
+        if (!id) await api(tsr.members.post, body);
 
         client.invalidateQueries({ queryKey: ['members'] });
         membersForm.reset();

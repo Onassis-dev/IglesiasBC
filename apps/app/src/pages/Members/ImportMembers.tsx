@@ -1,4 +1,4 @@
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -27,11 +27,7 @@ const ImportMembers = () => {
 
         formData.append('file', selectedFile);
 
-        await api.post('/members/import', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        await api(tsr.members.import, formData);
 
         client.refetchQueries({ queryKey: ['members'] });
         setOpen(false);
@@ -55,7 +51,7 @@ const ImportMembers = () => {
                     <a href="https://cdn.iglesiasbc.com/plantilla_miembros.xlsx">Descargar plantilla</a>
                 </Button>
                 <Label>Archivo</Label>
-                <Input type="file" accept='.xlsx .xls' id="username" onChange={(e) => handleFile(e)} />
+                <Input type="file" accept=".xlsx .xls" id="username" onChange={(e) => handleFile(e)} />
 
                 <Button onClick={() => showPromise(handleSubmit(), 'Miembros importados')}>Importar</Button>
             </DialogContent>

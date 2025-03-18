@@ -14,7 +14,7 @@ import { signInWithGoogle, signup } from './auth.lib';
 const SignupForm = () => {
     const registerForm = useRegisterSchema();
     const [redirect, setRedirect] = useState('');
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);

@@ -16,7 +16,7 @@ import { Separator } from '@/components/ui/separator';
 const LoginForm = () => {
     const loginForm = useLoginSchema();
     const [open2, setOpen2] = useState(false);
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
@@ -29,7 +29,7 @@ const LoginForm = () => {
                 <CardTitle className="text-xl text-center">Bienvenido</CardTitle>
                 <CardDescription className="text-center">Inicia sesion con tu cuenta de google</CardDescription>
             </CardHeader>
-            <CardContent className='p-6'>
+            <CardContent className="p-6">
                 <Button variant={'outline'} className="w-full flex gap-3" onClick={() => signInWithGoogle(() => navigate('/'))}>
                     <img src="/google.svg" alt="google" className="w-5 h-5" />
                     Continuar con Google
@@ -64,7 +64,7 @@ const LoginForm = () => {
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className='w-full flex justify-between'>
+                                    <FormLabel className="w-full flex justify-between">
                                         Contraseña
                                         <p onClick={() => setOpen2(true)} className=" cursor-pointer text-sm font-normal text-right">
                                             Olvide mi contraseña

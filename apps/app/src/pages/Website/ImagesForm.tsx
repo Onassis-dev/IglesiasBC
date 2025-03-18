@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import ChurchImage from './ChurchImage';
@@ -50,7 +50,7 @@ const ImagesForm = () => {
     const uploadImage = async (apiPath: ApiPath) => {
         if (!selectedFile) throw new Error('No se seleccionó ninguna imagen');
 
-        await api2(tsr.builder[apiPath], { image: selectedFile });
+        await api(tsr.builder[apiPath], { image: selectedFile });
 
         setOpen(false);
         setOpen2(false);

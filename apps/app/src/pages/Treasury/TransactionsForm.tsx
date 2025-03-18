@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { api, api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -33,8 +33,8 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
     const handleSubmit = async (values: z.infer<typeof PostTransactionSchema>) => {
         const data = { ...values, date: formatToUTC(values.date) || values.date };
 
-        if (transaction?.id) await api2(tsr.transactions.put, { ...data, id: transaction.id });
-        if (!transaction?.id) await api2(tsr.transactions.post, { ...data });
+        if (transaction?.id) await api(tsr.transactions.put, { ...data, id: transaction.id });
+        if (!transaction?.id) await api(tsr.transactions.post, { ...data });
         client.refetchQueries({ queryKey: ['transactions'] });
         setOpen(false);
     };
@@ -63,7 +63,7 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
     }, []);
 
     const fetchData = async () => {
-        setCategories((await api.get('/options/categories')).data);
+        setCategories((await tsr.options.getCategories.query()).body as any);
     };
 
     const submit = transactionForm.handleSubmit((values: z.infer<typeof PostTransactionSchema>) => {

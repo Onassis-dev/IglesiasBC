@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import type { z } from 'zod';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { format } from 'date-fns';
 import { PlusIcon } from 'lucide-react';
 import DatePicker from '@/components/common/DatePicker';
@@ -13,7 +13,7 @@ import { UploadEventSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-const UploadEvent = ({}: any) => {
+const UploadEvent = () => {
     const client = tsr.useQueryClient();
     const eventsForm = useForm<z.infer<typeof UploadEventSchema>>({
         resolver: zodResolver(UploadEventSchema),
@@ -30,7 +30,7 @@ const UploadEvent = ({}: any) => {
     };
 
     const handleSubmit = async (values: z.infer<typeof UploadEventSchema>) => {
-        await api2(tsr.builder.uploadEvent, {
+        await api(tsr.builder.uploadEvent, {
             title: values.title,
             date: format(values.date, 'yyyy-MM-dd'),
             image: selectedFile,

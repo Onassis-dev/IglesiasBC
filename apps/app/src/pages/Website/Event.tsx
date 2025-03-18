@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import {
     AlertDialog,
@@ -20,9 +20,7 @@ const Event = ({ event }: any) => {
     const client = useQueryStore((queryClient) => queryClient.queryClient);
 
     const deleteEvents = async (id: string) => {
-        await api.delete('/builder/event', {
-            data: { eventId: id },
-        });
+        await api(tsr.builder.deleteEvent, { eventId: Number(id) });
         client.refetchQueries({ queryKey: ['events'] });
     };
 

@@ -1,5 +1,5 @@
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -33,8 +33,8 @@ const InventoryForm = ({ id, open, setOpen }: props) => {
     });
 
     const handleSubmit = async (values: z.infer<typeof PostInventorySchema>) => {
-        if (id) await api2(tsr.inventory.put, { ...values, id: Number(id) });
-        else await api2(tsr.inventory.post, values);
+        if (id) await api(tsr.inventory.put, { ...values, id: Number(id) });
+        else await api(tsr.inventory.post, values);
 
         client.invalidateQueries({ queryKey: ['inventory'] });
         setOpen(false);

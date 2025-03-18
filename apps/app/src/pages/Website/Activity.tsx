@@ -11,7 +11,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import UploadActivity from './UploadActivity';
 import { Card } from '@/components/ui/card';
 import { useQueryStore } from '@/lib/store';
@@ -19,10 +19,9 @@ import { useQueryStore } from '@/lib/store';
 const Activity = ({ activity }: any) => {
     const client = useQueryStore((queryClient) => queryClient.queryClient);
 
-    const deleteEvents = async (id: string) => {
-        await api.delete('/builder/activity', {
-            data: { id: id },
-        });
+    const deleteActivity = async (id: string) => {
+        await api(tsr.builder.deleteActivity, { id: Number(id) });
+
         client.refetchQueries({ queryKey: ['activities'] });
     };
 
@@ -46,7 +45,7 @@ const Activity = ({ activity }: any) => {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => showPromise(deleteEvents(activity.id), 'Actividad eliminada')}>
+                            <AlertDialogAction onClick={() => showPromise(deleteActivity(activity.id), 'Actividad eliminada')}>
                                 Eliminar
                             </AlertDialogAction>
                         </AlertDialogFooter>

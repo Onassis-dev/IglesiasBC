@@ -18,7 +18,7 @@ interface props {
 }
 
 const BlogAlert = ({ open, setOpen }: props) => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
@@ -35,7 +35,7 @@ const BlogAlert = ({ open, setOpen }: props) => {
 
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={()=>navigate('/website')}>Crear pagina</AlertDialogAction>
+                    <AlertDialogAction onClick={() => navigate('/website')}>Crear pagina</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { z } from 'zod';
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,23 +20,23 @@ const WebSiteForm = () => {
     const client = tsr.useQueryClient();
     const [color, setColor] = useState('#000000');
 
-    const { data: { body: [websiteData] = [] } = {}, isLoading } = tsr.builder.getWebsite.useQuery({
+    const { data: { body: [websiteData] = [] } = {} } = tsr.builder.getWebsite.useQuery({
         queryKey: ['websiteData'],
     });
 
     useEffect(() => {
-        if (!isLoading && websiteData) {
+        if (websiteData) {
             websiteForm.reset({ ...websiteData });
 
             setColor(websiteData.color || '#000000');
         }
-    }, [isLoading, websiteData]);
+    }, [websiteData]);
 
     const handleSubmit: any = async (values: z.infer<typeof WebsiteSchema>) => {
         if (websiteData) {
-            await api2(tsr.builder.editWebsite, { ...values, color });
+            await api(tsr.builder.editWebsite, { ...values, color });
         } else {
-            await api2(tsr.builder.createWebsite, { ...values, color });
+            await api(tsr.builder.createWebsite, { ...values, color });
         }
         client.refetchQueries({ queryKey: ['pageInfo'] });
         client.refetchQueries({ queryKey: ['websiteData'] });

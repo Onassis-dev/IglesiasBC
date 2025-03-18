@@ -1,4 +1,4 @@
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import type { z } from 'zod';
 import { DialogHeader } from '@/components/ui/dialog';
@@ -19,7 +19,7 @@ const UserInvite = () => {
     const client = tsr.useQueryClient();
 
     const handleSubmit = async (values: z.infer<typeof PostPermissionSchema>) => {
-        await api2(tsr.permissions.create, values);
+        await api(tsr.permissions.create, values);
         client.refetchQueries({ queryKey: ['permissions'] });
         setOpen(false);
     };

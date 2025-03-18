@@ -13,7 +13,7 @@ export function formatToTZ(dateStr: string | Date | null): Date | null {
 }
 
 export function formatToUTC(dateStr: string | Date): string | undefined {
-    let date = new Date(dateStr);
+    const date = new Date(dateStr);
     if (isNaN(date.getTime())) return;
 
     return new Date(new Date(date).getTime() - (new Date().getTimezoneOffset() / 60) * 60 * 60 * 1000).toISOString().split('T')[0];

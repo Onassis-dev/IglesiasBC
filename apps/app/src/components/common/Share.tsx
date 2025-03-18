@@ -1,22 +1,22 @@
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Event } from "@/pages/Website/website.types";
-import { Share2Icon } from "lucide-react";
-import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Event } from '@/pages/Website/website.types';
+import { Share2Icon } from 'lucide-react';
+import { useState } from 'react';
 
 interface props {
     event: Event;
 }
 
 const Share = ({ event }: props) => {
-    let FB_LINK_FORMAT = `https://www.facebook.com/sharer/sharer.php?u=${"https://iglesiasbc.com/Iglesia%20pro%20curada/eventos#Iglesia%20pro%20curada"}&quote=${event.title}`;
-    let WA_LINK_FORMAT = `https://wa.me/?text=${event.img}%20${event.title}`;
-    let TW_LINK_FORMAT = `https://twitter.com/intent/tweet?url=${event.img}&text=${event.title}`;
+    const FB_LINK_FORMAT = `https://www.facebook.com/sharer/sharer.php?u=${'https://iglesiasbc.com/Iglesia%20pro%20curada/eventos#Iglesia%20pro%20curada'}&quote=${event.title}`;
+    const WA_LINK_FORMAT = `https://wa.me/?text=${event.img}%20${event.title}`;
+    const TW_LINK_FORMAT = `https://twitter.com/intent/tweet?url=${event.img}&text=${event.title}`;
 
     const [canShare, setCanShare] = useState(false);
 
     async function urlToFile(url: string, filename: string) {
         const response = await fetch(url);
-        if (!response.ok) throw new Error("Network response was not ok");
+        if (!response.ok) throw new Error('Network response was not ok');
 
         const blob = await response.blob();
 
@@ -26,17 +26,17 @@ const Share = ({ event }: props) => {
     }
 
     const shareEvent = async () => {
-        const file = await urlToFile(event.img, "imagen.jpg");
+        const file = await urlToFile(event.img, 'imagen.jpg');
         const shareData: ShareData = {
             title: event.title,
-            text: "Visítenos en nuestro proximo evento",
+            text: 'Visítenos en nuestro proximo evento',
             files: [file],
         };
 
         try {
             await navigator.share(shareData);
             setCanShare(true);
-        } catch (err) {
+        } catch (error) {
             setCanShare(false);
         }
     };

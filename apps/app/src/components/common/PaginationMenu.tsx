@@ -22,7 +22,7 @@ const PaginationMenu = ({ page, setPage, count, rowsDisplayed }: props) => {
 
     const calculatePages = () => {
         for (let i = 0; i < (Math.ceil(count / rowsDisplayed) < 5 ? Math.ceil(count / rowsDisplayed) : 5); i++) {
-            let pageNo = page + 2 - i;
+            const pageNo = page + 2 - i;
             items.unshift(pageNo);
         }
 

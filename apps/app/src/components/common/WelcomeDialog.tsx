@@ -7,7 +7,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { api, api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -29,14 +29,14 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
     const client = tsr.useQueryClient();
 
     const createChurch = async (values: any) => {
-        const userData = (await api.post('/churches', values)).data;
+        const userData: any = await api(tsr.churches.create, values);
         saveUserData(userData);
         location.pathname = '/settings';
     };
 
     const selectChurch = async (values: any) => {
         if (!values.churchId) throw new Error('No haz seleccionado una iglesia');
-        const userData: any = await api2(tsr.users.selectChurch, { ...values, churchId: values.churchId });
+        const userData: any = await api(tsr.users.selectChurch, { ...values, churchId: values.churchId });
         saveUserData(userData);
         location.pathname = '/';
     };

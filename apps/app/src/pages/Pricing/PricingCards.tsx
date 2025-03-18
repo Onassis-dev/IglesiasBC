@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { useNavigate } from 'react-router';
 
 const Line = (text: string) => (
@@ -12,12 +12,10 @@ const Line = (text: string) => (
 );
 
 const pricingCards = (plan: string, products: string[], prices: number[], period: string, savings: (number | null)[]) => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     const handleCheckout = async (product: string) => {
-        const { data } = await api.post('/payments/checkout', {
-            product,
-        });
-        navigate(`/checkout?secret=${data.clientSecret}`);
+        const result: any = await api(tsr.payments.checkout, { product });
+        navigate(`/checkout?secret=${result.clientSecret}`);
     };
 
     const getText = (userPlan: number, plan: number) => {

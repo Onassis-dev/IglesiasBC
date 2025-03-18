@@ -66,7 +66,7 @@ export function Blog() {
                     open={open1}
                     setOpen={setOpen1}
                     path="posts"
-                    id={selectedPost?.id}
+                    id={selectedPost.id}
                     successMessage="Post eliminado"
                 />
             </OptionsGrid>

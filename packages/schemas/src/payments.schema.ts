@@ -16,7 +16,7 @@ export const paymentsContract = c.router(
         200: z.any(),
       },
       headers: z.object({
-        origin: z.string(),
+        origin: z.string().optional(),
       }),
       body: CheckoutSchema,
     },
@@ -30,7 +30,7 @@ export const paymentsContract = c.router(
         }),
       },
       headers: z.object({
-        origin: z.string(),
+        origin: z.string().optional(),
       }),
       body: null,
     },

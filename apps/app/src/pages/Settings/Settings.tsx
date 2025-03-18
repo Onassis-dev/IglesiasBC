@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { useEffect, useState } from 'react';
 import '@/lib/boilerplate';
@@ -44,13 +44,13 @@ const Settings = () => {
     });
 
     const handlePortal = async () => {
-        // @ts-ignore - The headers are automatically sent by the browser
-        const data: { url: string } = await api2(tsr.payments.portal, null);
+        // @ts-expect-error - The headers are automatically sent by the browser
+        const data: { url: string } = await api(tsr.payments.portal, null);
         if (data?.url) window.location.href = data.url;
     };
 
     const handleSubmit: any = async (values: z.infer<typeof ChurchSchema>) => {
-        api2(tsr.churches.edit, values);
+        api(tsr.churches.edit, values);
     };
 
     return (

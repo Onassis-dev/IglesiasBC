@@ -1,4 +1,4 @@
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { XIcon } from 'lucide-react';
 import {
@@ -21,9 +21,8 @@ interface props {
 
 const ChurchImage = ({ url, fetchData }: props) => {
     const deleteImage = async (url: string) => {
-        await api.delete('/builder/image', {
-            data: { imageUrl: url },
-        });
+        await api(tsr.builder.deleteChurchImage, { imageUrl: url });
+
         fetchData();
     };
 

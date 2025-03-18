@@ -8,19 +8,19 @@ import { saveUserData } from '@/lib/accountFunctions';
 import { useUIStore } from '@/lib/store';
 
 export const Layout = () => {
-    const [isChecking, setIsChecking] = useState(false);
     const [forceRefresh, setForceRefresh] = useState(0);
     const navigate = useNavigate();
     const { registerOpen, setRegisterOpen } = useUIStore((state) => state);
 
     async function checkUserData() {
-        const newData: any = await tsr.users.getData.query();
+        const { body }: any = await tsr.users.getData.query();
+
         let changed = false;
-        for (const key in newData) {
-            if (newData[key]?.toString() !== localStorage.getItem(key)) changed = true;
+        for (const key in body) {
+            if (body[key]?.toString() !== localStorage.getItem(key)) changed = true;
         }
 
-        saveUserData(newData);
+        saveUserData(body);
         if (changed) setForceRefresh(1);
     }
 
@@ -30,12 +30,9 @@ export const Layout = () => {
 
         if (!userId) navigate('/login');
         if (!churchId && userId) setRegisterOpen(true);
-        setIsChecking(false);
 
         checkUserData();
     }, []);
-
-    if (isChecking) return null;
 
     return (
         <>

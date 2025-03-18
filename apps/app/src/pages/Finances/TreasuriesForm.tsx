@@ -1,5 +1,5 @@
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -33,8 +33,8 @@ const TreasuriesForm = ({ open, setOpen, id }: props) => {
     });
 
     const handleSubmit = async (values: z.infer<typeof PostTreasurySchema>) => {
-        if (id) await api2(tsr.treasuries.put, { ...values, id: Number(id) });
-        if (!id) await api2(tsr.treasuries.post, values);
+        if (id) await api(tsr.treasuries.put, { ...values, id: Number(id) });
+        if (!id) await api(tsr.treasuries.post, values);
 
         client.invalidateQueries({ queryKey: ['treasuries'] });
         setOpen(false);

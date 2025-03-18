@@ -1,4 +1,4 @@
-import { api2, tsr } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type { z } from 'zod';
 import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -24,7 +24,7 @@ const UserForm = ({ user, open, setOpen }: props) => {
     const client = tsr.useQueryClient();
 
     const handleSubmit = async (values: z.infer<typeof EditPermissionSchema>) => {
-        await api2(tsr.permissions.edit, values);
+        await api(tsr.permissions.edit, values);
         client.refetchQueries({ queryKey: ['permissions'] });
         setOpen(false);
     };

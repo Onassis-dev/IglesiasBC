@@ -280,9 +280,6 @@ importers:
       '@ts-rest/react-query':
         specifier: ^3.52.1
         version: 3.52.1(@tanstack/react-query@5.67.3(react@18.3.1))(@ts-rest/core@3.52.1(@types/node@22.13.9)(zod@3.24.2))(react@18.3.1)(zod@3.24.2)
-      axios:
-        specifier: ^1.7.9
-        version: 1.8.2
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -8871,6 +8868,7 @@ packages:
   typescript@5.8.2:
     resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
     engines: {node: '>=14.17'}
+    hasBin: true
 
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}

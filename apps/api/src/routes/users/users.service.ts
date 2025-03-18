@@ -13,7 +13,7 @@ export class UsersService {
 
   async getOne() {
     const [user] =
-      await sql`select username, email, (select id from churches where "ownerId" = users.id) as "isOwner" from users where id = ${this.req.getUserId()}`;
+      await sql`select username, email, (select true from churches where "ownerId" = users.id) as "isOwner" from users where id = ${this.req.getUserId()}`;
 
     const [result] =
       await sql`select "churchId" from permissions where "userId" = ${this.req.getUserId()} and selected = true`;

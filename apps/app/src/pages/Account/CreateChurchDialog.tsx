@@ -9,7 +9,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { api } from '@/lib/boilerplate';
+import { api, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -24,7 +24,7 @@ const CreateChurchDialog = () => {
     const [open, setOpen] = useState(false);
 
     const createChurch = async (values: any) => {
-        const userData = (await api.post('/churches', values)).data;
+        const userData: any = await api(tsr.churches.create, { ...values });
         saveUserData(userData);
         location.pathname = '/settings';
     };
