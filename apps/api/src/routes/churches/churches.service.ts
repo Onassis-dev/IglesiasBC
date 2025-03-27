@@ -12,8 +12,8 @@ export class ChurchesService {
 
   async getChurch() {
     const [church] =
-      await sql`select users.plan, users."expirationDate", churches.name from
-      users join churches on users.id = churches."ownerId"
+      await sql`select churches.plan, churches."expirationDate", churches.name from
+      churches
       where churches.id = ${this.req.getChurchId()}`;
 
     return res(200, church);

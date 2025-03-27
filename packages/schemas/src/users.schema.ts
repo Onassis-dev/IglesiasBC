@@ -2,7 +2,7 @@ import { z } from "zod";
 import { initContract } from "@ts-rest/core";
 
 export const UserSchema = z.object({
-  username: z.string(),
+  username: z.string().optional(),
   churchId: z.string(),
 });
 

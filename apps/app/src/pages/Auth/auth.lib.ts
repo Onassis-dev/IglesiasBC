@@ -1,20 +1,15 @@
 import { saveUserData } from '@/lib/accountFunctions';
-import { api, tsr } from '@/lib/boilerplate';
 import { LoginSchema, RegisterSchema } from './auth.models';
 import { auth } from '@/lib/firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth';
 import { z } from 'zod';
 
 export async function login(values: z.infer<typeof LoginSchema>, cb: () => void) {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
         const user = userCredential.user;
-        const token = await user.getIdToken();
-        const refreshToken = user.refreshToken;
 
-        const userData: any = await api(tsr.auth.login, { email: values.email, token, refreshToken });
-
-        saveUserData(userData);
+        saveUserData([{ userId: user.uid }]);
 
         cb();
     } catch (err: any) {
@@ -31,14 +26,9 @@ export async function signInWithGoogle(cb: () => void) {
         const result = await signInWithPopup(auth, provider);
 
         const user = result.user;
-        const token = await user.getIdToken();
-        const refreshToken = user.refreshToken;
 
         if (!user?.email || !user?.displayName) throw new Error('Error al iniciar sesión con Google');
-        const userData: any = await api(tsr.auth.google, { email: user.email, token, refreshToken, username: user.displayName });
-
-        localStorage.setItem('photo', user.photoURL || '');
-        saveUserData(userData);
+        saveUserData([{ userId: user.uid }]);
 
         cb();
     } catch (err: any) {
@@ -51,13 +41,10 @@ export async function signInWithGoogle(cb: () => void) {
 export async function signup(values: z.infer<typeof RegisterSchema>, cb: () => void) {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        await updateProfile(userCredential.user, { displayName: values.username });
+
         const user = userCredential.user;
-        const token = await user.getIdToken();
-        const refreshToken = user.refreshToken;
-        const userData: any = await api(tsr.auth.signup, { username: values.username, email: values.email, token, refreshToken });
-
-        saveUserData(userData);
-
+        saveUserData([{ userId: user.uid }]);
         cb();
     } catch (err: any) {
         // Como ventana emergente

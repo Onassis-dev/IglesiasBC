@@ -13,18 +13,17 @@ export class UsersService {
 
   async getOne() {
     const [user] =
-      await sql`select username, email, (select true from churches where "ownerId" = users.id) as "isOwner" from users where id = ${this.req.getUserId()}`;
+      await sql`select ("ownerId" = ${this.req.getUserId()}) as "isOwner" from churches where id = ${this.req.getChurchId() || 0}`;
 
     const [result] =
       await sql`select "churchId" from permissions where "userId" = ${this.req.getUserId()} and selected = true`;
     const churchId = result ? result.churchId : null;
 
     const churches =
-      await sql`select permissions."churchId" as id, permissions.selected, churches.name, users.plan
+      await sql`select permissions."churchId" as id, permissions.selected, churches.name, churches.plan
         from permissions
-        join users on users.id = permissions."userId"
         join churches on churches.id = permissions."churchId"      
-      where users.id = ${this.req.getUserId()}`;
+      where permissions."userId" = ${this.req.getUserId()}`;
 
     return res(200, { user: { ...user, churchId }, churches });
   }
@@ -39,15 +38,7 @@ export class UsersService {
   }
 
   async edit(body: z.infer<typeof UserSchema>) {
-    const [usernameExists] =
-      await sql`select 1 from "users" where "username" = ${body.username} and id <> ${this.req.getUserId()}`;
-
-    if (usernameExists) {
-      return error('Ya existe un usuario registrado con ese nombre', 400);
-    }
-
     await sql.begin(async (sql) => {
-      await sql`update "users" set "username" = ${body.username} where "id" = ${this.req.getUserId()}`;
       await sql`update permissions set selected = false where "userId" = ${this.req.getUserId()}`;
       await sql`update permissions set selected = true where "userId" = ${this.req.getUserId()} and "churchId" = ${body.churchId}`;
     });
@@ -67,8 +58,7 @@ export class UsersService {
   }
 
   async getData() {
-    const userId = this.req.getUserId();
-    const data = await getUserData(userId);
+    const data = await getUserData(this.req.getUserId());
     return res(200, data);
   }
 }

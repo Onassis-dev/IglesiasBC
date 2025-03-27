@@ -8,19 +8,20 @@ import {
     DropdownMenuTrigger,
     DropdownMenuShortcut,
 } from '@/components/ui/dropdown-menu';
-import { showPromise } from '@/lib/showFunctions.tsx';
 import { LogOutIcon, User2 } from 'lucide-react';
-import { logout } from '@/lib/accountFunctions';
 import { Link, useNavigate } from 'react-router';
+import { auth } from '@/lib/firebase';
+import { useUserStore } from '@/lib/store';
 
 const UserButton = () => {
+    const { user } = useUserStore((state) => state);
     const navigate = useNavigate();
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="rounded-full">
                 <Avatar className="size-8">
-                    <AvatarImage src={localStorage.getItem('photo') || ''} alt="avatar" className="w-full h-full" />
+                    <AvatarImage src={user?.photoURL || ''} alt="avatar" className="w-full h-full" />
                     <AvatarFallback className="text-foreground border">
                         <User2 className="size-5" />
                     </AvatarFallback>
@@ -34,12 +35,12 @@ const UserButton = () => {
                 </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                    onClick={() =>
-                        showPromise(
-                            logout(() => navigate('/login')),
-                            'Sesión cerrada'
-                        )
-                    }
+                    onClick={() => {
+                        auth.signOut().then(() => {
+                            localStorage.clear();
+                            navigate('/login');
+                        });
+                    }}
                 >
                     Cerrar sesión
                     <DropdownMenuShortcut>

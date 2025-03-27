@@ -13,11 +13,15 @@ import { useEffect } from 'react';
 import { UserSchema } from '@iglesiasbc/schemas';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useUserStore } from '@/lib/store';
+import { updateProfile } from 'firebase/auth';
 
 const Account = () => {
     const userConfigForm = useForm<z.infer<typeof UserSchema>>({
         resolver: zodResolver(UserSchema),
     });
+
+    const user = useUserStore((state) => state.user);
 
     const { data: { body: data } = {} } = tsr.users.get.useQuery({
         queryKey: ['user'],
@@ -26,12 +30,13 @@ const Account = () => {
     useEffect(() => {
         userConfigForm.reset({
             churchId: data?.user?.churchId ? data?.user?.churchId.toString() : '0',
-            username: data?.user?.username,
+            username: user?.displayName || '',
         });
-    }, [data]);
+    }, [data, user]);
 
     const handleSubmit: any = async (values: z.infer<typeof UserSchema>) => {
-        const userData: any = await api(tsr.users.editUser, { ...values });
+        const userData: any = await api(tsr.users.editUser, { churchId: values.churchId });
+        if (user) await updateProfile(user, { displayName: values.username });
         saveUserData(userData);
         location.reload();
     };
@@ -39,7 +44,7 @@ const Account = () => {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Configuración de cuenta</CardTitle>
+                <CardTitle>Configuración de tu cuenta</CardTitle>
             </CardHeader>
             <CardContent>
                 <Form {...userConfigForm}>
@@ -56,7 +61,7 @@ const Account = () => {
                                 <FormItem>
                                     <FormLabel>Nombre de usuario</FormLabel>
                                     <FormControl>
-                                        <Input {...field} />
+                                        <Input className="max-w-lg" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -66,7 +71,7 @@ const Account = () => {
                         <FormItem>
                             <FormLabel>Correo electrónico</FormLabel>
                             <FormControl>
-                                <Input value={data?.user?.email} readOnly />
+                                <Input className="max-w-lg" value={user?.email || ''} readOnly />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -81,7 +86,7 @@ const Account = () => {
                                         <FormControl>
                                             <Select value={field.value} onValueChange={field.value ? field.onChange : undefined}>
                                                 <FormControl>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="max-w-lg">
                                                         <SelectValue placeholder="Selecciona una iglesia" />
                                                     </SelectTrigger>
                                                 </FormControl>

@@ -3,6 +3,7 @@ import { initContract } from "@ts-rest/core";
 
 export const CheckoutSchema = z.object({
   product: z.string(),
+  email: z.string().email(),
 });
 
 const c = initContract();

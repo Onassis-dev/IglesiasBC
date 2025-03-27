@@ -5,12 +5,14 @@ import { useEffect, useState } from 'react';
 import WelcomeDialog from '../WelcomeDialog';
 import { tsr } from '@/lib/boilerplate';
 import { saveUserData } from '@/lib/accountFunctions';
-import { useUIStore } from '@/lib/store';
+import { useUIStore, useUserStore } from '@/lib/store';
+import { Loader, Loader2 } from 'lucide-react';
 
 export const Layout = () => {
     const [forceRefresh, setForceRefresh] = useState(0);
     const navigate = useNavigate();
     const { registerOpen, setRegisterOpen } = useUIStore((state) => state);
+    const { user, userLoading } = useUserStore((state) => state);
 
     async function checkUserData() {
         const { body }: any = await tsr.users.getData.query();
@@ -25,14 +27,25 @@ export const Layout = () => {
     }
 
     useEffect(() => {
-        const userId = localStorage.getItem('userId');
+        if (userLoading) return;
         const churchId = localStorage.getItem('churchId');
 
-        if (!userId) navigate('/login');
-        if (!churchId && userId) setRegisterOpen(true);
+        if (!user) navigate('/login');
+        if (!churchId && user) setRegisterOpen(true);
 
         checkUserData();
-    }, []);
+    }, [user]);
+
+    useEffect(() => {
+        if (!user && !userLoading) navigate('/login');
+    }, [user, userLoading]);
+
+    if (userLoading)
+        return (
+            <div className="flex justify-center bg-dashboardbg items-center w-full h-screen">
+                <Loader className="size-16 animate-spin" strokeWidth={1.2} />
+            </div>
+        );
 
     return (
         <>

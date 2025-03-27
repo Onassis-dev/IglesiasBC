@@ -46,13 +46,11 @@ export class PaymentsService {
 
     const paymentIntent = event.data.object;
     let customerId;
-    let userEmail;
     let userId;
     let subscriptionExpirationDate;
+
     let productId;
     let subscription;
-
-    let completed = false;
 
     if (event.type === 'checkout.session.completed') {
       subscription = await stripe.subscriptions.retrieve(
@@ -62,24 +60,22 @@ export class PaymentsService {
       customerId = paymentIntent.customer;
       userId = paymentIntent.metadata.userId;
       productId = subscription.plan.product;
-      userEmail = paymentIntent.customer_email;
       subscriptionExpirationDate = new Date(
         subscription.current_period_end * 1000,
       );
 
       try {
-        const [userExists] =
-          await sql`select 1 from "users" where "id" = ${userId} OR "email" = ${userEmail}`;
-        if (!userExists) {
-          console.log('No se encontro el usuario');
+        const [church] =
+          await sql`update "churches" set "stripeId" = ${customerId}, "plan" = ${productLevels[productId]}, "expirationDate" = ${subscriptionExpirationDate} where "ownerId" = ${userId} returning "id"`;
+        if (!church) {
+          console.log('No se encontro la iglesia de dueno:' + userId);
           throw new HttpException(null, 500);
         }
-        await sql`update "users" set "stripeId" = ${customerId}, "plan" = ${productLevels[productId]}, "expirationDate" = ${subscriptionExpirationDate} where "id" = ${userId}`;
       } catch (err) {
         console.log(err);
         throw new HttpException(null, 500);
       }
-      completed = true;
+      return;
     }
 
     if (event.type === 'customer.subscription.updated') {
@@ -90,10 +86,10 @@ export class PaymentsService {
       productId = paymentIntent.plan.product;
 
       try {
-        await sql`update "users" set "plan" = ${productLevels[productId]}, "expirationDate" = ${subscriptionExpirationDate} where "stripeId" = ${customerId} `;
-        completed = true;
+        await sql`update "churches" set "plan" = ${productLevels[productId]}, "expirationDate" = ${subscriptionExpirationDate} where "stripeId" = ${customerId} `;
+        return;
       } catch (err) {
-        console.log('No se encontro el usuario');
+        console.log('No se encontro la iglesia de stripeId:' + customerId);
         throw new HttpException(null, 500);
       }
     }
@@ -102,33 +98,27 @@ export class PaymentsService {
       customerId = paymentIntent.customer;
 
       try {
-        await sql`update "users" set "plan" = 0, "expirationDate" = null, "stripeId" = null where "stripeId" = ${customerId} `;
-        completed = true;
+        await sql`update "churches" set "plan" = 0, "expirationDate" = null, "stripeId" = null where "stripeId" = ${customerId} `;
+        return;
       } catch (err) {
-        console.log('No se encontro el usuario');
+        console.log('No se encontro la iglesia de stripeId:' + customerId);
         throw new HttpException(null, 500);
       }
     }
 
-    if (!completed) console.log(`Unhandled event type ${event.type}`);
+    console.log(`Unhandled event type ${event.type}`);
     return;
   }
 
   async checkout(body: z.infer<typeof CheckoutSchema>, headers: any) {
     const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
-    const [{ email }] =
-      await sql`select email from "users" where id = ${this.req.getUserId()}`;
-    if (!email) {
-      return res(400, { message: 'No tienes una cuenta' });
-    }
-
     const session = await stripe.checkout.sessions.create({
       ui_mode: 'embedded',
       metadata: {
         userId: this.req.getUserId(),
       },
-      customer_email: email,
+      customer_email: body.email,
       payment_method_types: ['card'],
       locale: 'es',
       line_items: [
@@ -148,7 +138,7 @@ export class PaymentsService {
     const stripe = new Stripe(process.env.STRIPE_API_KEY);
 
     const [{ stripeId }] =
-      await sql`select "stripeId" from "users" where id = ${this.req.getUserId()}`;
+      await sql`select "stripeId" from "churches" where "ownerId" = ${this.req.getUserId()}`;
     if (!stripeId) {
       return res(400, { message: 'No tienes una suscripción' });
     }

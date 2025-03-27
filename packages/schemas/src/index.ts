@@ -7,14 +7,12 @@ import { builderContract } from "./builder.schema.js";
 import { postsContract } from "./posts.schema.js";
 import { optionsContract } from "./options.schema.js";
 import { websitesContract } from "./websites.schema.js";
-import { authContract } from "./auth.schema.js";
 import { churchesContract } from "./churches.schema.js";
 import { dashboardContract } from "./dashboard.schema.js";
 import { usersContract } from "./users.schema.js";
 import { permissionsContract } from "./permissions.schema.js";
 import { paymentsContract } from "./payments.schema.js";
 
-export * from "./auth.schema.js";
 export * from "./members.schema.js";
 export * from "./transactions.schema.js";
 export * from "./payments.schema.js";
@@ -43,7 +41,6 @@ export const contract = c.router({
   posts: postsContract,
   websites: websitesContract,
   options: optionsContract,
-  auth: authContract,
   churches: churchesContract,
   dashboard: dashboardContract,
   users: usersContract,

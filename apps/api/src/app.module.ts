@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { WebsitesModule } from './routes/websites/websites.module';
-import { AuthModule } from './routes/auth/auth.module';
 import { ChurchesModule } from './routes/churches/churches.module';
 import { BuilderModule } from './routes/builder/builder.module';
 import { FastifyMulterModule } from '@nest-lab/fastify-multer';
@@ -20,7 +19,6 @@ import { DashboardModule } from './routes/dashboard/dashboard.module';
 @Module({
   imports: [
     WebsitesModule,
-    AuthModule,
     ChurchesModule,
     BuilderModule,
     UsersModule,

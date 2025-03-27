@@ -3,14 +3,14 @@ import { ContextProvider } from 'src/interceptors/contextProvider';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import {
-  PermissionIdSchema,
+  IdSchema,
   EditPermissionSchema,
   PostPermissionSchema,
 } from '@iglesiasbc/schemas';
 import { res } from 'src/utils/response';
+import { auth } from 'src/utils/firebase';
 
 const permissionsLimits = [2, 10, 20];
-
 @Injectable()
 export class PermissionsService {
   constructor(private readonly req: ContextProvider) {}
@@ -22,13 +22,17 @@ export class PermissionsService {
       return res(403, { message: 'No cuentas con los permisos necesarios' });
     }
 
-    const rows = await sql`
-    SELECT users.username, permissions.*
-    FROM permissions JOIN users
-    ON permissions."userId" = users.id
-    where "churchId" = ${this.req.getChurchId()}`;
+    const rows =
+      await sql`SELECT * FROM permissions WHERE "churchId" = ${this.req.getChurchId()}`;
 
-    return res(200, rows);
+    const query = await auth.getUsers(rows.map((row) => ({ uid: row.userId })));
+    const result = rows.map((row) => ({
+      ...row,
+      username: query.users.find((user) => user.uid === row.userId)
+        ?.displayName,
+    }));
+
+    return res(200, result);
   }
 
   async createPermission(body: z.infer<typeof PostPermissionSchema>) {
@@ -49,21 +53,21 @@ export class PermissionsService {
       return res(403, { message: 'No cuentas con los permisos necesarios' });
     }
 
-    const [user] = await sql`select * from users where email = ${body.email}`;
-    if (!user) {
+    const { uid } = await auth.getUserByEmail(body.email);
+    if (!uid) {
       return res(400, {
         message: 'No se encontró un usuario con ese correo electrónico',
       });
     }
 
     const [userRegistered] =
-      await sql`select 1 from permissions where "userId" = (select id from users where email = ${body.email}) and "churchId" = ${this.req.getChurchId()}`;
+      await sql`select 1 from permissions where "userId" = ${uid} and "churchId" = ${this.req.getChurchId()}`;
     if (userRegistered) {
       return res(400, { message: 'Ese usuario ya esta registrado' });
     }
 
     const result =
-      await sql`insert into permissions ${sql({ userId: user.id, churchId: this.req.getChurchId() })}`;
+      await sql`insert into permissions ${sql({ userId: uid, churchId: this.req.getChurchId() })}`;
     return res(200, result);
   }
 
@@ -90,7 +94,7 @@ export class PermissionsService {
     return res(200, result);
   }
 
-  async deletePermission(params: z.infer<typeof PermissionIdSchema>) {
+  async deletePermission(params: z.infer<typeof IdSchema>) {
     const [permission] =
       await sql`select 1 from churches where "ownerId" = ${this.req.getUserId()} and id = ${this.req.getChurchId()}`;
     if (!permission) {
