@@ -36,13 +36,13 @@ export class PostsService {
     LIMIT 6 OFFSET ${6 * (parseInt(query.page) - 1)}
   `;
 
-    const [{ title }] =
+    const [website] =
       await sql`select title from websites where "churchId" = ${this.req.getChurchId()}`;
 
     return res(200, {
       rows,
       count: rows[0]?.count || 0,
-      websiteTitle: title,
+      websiteTitle: website?.title,
     });
   }
 

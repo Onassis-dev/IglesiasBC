@@ -1,70 +1,73 @@
 import {
   Controller,
   UseGuards,
-  Post,
-  Body,
-  Get,
-  Delete,
-  Query,
-  Param,
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
 import { CertificatesService } from './certificates.service';
 import { AuthGuard } from 'src/interceptors/auth/authorization.guard';
-import { ZodPiPe } from 'src/interceptors/validation/validation.pipe';
-import {
-  IdSchema,
-  DownloadSchema,
-  PostCertificateSchema,
-  getCertificateSchema,
-} from '@iglesiasbc/schemas';
 import { FileInterceptor, File } from '@nest-lab/fastify-multer';
 import { ImageHandler } from 'src/interceptors/files/image.interceptor';
-
-@Controller('certificates')
+import { certificatesContract } from '@iglesiasbc/schemas';
+import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
+@Controller()
 @UseGuards(new AuthGuard('certificates'))
 export class CertificatesController {
   constructor(private readonly certificatesService: CertificatesService) {}
 
-  @Get()
-  read(@Query(new ZodPiPe(getCertificateSchema)) query) {
-    return this.certificatesService.get(query);
+  @TsRestHandler(certificatesContract.get)
+  read() {
+    return tsRestHandler(certificatesContract.get, ({ query }) =>
+      this.certificatesService.get(query),
+    );
   }
 
-  @Get(':id')
-  download(@Param(new ZodPiPe(DownloadSchema)) param) {
-    return this.certificatesService.download(param);
+  @TsRestHandler(certificatesContract.download)
+  download() {
+    return tsRestHandler(certificatesContract.download, ({ params }) =>
+      this.certificatesService.download({ id: params.id }),
+    );
   }
 
-  @Post()
-  create(@Body(new ZodPiPe(PostCertificateSchema)) body) {
-    return this.certificatesService.post(body);
+  @TsRestHandler(certificatesContract.create)
+  create() {
+    return tsRestHandler(certificatesContract.create, ({ body }) =>
+      this.certificatesService.post(body),
+    );
   }
 
-  @Delete(':id')
-  delete(@Param(new ZodPiPe(IdSchema)) param) {
-    return this.certificatesService.delete(param);
+  @TsRestHandler(certificatesContract.delete)
+  delete() {
+    return tsRestHandler(certificatesContract.delete, ({ params }) =>
+      this.certificatesService.delete(params),
+    );
   }
 
-  @Get('members')
+  @TsRestHandler(certificatesContract.getMembers)
   getMembers() {
-    return this.certificatesService.getMembers();
+    return tsRestHandler(certificatesContract.getMembers, () =>
+      this.certificatesService.getMembers(),
+    );
   }
 
-  @Get('pastors')
+  @TsRestHandler(certificatesContract.getPastors)
   getPastors() {
-    return this.certificatesService.getPastors();
+    return tsRestHandler(certificatesContract.getPastors, () =>
+      this.certificatesService.getPastors(),
+    );
   }
 
-  @Get('stats')
-  getTotal() {
-    return this.certificatesService.getStats();
+  @TsRestHandler(certificatesContract.getStats)
+  getStats() {
+    return tsRestHandler(certificatesContract.getStats, () =>
+      this.certificatesService.getStats(),
+    );
   }
-
-  @Post('logo')
-  @UseInterceptors(FileInterceptor('image'), new ImageHandler(600, 100, true))
+  @TsRestHandler(certificatesContract.uploadLogo)
+  @UseInterceptors(FileInterceptor('file'), new ImageHandler(600, 100, true))
   uploadLogo(@UploadedFile() file: File) {
-    return this.certificatesService.uploadLogo(file);
+    return tsRestHandler(certificatesContract.uploadLogo, () =>
+      this.certificatesService.uploadLogo(file),
+    );
   }
 }

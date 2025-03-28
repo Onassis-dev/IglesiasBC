@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEffect, useState } from 'react';
-import pricingCards from './PricingCards';
+import PricingCards from './PricingCards';
 
 const Pricing = () => {
     const [plan, setPlan] = useState('0');
@@ -20,11 +20,9 @@ const Pricing = () => {
                 </TabsTrigger>
             </TabsList>
             <TabsContent value="mensual">
-                {pricingCards(plan, ['', 'base-monthly', 'pro-monthly'], [0, 199, 399], 'mes', [null, null, null])}
+                {PricingCards(plan, ['', 'base-monthly', 'pro-monthly'], [0, 199, 399], 'mes', [null, null, null])}
             </TabsContent>
-            <TabsContent value="anual">
-                {pricingCards(plan, ['', 'base-yearly', 'pro-yearly'], [0, 1990, 3990], 'año', [null, 390, 790])}
-            </TabsContent>
+            <TabsContent value="anual">{PricingCards(plan, ['', 'base-yearly', 'pro-yearly'], [0, 1990, 3990], 'año', [null, 390, 790])}</TabsContent>
         </Tabs>
     );
 };

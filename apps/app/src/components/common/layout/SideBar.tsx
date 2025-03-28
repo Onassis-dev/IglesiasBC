@@ -1,4 +1,4 @@
-import { AppWindow, Archive, Award, Church, CircleDollarSign, Home, MessageSquareQuote, Settings, Users2 } from 'lucide-react';
+import { AppWindow, Archive, Award, Church, CircleDollarSign, FileBadge, Home, MessageSquareQuote, Settings, Users2 } from 'lucide-react';
 import { useUIStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -75,12 +75,9 @@ const SideBar = () => {
                     <SideBarButton permRequired={userData.perm_inventory} href="inventory">
                         <Archive className="size-4" />
                     </SideBarButton>
-                    {/* <SideBarButton
-            permRequired={userData.perm_certificates}
-            href="certificates"
-          >
-            <FileBadge className="size-4" />
-          </SideBarButton> */}
+                    <SideBarButton permRequired={userData.perm_certificates} href="certificates">
+                        <FileBadge className="size-4" />
+                    </SideBarButton>
                     {/* <SideBarButton permRequired={userData.perm_classes} href="classes">
             <GraduationCap className="size-4" />
           </SideBarButton> */}

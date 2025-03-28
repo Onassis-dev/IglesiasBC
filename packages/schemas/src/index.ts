@@ -12,6 +12,7 @@ import { dashboardContract } from "./dashboard.schema.js";
 import { usersContract } from "./users.schema.js";
 import { permissionsContract } from "./permissions.schema.js";
 import { paymentsContract } from "./payments.schema.js";
+import { certificatesContract } from "./certificates.schema.js";
 
 export * from "./members.schema.js";
 export * from "./transactions.schema.js";
@@ -34,6 +35,7 @@ const c = initContract();
 
 export const contract = c.router({
   members: membersContract,
+  certificates: certificatesContract,
   inventory: inventoryContract,
   transactions: transactionsContract,
   treasuries: treasuriesContract,

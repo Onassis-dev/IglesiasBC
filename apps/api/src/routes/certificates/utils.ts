@@ -21,7 +21,7 @@ export const getCertificateText = (
   if (type === 'Membresia')
     return `Ha sido aceptado como miembro de pleno derecho de nuestra comunidad, comprometiéndose a vivir y promover los valores y principios que nos guían el día ${dateStr} en la iglesia ${churchName}.`;
 
-  if (type === 'Quince amos')
+  if (type === 'Quince años')
     return `Ha celebrado su quinceañera, marcando su transición de niña a mujer bajo la bendición de Dios el día ${dateStr} en la iglesia ${churchName}.`;
 
   if (type === 'Recomendacion')

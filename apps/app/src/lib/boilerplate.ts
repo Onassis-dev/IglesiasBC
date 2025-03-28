@@ -25,7 +25,7 @@ export const tsr = initTsrReactQuery(contract, {
         }
         if ((result.body as any).message === 'NOCHURCH') {
             localStorage.removeItem('churchId');
-            useUIStore.getState().setRegisterOpen(true);
+            // useUIStore.getState().setRegisterOpen(true);
         }
 
         return result;
@@ -53,6 +53,7 @@ export const api = async <TVariables, TResult>(mutation: Mutation<TVariables, TR
 
     if ((result.body as any).message === 'NOCHURCH') {
         localStorage.removeItem('churchId');
+        console.log('open1');
         useUIStore.getState().setRegisterOpen(true);
     }
 

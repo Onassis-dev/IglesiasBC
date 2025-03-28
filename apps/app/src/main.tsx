@@ -7,7 +7,7 @@ import Finances from './pages/Finances/Finances';
 import Blog from './pages/Blog/Blog';
 import Website from './pages/Website/Website';
 // import Classes from "./pages/Classes/Classes";
-// import Certificates from "./pages/Certificates/Certificates";
+import Certificates from './pages/Certificates/Certificates';
 import Inventory from './pages/Inventory/Inventory';
 import LoginForm from './pages/Auth/LoginForm';
 import Account from './pages/Account/Account';
@@ -33,7 +33,7 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="/members" element={<Members />} />
                         <Route path="/finances" element={<Finances />} />
                         <Route path="/inventory" element={<Inventory />} />
-                        {/* <Route path="/certificates" element={<Certificates />} /> */}
+                        <Route path="/certificates" element={<Certificates />} />
                         {/* <Route path="/classes" element={<Classes />} /> */}
                         <Route path="/website" element={<Website />} />
                         <Route path="/finances" element={<Finances />} />

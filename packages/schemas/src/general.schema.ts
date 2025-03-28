@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const IdSchema = z.object({
-  id: z.string(),
+  id: z.coerce.string(),
 });
 
 export const parsedString = z.string().transform((val) => {

@@ -2,7 +2,6 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import {
   IdSchema,
-  DownloadSchema,
   PostCertificateSchema,
   getCertificateSchema,
 } from '@iglesiasbc/schemas';
@@ -19,6 +18,8 @@ import {
   drawCenteredText,
   getCertificateText,
 } from './utils';
+import { res } from 'src/utils/response';
+import { File } from '@nest-lab/fastify-multer';
 
 @Injectable()
 export class CertificatesService {
@@ -27,16 +28,16 @@ export class CertificatesService {
   async getMembers() {
     const members =
       await sql`select id, name from members where "churchId" = ${this.req.getChurchId()} order by name`;
-    return members;
+    return res(200, members);
   }
 
   async getPastors() {
     const pastors =
       await sql`select id, name from members where ("positionId" = 3 or "positionId" = 4) and "churchId" = ${this.req.getChurchId()} order by name`;
-    return pastors;
+    return res(200, pastors);
   }
 
-  async uploadLogo(file) {
+  async uploadLogo(file: File) {
     if (!file) throw new HttpException('Error al subir la imagen', 400);
     const [{ logo }] =
       await sql`select logo from churches where id = ${this.req.getChurchId()}`;
@@ -46,9 +47,68 @@ export class CertificatesService {
 
     const url = await uploadImage(file);
     await sql`update churches set logo = ${url} where id = ${this.req.getChurchId()}`;
+    return res(200, url);
   }
 
-  async download(body: z.infer<typeof DownloadSchema>) {
+  async get(query: z.infer<typeof getCertificateSchema>) {
+    //Ambos filtros deben de ser iguales
+    const rows = await sql`
+    SELECT certificates.*, certificatetypes.name as type, COUNT(*) OVER () AS count
+    FROM certificates
+    JOIN certificatetypes ON certificates."certificateTypeId" = certificatetypes.id
+    WHERE "churchId" = ${this.req.getChurchId()}
+    AND (${query.name ? sql`LOWER("memberName") LIKE LOWER('%' || ${query.name} || '%')` : sql`1=1`})
+    ORDER BY created DESC, certificates.id DESC
+    LIMIT 10 OFFSET ${10 * (parseInt(query.page) - 1)}`;
+
+    return res(200, { rows, count: rows[0]?.count || 0 });
+  }
+
+  async post(body: z.infer<typeof PostCertificateSchema>) {
+    const church =
+      await sql`select name from churches where id = ${this.req.getChurchId()}`;
+
+    const data = {
+      memberName: body.member,
+      member2Name: body.member2,
+      pastorName: body.pastor,
+      pastor2Name: body.pastor2,
+      churchName: church[0]?.name,
+      churchId: this.req.getChurchId(),
+      certificateTypeId: body.certificateTypeId,
+      expeditionDate: body.expeditionDate,
+    };
+
+    if (!data.member2Name) delete data.member2Name;
+    if (!data.pastor2Name) delete data.pastor2Name;
+
+    return res(200, await sql`insert into certificates ${sql(data)}`);
+  }
+
+  async delete(body: z.infer<typeof IdSchema>) {
+    return res(
+      200,
+      await sql`delete from certificates where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`,
+    );
+  }
+
+  async getStats() {
+    const total = (
+      await sql`select count(*) from certificates  WHERE "churchId" = ${this.req.getChurchId()} `
+    )[0].count;
+
+    const recent = (
+      await sql`select count(*) from certificates  WHERE "churchId" = ${this.req.getChurchId()} and "created" > NOW() - INTERVAL '1 month'`
+    )[0].count;
+
+    const baptized = (
+      await sql`select count(*) from certificates  WHERE "churchId" = ${this.req.getChurchId()} and "certificateTypeId" = 1 `
+    )[0].count;
+
+    return res(200, { recent, total, baptized });
+  }
+
+  async download(body: z.infer<typeof IdSchema>) {
     const [certificateInfo] =
       await sql`select certificates.*, certificatetypes.name as type
       from certificates
@@ -208,61 +268,6 @@ export class CertificatesService {
     }
 
     const pdfBytes = await pdfDoc.save();
-    return pdfBytes;
-  }
-
-  async get(query: z.infer<typeof getCertificateSchema>) {
-    //Ambos filtros deben de ser iguales
-    const rows = await sql`
-    SELECT certificates.*, certificatetypes.name as type, COUNT(*) OVER () AS count
-    FROM certificates
-    JOIN certificatetypes ON certificates."certificateTypeId" = certificatetypes.id
-    WHERE "churchId" = ${this.req.getChurchId()}
-    AND (${query.name ? sql`LOWER("memberName") LIKE LOWER('%' || ${query.name} || '%')` : sql`1=1`})
-    ORDER BY created DESC, certificates.id DESC
-    LIMIT 10 OFFSET ${10 * (parseInt(query.page) - 1)}`;
-
-    return { rows, count: rows[0]?.count || 0 };
-  }
-
-  async post(body: z.infer<typeof PostCertificateSchema>) {
-    const church =
-      await sql`select name from churches where id = ${this.req.getChurchId()}`;
-
-    const data = {
-      memberName: body.member,
-      member2Name: body.member2,
-      pastorName: body.pastor,
-      pastor2Name: body.pastor2,
-      churchName: church[0]?.name,
-      churchId: this.req.getChurchId(),
-      certificateTypeId: body.certificateTypeId,
-      expeditionDate: body.expeditionDate,
-    };
-
-    if (!data.member2Name) delete data.member2Name;
-    if (!data.pastor2Name) delete data.pastor2Name;
-
-    return await sql`insert into certificates ${sql(data)}`;
-  }
-
-  async delete(body: z.infer<typeof IdSchema>) {
-    return await sql`delete from certificates where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
-  }
-
-  async getStats() {
-    const total = (
-      await sql`select count(*) from certificates  WHERE "churchId" = ${this.req.getChurchId()} `
-    )[0].count;
-
-    const recent = (
-      await sql`select count(*) from certificates  WHERE "churchId" = ${this.req.getChurchId()} and "created" > NOW() - INTERVAL '1 month'`
-    )[0].count;
-
-    const baptized = (
-      await sql`select count(*) from certificates  WHERE "churchId" = ${this.req.getChurchId()} and "certificateTypeId" = 1 `
-    )[0].count;
-
-    return { recent, total, baptized };
+    return res(200, pdfBytes);
   }
 }

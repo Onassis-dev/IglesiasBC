@@ -37,8 +37,8 @@ const UserButton = () => {
                 <DropdownMenuItem
                     onClick={() => {
                         auth.signOut().then(() => {
-                            localStorage.clear();
                             navigate('/login');
+                            localStorage.clear();
                         });
                     }}
                 >

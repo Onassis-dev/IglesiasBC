@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import OwnerDashboard from "./OwnerDashboard";
-import Dashboard from "./Dashboard";
+import { useEffect, useState } from 'react';
+import OwnerDashboard from './OwnerDashboard';
+import Dashboard from './Dashboard';
 
 const SelectDashboard = () => {
     const [isOwner, setIsOwner] = useState<boolean | null>(null);
 
     useEffect(() => {
-        const owner = localStorage.getItem("owner") === "true";
+        const owner = localStorage.getItem('owner') === 'true';
         setIsOwner(owner);
     }, []);
 

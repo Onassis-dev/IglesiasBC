@@ -24,7 +24,7 @@ const Dashboard = () => {
     useEffect(() => {
         if (body?.userData) saveUserData(body.userData);
         if (body?.movements)
-            setFilteredMovements(body.movements.map((v: any) => ({ ...v, Ingresos: parseFloat(v.Ingresos), Egresos: parseFloat(v.Egresos) })));
+            setFilteredMovements(body.movements?.map((v: any) => ({ ...v, Ingresos: parseFloat(v.Ingresos), Egresos: parseFloat(v.Egresos) })));
     }, [body]);
 
     return (
@@ -53,7 +53,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {body?.lastMembers.map((row: any, i: number) => (
+                                    {body?.lastMembers?.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.name}</TableCell>
                                             <TableCell>
@@ -78,7 +78,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {body?.lastCertificates.map((row: any, i: number) => (
+                                    {body?.lastCertificates?.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.name}</TableCell>
                                             <TableCell>
@@ -102,7 +102,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {body?.lastSubjects.map((row: any, i: number) => (
+                                    {body?.lastSubjects?.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.title}</TableCell>
                                         </TableRow>
@@ -138,7 +138,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {body?.lastMovements.map((row: any, i: number) => (
+                                    {body?.lastMovements?.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.concept}</TableCell>
                                             <TableCell>
@@ -167,7 +167,7 @@ const Dashboard = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {body?.lastMaterials.map((row: any, i: number) => (
+                                    {body?.lastMaterials?.map((row: any, i: number) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.name}</TableCell>
                                             <TableCell>${row.price}</TableCell>

@@ -24,7 +24,6 @@ import { DashboardModule } from './routes/dashboard/dashboard.module';
     UsersModule,
     PaymentsModule,
     MembersModule,
-    CertificatesModule,
     OptionsModule,
     ClassesModule,
     InventoryModule,
@@ -34,6 +33,7 @@ import { DashboardModule } from './routes/dashboard/dashboard.module';
     TreasuriesModule,
     TransactionsModule,
     DashboardModule,
+    CertificatesModule,
   ],
 })
 export class AppModule {}

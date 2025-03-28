@@ -1,4 +1,6 @@
+import { initContract } from "@ts-rest/core";
 import { z } from "zod";
+import { IdSchema } from "./general.schema";
 
 export const getCertificateSchema = z.object({
   name: z.string().nullable(),
@@ -7,13 +9,95 @@ export const getCertificateSchema = z.object({
 
 export const PostCertificateSchema = z.object({
   member: z.string(),
+  design: z.string(),
   member2: z.string().optional().nullable(),
   pastor: z.string(),
   pastor2: z.string().optional().nullable(),
-  expeditionDate: z.string(),
+  expeditionDate: z.string().date().or(z.date()),
   certificateTypeId: z.string(),
 });
 
-export const DownloadSchema = z.object({
-  id: z.string(),
+export const UploadLogoSchema = z.object({
+  image: z.any(),
 });
+
+// Contract
+const c = initContract();
+
+export const certificatesContract = c.router(
+  {
+    get: {
+      method: "GET",
+      path: "",
+      responses: {
+        200: z.any(),
+      },
+      query: getCertificateSchema,
+    },
+
+    download: {
+      method: "GET",
+      path: "/:id",
+      responses: {
+        200: z.any(),
+      },
+      pathParams: IdSchema,
+    },
+
+    create: {
+      method: "POST",
+      path: "",
+      responses: {
+        200: z.any(),
+      },
+      body: PostCertificateSchema,
+    },
+
+    delete: {
+      method: "DELETE",
+      path: "/:id",
+      responses: {
+        200: z.any(),
+      },
+      pathParams: IdSchema,
+    },
+
+    getMembers: {
+      method: "GET",
+      path: "/members",
+      responses: {
+        200: z.any(),
+      },
+    },
+
+    getPastors: {
+      method: "GET",
+      path: "/pastors",
+      responses: {
+        200: z.any(),
+      },
+    },
+
+    getStats: {
+      method: "GET",
+      path: "/stats",
+      responses: {
+        200: z.any(),
+      },
+    },
+
+    uploadLogo: {
+      method: "POST",
+      path: "/logo",
+      responses: {
+        200: z.any(),
+      },
+      contentType: "multipart/form-data",
+
+      body: UploadLogoSchema,
+    },
+  },
+  {
+    pathPrefix: "/certificates",
+  }
+);

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { api, tsr } from '@/lib/boilerplate';
 import { useNavigate } from 'react-router';
-
+import { useUserStore } from '@/lib/store';
 const Line = (text: string) => (
     <li className="flex space-x-3 items-center">
         <Check className="h-4 w-5 text-primary " />
@@ -11,10 +11,11 @@ const Line = (text: string) => (
     </li>
 );
 
-const pricingCards = (plan: string, products: string[], prices: number[], period: string, savings: (number | null)[]) => {
+const PricingCards = (plan: string, products: string[], prices: number[], period: string, savings: (number | null)[]) => {
     const navigate = useNavigate();
+    const { user } = useUserStore((state) => state);
     const handleCheckout = async (product: string) => {
-        const result: any = await api(tsr.payments.checkout, { product });
+        const result: any = await api(tsr.payments.checkout, { product, email: user?.email || '' });
         navigate(`/checkout?secret=${result.clientSecret}`);
     };
 
@@ -134,4 +135,4 @@ const pricingCards = (plan: string, products: string[], prices: number[], period
     );
 };
 
-export default pricingCards;
+export default PricingCards;

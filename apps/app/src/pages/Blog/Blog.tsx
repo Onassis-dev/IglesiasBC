@@ -35,7 +35,7 @@ export function Blog() {
         queryKey: ['posts', 'stats'],
     });
 
-    const { data: { body: websiteData } = {} } = tsr.builder.getWebsite.useQuery({
+    const { data: { body: [websiteData] = [] } = {} } = tsr.builder.getWebsite.useQuery({
         queryKey: ['websiteData'],
     });
 
