@@ -22,6 +22,9 @@ import Treasury from './pages/Treasury/Treasury';
 import Pricing from './pages/Pricing/Pricing';
 import Checkout from './pages/Checkout/Checkout';
 import { Providers } from './providers';
+import Presentations from './pages/Presentations/Presentations';
+import Slides from './pages/Slides/Slides';
+import Projection from './pages/Projection/Projection';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -34,10 +37,12 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="/finances" element={<Finances />} />
                         <Route path="/inventory" element={<Inventory />} />
                         <Route path="/certificates" element={<Certificates />} />
+                        <Route path="/presentations" element={<Presentations />} />
                         {/* <Route path="/classes" element={<Classes />} /> */}
                         <Route path="/website" element={<Website />} />
                         <Route path="/finances" element={<Finances />} />
                         <Route path="/finances/treasury" element={<Treasury />} />
+                        <Route path="/presentations/slides" element={<Slides />} />
                         <Route path="/settings" element={<Settings />} />
                         <Route path="/blog" element={<Blog />} />
                         <Route path="/account" element={<Account />} />
@@ -48,6 +53,7 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="/login" element={<LoginForm />} />
                         <Route path="/signup" element={<SignupForm />} />
                     </Route>
+                    <Route path="/projection" element={<Projection />} />
                     <Route element={<Layout />}>
                         <Route path="*" element={<Error404 />} />
                     </Route>

@@ -49,7 +49,6 @@ const pricingCards = (
           {Line("Registro de 30 personas")}
           {Line("2 usuarios")}
           {Line("Miembros")}
-          {/* {Line("Certificados")} */}
         </ul>
       </CardContent>
     </Card>
@@ -86,7 +85,7 @@ const pricingCards = (
           {Line("Registro de 100 personas")}
           {Line("10 usuarios")}
           {Line("Miembros")}
-          {/* {Line("Certificados")} */}
+          {Line("Certificados")}
           {Line("Pagina web")}
           {Line("Blog")}
         </ul>
@@ -126,11 +125,12 @@ const pricingCards = (
           {Line("Registro de 300 personas")}
           {Line("20 usuarios")}
           {Line("Miembros")}
-          {/* {Line("Certificados")} */}
+          {Line("Certificados")}
           {Line("Pagina web")}
           {Line("Blog")}
           {Line("Finanzas")}
           {Line("Inventario")}
+          {Line("Presentaciones")}
         </ul>
       </CardContent>
     </Card>

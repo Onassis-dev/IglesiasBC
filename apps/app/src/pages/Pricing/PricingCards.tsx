@@ -56,7 +56,6 @@ const PricingCards = (plan: string, products: string[], prices: number[], period
                         {Line('Registro de 30 personas')}
                         {Line('2 usuarios')}
                         {Line('Miembros')}
-                        {/* {Line('Certificados')} */}
                     </ul>
                 </CardContent>
             </Card>
@@ -88,7 +87,7 @@ const PricingCards = (plan: string, products: string[], prices: number[], period
                         {Line('Registro de 100 personas')}
                         {Line('10 usuarios')}
                         {Line('Miembros')}
-                        {/* {Line('Certificados')} */}
+                        {Line('Certificados')}
                         {Line('Página web')}
                         {Line('Blog')}
                     </ul>
@@ -123,11 +122,12 @@ const PricingCards = (plan: string, products: string[], prices: number[], period
                         {Line('Registro de 300 personas')}
                         {Line('20 usuarios')}
                         {Line('Miembros')}
-                        {/* {Line('Certificados')} */}
+                        {Line('Certificados')}
                         {Line('Página web')}
                         {Line('Blog')}
                         {Line('Finanzas')}
                         {Line('Inventario')}
+                        {Line('Presentaciones')}
                     </ul>
                 </CardContent>
             </Card>

@@ -1,4 +1,16 @@
-import { AppWindow, Archive, Award, Church, CircleDollarSign, FileBadge, Home, MessageSquareQuote, Settings, Users2 } from 'lucide-react';
+import {
+    AppWindow,
+    Archive,
+    Award,
+    Church,
+    CircleDollarSign,
+    FileBadge,
+    Home,
+    MessageSquareQuote,
+    Presentation,
+    Settings,
+    Users2,
+} from 'lucide-react';
 import { useUIStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -15,6 +27,7 @@ const SideBar = () => {
         perm_inventory: 'true',
         perm_website: 'true',
         perm_certificates: 'true',
+        perm_presentations: 'true',
         plan: '0',
     });
     const { menuOpen, setMenuOpen } = useUIStore((state) => state);
@@ -37,6 +50,7 @@ const SideBar = () => {
             perm_inventory: localStorage.getItem('perm_inventory'),
             perm_website: localStorage.getItem('perm_website'),
             perm_certificates: localStorage.getItem('perm_certificates'),
+            perm_presentations: localStorage.getItem('perm_presentations'),
             plan: localStorage.getItem('plan'),
         });
     };
@@ -77,6 +91,9 @@ const SideBar = () => {
                     </SideBarButton>
                     <SideBarButton permRequired={userData.perm_certificates} href="certificates">
                         <FileBadge className="size-4" />
+                    </SideBarButton>
+                    <SideBarButton permRequired={userData.perm_presentations} href="presentations">
+                        <Presentation className="size-4" />
                     </SideBarButton>
                     {/* <SideBarButton permRequired={userData.perm_classes} href="classes">
             <GraduationCap className="size-4" />

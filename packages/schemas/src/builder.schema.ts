@@ -122,6 +122,7 @@ export const PostActivitySchema = z.object({
     .string()
     .min(10, "El texto de la actividad debe tener al menos 10 caracteres.")
     .max(300, "El texto de la actividad no puede exceder los 300 caracteres."),
+  image: z.any(),
 });
 
 export const EditActivitySchema = PostActivitySchema.extend({

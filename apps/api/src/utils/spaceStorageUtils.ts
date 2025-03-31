@@ -4,6 +4,7 @@ import {
   DeleteObjectCommand,
   ObjectCannedACL,
 } from '@aws-sdk/client-s3';
+import { File } from '@nest-lab/fastify-multer';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -16,13 +17,14 @@ const s3Client = new S3Client({
   },
 });
 
-export const uploadImage = async (file: any): Promise<string> => {
+export const uploadImage = async (file: File): Promise<string> => {
   const fileName = `${Date.now()}.${file.originalname.split('.').pop()}`;
   const params = {
     Bucket: process.env.S3_BUCKET_NAME!,
     Key: fileName,
     Body: file.buffer,
     ACL: ObjectCannedACL.public_read,
+    ContentType: file.mimetype,
   };
 
   await s3Client.send(new PutObjectCommand(params));

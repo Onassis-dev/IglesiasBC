@@ -31,8 +31,8 @@ export class ChurchesService {
       const [{ id }] =
         await sql`insert into "churches" (name, "ownerId") values (${body.name}, ${this.req.getUserId()}) returning id`;
       await sql`update permissions set selected = false where "userId" = ${this.req.getUserId()}`;
-      await sql`insert into permissions ("churchId", "userId", selected, perm_website, perm_inventory, perm_finances, perm_members, perm_classes, perm_blog, perm_certificates)
-       values (${id}, ${this.req.getUserId()}, true, true,true,true,true, true, true, true)`;
+      await sql`insert into permissions ("churchId", "userId", selected, perm_website, perm_inventory, perm_finances, perm_members, perm_classes, perm_blog, perm_certificates, perm_presentations)
+       values (${id}, ${this.req.getUserId()}, true, true,true,true,true, true, true, true, true)`;
     });
 
     const data = await getUserData(this.req.getUserId());

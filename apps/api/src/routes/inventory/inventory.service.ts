@@ -28,7 +28,7 @@ export class InventoryService {
     SELECT id, name, amount, price, brand, COUNT(*) OVER () AS count
     FROM inventory
     WHERE "churchId" = ${this.req.getChurchId()} 
-    AND (${query.name ? sql`LOWER(name) LIKE LOWER('%' || ${query.name} || '%')` : sql`1=1`})
+    AND (${query.name ? sql`LOWER(name) LIKE LOWER('%' || ${query.name} || '%')` : sql`TRUE`})
     ORDER BY id
     LIMIT 10 OFFSET ${10 * (parseInt(query.page) - 1)}`;
 

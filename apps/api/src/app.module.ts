@@ -15,7 +15,7 @@ import { ClassesModule } from './routes/classes/classes.module';
 import { TreasuriesModule } from './routes/treasuries/treasuries.module';
 import { TransactionsModule } from './routes/transactions/transactions.module';
 import { DashboardModule } from './routes/dashboard/dashboard.module';
-
+import { PresentationsModule } from './routes/presentations/presentations.module';
 @Module({
   imports: [
     WebsitesModule,
@@ -34,6 +34,7 @@ import { DashboardModule } from './routes/dashboard/dashboard.module';
     TransactionsModule,
     DashboardModule,
     CertificatesModule,
+    PresentationsModule,
   ],
 })
 export class AppModule {}

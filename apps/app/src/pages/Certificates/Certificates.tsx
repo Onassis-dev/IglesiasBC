@@ -35,29 +35,8 @@ const Certificates = () => {
         queryKey: ['certificates', 'stats'],
     });
 
-    const downloadCertificate = async (id: string | number) => {
-        const response = await tsr.certificates.download.query({
-            params: { id: String(id) },
-        });
-
-        const pdfBuffer = response.body;
-
-        const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
-
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = `certificado_${id}.pdf`;
-
-        document.body.appendChild(a);
-
-        a.click();
-
-        document.body.removeChild(a);
-
-        URL.revokeObjectURL(url);
+    const downloadCertificate = (row: Record<string, any>) => {
+        window.open(row.url, '_blank');
     };
 
     useEffect(() => {
@@ -65,8 +44,8 @@ const Certificates = () => {
     }, [open, open1]);
 
     const columns: Column[] = [
-        { title: 'Miembros', data: ['memberName', 'member2Name'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || '') },
-        { title: 'Pastores', data: ['pastorName', 'pastor2Name'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || '') },
+        { title: 'Miembros', data: ['member', 'member2'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || '') },
+        { title: 'Pastores', data: ['pastor', 'pastor2'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || '') },
         { title: 'Tipo', data: 'type', badge: true },
         {
             title: 'Fecha de expedición',

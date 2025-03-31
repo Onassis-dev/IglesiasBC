@@ -7,11 +7,14 @@ import {
   CheckCircle,
   CircleCheckBig,
   DollarSign,
+  FileBadge,
+  FileBarChartIcon,
   FileCheck,
   Gauge,
   GraduationCap,
   HeartHandshake,
   MessageSquareQuote,
+  Presentation,
   Users2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,12 +55,14 @@ import InfoCard from "@/components/pages/General/InfoCard";
     </div>
 
     <div
-      class="w-[94%] grid-cols-4 md:grid-cols-5 justify-between px-1 max-w-6xl fadein delay-1000 flex-wrap gap-4 hidden lg:grid"
+      class="w-[94%] grid-cols-4 md:grid-cols-7 justify-between px-1 max-w-6xl fadein delay-1000 flex-wrap gap-4 hidden lg:grid"
     >
       <Icon text="Miembros" color="purple"
         ><Users2 className="size-3 xs:size-4 sm:size-5" /></Icon
       >
-      <!-- <Icon text="Certificados" color="cyan"><FileBadge className="size-3 xs:size-4 sm:size-5" /></Icon> -->
+      <Icon text="Certificados" color="cyan"
+        ><FileBadge className="size-3 xs:size-4 sm:size-5" /></Icon
+      >
       <!-- <Icon text="Clases" color="blue"><GraduationCap className="size-3 xs:size-4 sm:size-5" /></Icon> -->
       <Icon text="Finanzas" color="green"
         ><DollarSign className="size-3 xs:size-4 sm:size-5" /></Icon
@@ -70,6 +75,9 @@ import InfoCard from "@/components/pages/General/InfoCard";
       >
       <Icon text="Inventario" color="yellow"
         ><Archive className="size-3 xs:size-4 sm:size-5" /></Icon
+      >
+      <Icon text="Presentaciones" color="pink"
+        ><Presentation className="size-3 xs:size-4 sm:size-5" /></Icon
       >
     </div>
 
@@ -85,7 +93,9 @@ import InfoCard from "@/components/pages/General/InfoCard";
       <Icon text="Miembros" color="purple"
         ><Users2 className="size-3 xs:size-4 sm:size-5" /></Icon
       >
-      <!-- <Icon text="Certificados" color="cyan"><FileBadge className="size-3 xs:size-4 sm:size-5" /></Icon> -->
+      <Icon text="Certificados" color="cyan"
+        ><FileBadge className="size-3 xs:size-4 sm:size-5" /></Icon
+      >
       <!-- <Icon text="Clases" color="blue"><GraduationCap className="size-3 xs:size-4 sm:size-5" /></Icon> -->
       <Icon text="Finanzas" color="green"
         ><DollarSign className="size-3 xs:size-4 sm:size-5" /></Icon
@@ -180,13 +190,18 @@ import InfoCard from "@/components/pages/General/InfoCard";
             minutos o hasta horas se reducen a un simple click.
           </p>
         </div>
-        <!-- <div class="space-y-4 p-6 border">
-                    <div class="flex items-center gap-8 justify-between">
-                        <h3 class="text-2xl font-semibold flex-1">Mejora tus documentos</h3>
-                        <FileBarChartIcon className="size-9 p-1.5 rounded-lg bg-yellow-background" />
-                    </div>
-                    <p class="text-muted-foreground">Genera certificados, reportes de ingresos, tablas de información y otros muchos documentos de alta calidad con un solo click.</p>
-                </div> -->
+        <div class="space-y-4 p-6 border">
+          <div class="flex items-center gap-8 justify-between">
+            <h3 class="text-2xl font-semibold flex-1">Mejora tus documentos</h3>
+            <FileBarChartIcon
+              className="size-9 p-1.5 rounded-lg bg-yellow-background"
+            />
+          </div>
+          <p class="text-muted-foreground">
+            Genera certificados, reportes de ingresos, tablas de información y
+            otros muchos documentos de alta calidad con un solo click.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -245,7 +260,12 @@ import InfoCard from "@/components/pages/General/InfoCard";
         color="purple"
         accentWord="miembros"><Users2 /></Section
       >
-      <!-- <Section title="Genera bellos certificados" text="Crea certificados únicos para eventos de la iglesia, desde bautismos hasta bodas. Personaliza cada reconocimiento." color="cyan" accentWord="certificados"><FileBadge /></Section> -->
+      <Section
+        title="Genera bellos certificados"
+        text="Crea certificados únicos para eventos de la iglesia, desde bautismos hasta bodas. Personaliza cada reconocimiento."
+        color="cyan"
+        accentWord="certificados"><FileBadge /></Section
+      >
       <!-- <Section title="Registra clases y alumnos" text="Organiza clases y registra alumnos eficientemente. Mejora la planificación educativa y la comunicación entre maestros y estudiantes." color="blue" accentWord="clases"><GraduationCap /></Section> -->
       <Section
         title="Administra tus finanzas"

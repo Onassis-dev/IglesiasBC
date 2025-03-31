@@ -25,7 +25,7 @@ export class TransactionsService {
     JOIN financescategories on financescategories.id = transactions."categoryId"
     JOIN treasuries on treasuries.id = transactions."treasuryId"
     WHERE treasuries."churchId" = ${this.req.getChurchId()}
-    AND (${query.name ? sql`LOWER(transactions.concept) LIKE LOWER('%' || ${query.name} || '%')` : sql`1=1`})
+    AND (${query.name ? sql`LOWER(transactions.concept) LIKE LOWER('%' || ${query.name} || '%')` : sql`TRUE`})
     AND treasuries.id = ${query.id}
     ORDER BY transactions.id DESC
     LIMIT 10 OFFSET ${10 * (parseInt(query.page) - 1)}

@@ -53,6 +53,7 @@ export const traductionValues = {
   perm_websites: 'Permiso de pagina web',
   perm_finances: 'Permiso de finanzas',
   perm_certificates: 'Permiso de certificados',
+  perm_presentation: 'Permiso de presentaciones',
   perm_inventory: 'Permiso de inventario',
   perm_blog: 'Permiso de blog',
   perm_classes: 'Permiso de clases',

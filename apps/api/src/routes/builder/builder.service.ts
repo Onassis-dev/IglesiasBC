@@ -10,7 +10,7 @@ import {
   DeleteEventSchema,
   EditActivitySchema,
   StartSchema,
-  UploadActivitySchema,
+  PostActivitySchema,
   UploadEventSchema,
   WebsiteSchema,
 } from '@iglesiasbc/schemas';
@@ -268,7 +268,7 @@ export class BuilderService {
     return res(200, { success: true });
   }
 
-  async uploadActivity(body: z.infer<typeof UploadActivitySchema>, file: File) {
+  async uploadActivity(body: z.infer<typeof PostActivitySchema>, file: File) {
     if (!file) throw new HttpException('Falta la imagen', 400);
 
     const [webExists] =

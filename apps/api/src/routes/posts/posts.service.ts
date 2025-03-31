@@ -31,7 +31,7 @@ export class PostsService {
     SELECT id, title, publication, description, COUNT(*) OVER () AS count
     FROM posts
     WHERE "churchId" = ${this.req.getChurchId()}
-    AND (${query.title ? sql`LOWER(title) LIKE LOWER('%' || ${query.title} || '%')` : sql`1=1`})
+    AND (${query.title ? sql`LOWER(title) LIKE LOWER('%' || ${query.title} || '%')` : sql`TRUE`})
     ORDER BY id DESC
     LIMIT 6 OFFSET ${6 * (parseInt(query.page) - 1)}
   `;

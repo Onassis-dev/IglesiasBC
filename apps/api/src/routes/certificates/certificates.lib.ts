@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { PDFFont, PDFPage, RGB } from 'pdf-lib';
@@ -133,4 +135,12 @@ export const drawAlignedLine = (props: {
     color: props.color,
     opacity: 1,
   });
+};
+
+export type Font = 'playfair' | 'Allura-Regular';
+
+export const loadFont = (font: Font) => {
+  return fs.readFileSync(
+    path.join(__dirname, `../../../resources/fonts/${font}.ttf`),
+  );
 };

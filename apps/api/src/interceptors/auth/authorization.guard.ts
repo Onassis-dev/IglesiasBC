@@ -9,15 +9,6 @@ import { auth } from 'src/utils/firebase';
 import { FastifyRequest } from 'fastify';
 import sql from 'src/utils/db';
 
-type permission =
-  | 'finances'
-  | 'inventory'
-  | 'members'
-  | 'classes'
-  | 'website'
-  | 'certificates'
-  | 'blog';
-
 interface Request extends FastifyRequest {
   userId: number;
   churchId: number;
@@ -26,7 +17,7 @@ interface Request extends FastifyRequest {
   cookies: Record<string, string>;
 }
 
-const planAccess: Record<permission, number> = {
+const planAccess = {
   members: 0,
   website: 1,
   blog: 1,
@@ -34,7 +25,10 @@ const planAccess: Record<permission, number> = {
   finances: 2,
   inventory: 2,
   classes: 2,
+  presentations: 2,
 };
+
+type permission = keyof typeof planAccess;
 
 @Injectable()
 export class AuthGuard implements CanActivate {

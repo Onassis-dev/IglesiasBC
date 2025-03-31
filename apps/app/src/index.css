@@ -40,6 +40,12 @@
         --purple-background: hsl(276, 26%, 96%);
         --gray-background: hsl(0, 2%, 95%);
         --cyan-background: hsl(165, 25%, 95%);
+        --pink: hsl(330, 85%, 50%);
+        --pink-background: hsl(330, 25%, 95%);
+        --brown: hsl(30, 50%, 36%);
+        --brown-background: hsl(30, 25%, 95%);
+        --teal: hsl(165, 75%, 38%);
+        --teal-background: hsl(165, 25%, 95%);
     }
 }
 

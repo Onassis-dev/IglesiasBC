@@ -1,6 +1,5 @@
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group-card';
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
@@ -314,29 +313,21 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                 name="design"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Diseno</FormLabel>
+                                        <FormLabel>Diseño</FormLabel>
                                         <FormControl {...field} className="grid grid-cols-2 gap-2">
-                                            <RadioGroup defaultValue="1">
-                                                <div className="flex flex-col gap-2 w-full">
-                                                    <RadioGroupItem value="1" id="design1" />
-                                                    <Label htmlFor="design1" className="w-full">
-                                                        <img
-                                                            src="/images/certificates/design1.png"
-                                                            alt="Diseño 1"
-                                                            className="min-w-full aspect-video border rounded-sm"
-                                                        />
-                                                    </Label>
-                                                </div>
-                                                <div className="flex flex-col gap-2 w-full">
-                                                    <RadioGroupItem value="2" id="design2" />
-                                                    <Label htmlFor="design2" className="w-full">
-                                                        <img
-                                                            src="/images/certificates/design2.png"
-                                                            alt="Diseño 2"
-                                                            className="min-w-full aspect-video border rounded-sm"
-                                                        />
-                                                    </Label>
-                                                </div>
+                                            <RadioGroup onValueChange={field.onChange} defaultValue={'1'}>
+                                                <RadioGroupItem value="1" className="w-full aspect-[11/8] rounded-sm border">
+                                                    <img src="/certificates/1.webp" alt="Diseño 1" className="" />
+                                                </RadioGroupItem>
+                                                <RadioGroupItem value="2" className="w-full aspect-[11/8] rounded-sm border">
+                                                    <img src="/certificates/2.webp" alt="Diseño 2" className="" />
+                                                </RadioGroupItem>
+                                                <RadioGroupItem value="3" className="w-full aspect-[11/8] rounded-sm border">
+                                                    <img src="/certificates/3.webp" alt="Diseño 3" className="" />
+                                                </RadioGroupItem>
+                                                <RadioGroupItem value="4" className="w-full aspect-[11/8] rounded-sm border">
+                                                    <img src="/certificates/4.webp" alt="Diseño 4" className="" />
+                                                </RadioGroupItem>
                                             </RadioGroup>
                                         </FormControl>
                                         <FormMessage />

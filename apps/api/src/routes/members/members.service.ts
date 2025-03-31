@@ -23,7 +23,7 @@ export class MembersService {
     SELECT id, name, COUNT(*) OVER () AS count, cellphone, email, (select name from positions where id = "positionId") as "positionId"
     FROM members
     WHERE "churchId" = ${this.req.getChurchId()}
-    AND (${dto.name ? sql`LOWER(name) LIKE LOWER('%' || ${dto.name} || '%')` : sql`1=1`})
+    AND (${dto.name ? sql`LOWER(name) LIKE LOWER('%' || ${dto.name} || '%')` : sql`TRUE`})
     ORDER BY id
     LIMIT 10 OFFSET ${10 * (parseInt(dto.page) - 1)}
   `;

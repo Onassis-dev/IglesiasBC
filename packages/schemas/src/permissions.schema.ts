@@ -18,6 +18,7 @@ export const EditPermissionSchema = z.object({
   perm_classes: z.boolean().optional(),
   perm_website: z.boolean().optional(),
   perm_blog: z.boolean().optional(),
+  perm_presentations: z.boolean().optional(),
 });
 
 const c = initContract();

@@ -15,7 +15,7 @@ interface props {
     setOpenDelete?: React.Dispatch<React.SetStateAction<boolean>>;
     setOpenView?: React.Dispatch<React.SetStateAction<boolean>>;
     setOpenEdit?: React.Dispatch<React.SetStateAction<boolean>>;
-    downloadFunc?: (id: string | number) => void;
+    downloadFunc?: (row: Record<string, any>) => void;
     viewHref?: string;
     enableOpenOnRowClick?: boolean;
 }
@@ -46,7 +46,7 @@ export const CrudTable = ({
                 {status === 'success' &&
                     data?.map((row: any) => (
                         <TableRow className="w-full" key={row.id}>
-                            {columns.map((column, i) => {
+                            {columns?.map((column, i) => {
                                 const cellContent =
                                     Array.isArray(column.data) && column.transform
                                         ? column.transform(column.data.map((data) => row[data]))
@@ -116,7 +116,7 @@ export const CrudTable = ({
                                             <DropdownMenuItem
                                                 onClick={() => {
                                                     setSelectedRow(row);
-                                                    downloadFunc(row.id);
+                                                    downloadFunc(row);
                                                 }}
                                             >
                                                 <FileDown className="size-4 mr-2" /> Descargar

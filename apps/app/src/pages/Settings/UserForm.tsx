@@ -88,6 +88,25 @@ const UserForm = ({ user, open, setOpen }: props) => {
                         />
                         <FormField
                             control={userForm.control}
+                            name="perm_certificates"
+                            render={({ field }) => (
+                                <FormItem className="grid grid-cols-[auto,2.5rem] gap-4">
+                                    <div className="grid">
+                                        <FormLabel className="font-semibold text-md">Permiso de certificados</FormLabel>
+                                        <span className="text-secondary font-medium text-xs">
+                                            Permite crear y gestionar los certificados de la iglesia.
+                                        </span>
+                                    </div>
+
+                                    <FormControl>
+                                        <Switch className="translate-y-1" checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={userForm.control}
                             name="perm_blog"
                             render={({ field }) => (
                                 <FormItem className="grid grid-cols-[auto,2.5rem] gap-4">
@@ -131,6 +150,25 @@ const UserForm = ({ user, open, setOpen }: props) => {
                                         <FormLabel className="font-semibold text-md">Permiso de página</FormLabel>
                                         <span className="text-secondary font-medium text-xs">
                                             Permite gestionar el contenido y diseño de la página web de la iglesia.
+                                        </span>
+                                    </div>
+
+                                    <FormControl>
+                                        <Switch className="translate-y-1" checked={field.value} onCheckedChange={field.onChange} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={userForm.control}
+                            name="perm_presentations"
+                            render={({ field }) => (
+                                <FormItem className="grid grid-cols-[auto,2.5rem] gap-4">
+                                    <div className="grid">
+                                        <FormLabel className="font-semibold text-md">Permiso de presentaciones</FormLabel>
+                                        <span className="text-secondary font-medium text-xs">
+                                            Permite gestionar las presentaciones de la iglesia.
                                         </span>
                                     </div>
 

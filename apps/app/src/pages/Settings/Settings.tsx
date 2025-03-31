@@ -137,10 +137,8 @@ const Settings = () => {
                                 <TableHead className="text-center">Perm. Miembros</TableHead>
                                 <TableHead className="text-center">Perm. Finanzas</TableHead>
                                 <TableHead className="text-center">Perm. Inventarios</TableHead>
-                                {/* <TableHead className="text-center">
-                  Perm. Certificados
-                </TableHead> */}
-                                {/* <TableHead className="text-center">Perm. Clases</TableHead> */}
+                                <TableHead className="text-center">Perm. Certificados</TableHead>
+                                <TableHead className="text-center">Perm. Presentaciones</TableHead>
                                 <TableHead className="text-center">Perm. Pagina</TableHead>
                                 <TableHead className="text-center">Perm. Blog</TableHead>
                                 <TableHead className="text-center"></TableHead>
@@ -165,12 +163,17 @@ const Settings = () => {
                                             {user.perm_inventory ? <CircleCheck /> : <CircleMinus />}
                                         </Badge>
                                     </TableCell>
-                                    {/* <TableCell className="text-center">
+                                    <TableCell className="text-center">
                                         <Badge className="p-0 rounded-full" variant={user.perm_certificates ? 'green' : 'orange'}>
                                             {user.perm_certificates ? <CircleCheck /> : <CircleMinus />}
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-center">
+                                        <Badge className="p-0 rounded-full" variant={user.perm_presentations ? 'green' : 'orange'}>
+                                            {user.perm_presentations ? <CircleCheck /> : <CircleMinus />}
+                                        </Badge>
+                                    </TableCell>
+                                    {/* <TableCell className="text-center">
                                         <Badge className="p-0 rounded-full" variant={user.perm_classes ? 'green' : 'orange'}>
                                             {user.perm_classes ? <CircleCheck /> : <CircleMinus />}
                                         </Badge>

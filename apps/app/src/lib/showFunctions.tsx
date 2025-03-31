@@ -1,11 +1,11 @@
-import { CircleCheck, CircleX, LoaderCircle } from "lucide-react";
-import toast from "react-hot-toast";
+import { CircleCheck, CircleX, LoaderCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export const showError = (err: any) => {
     toast.error(getMessage(err), { icon: <CircleX className="size-5 text-destructive"></CircleX> });
 };
 
-export const showPromise = (promise: Promise<void>, success: string, error: any = "Error", loading: string = "Cargando...") => {
+export const showPromise = (promise: Promise<any>, success: string, error: any = 'Error', loading: string = 'Cargando...') => {
     error = getMessage(error);
     toast.promise(
         promise,
@@ -25,9 +25,9 @@ export const showPromise = (promise: Promise<void>, success: string, error: any 
                 icon: <LoaderCircle className="size-5 animate-spin"></LoaderCircle>,
             },
             style: {
-                boxShadow: "none",
-                border: "1px solid var(--border)",
-                borderRadius: "0.4rem",
+                boxShadow: 'none',
+                border: '1px solid var(--border)',
+                borderRadius: '0.4rem',
             },
         }
     );
@@ -35,8 +35,8 @@ export const showPromise = (promise: Promise<void>, success: string, error: any 
 
 // extra
 function getMessage(obj: any): string {
-    if (typeof obj === "string") return obj;
-    if (Object.keys(obj).length === 0) return obj.message || "Error";
+    if (typeof obj === 'string') return obj;
+    if (Object.keys(obj).length === 0) return obj.message || 'Error';
     if (obj.response) return obj.response.data.message;
-    return "Error";
+    return 'Error';
 }

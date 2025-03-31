@@ -5,6 +5,7 @@ const requiredPlans = {
   perm_website: 1,
   perm_blog: 1,
   perm_certificates: 1,
+  perm_presentations: 2,
   perm_finances: 2,
   perm_inventory: 2,
   perm_classes: 2,

@@ -52,7 +52,7 @@ export class DashboardService {
       await sql`SELECT name, (SELECT name from positions where id = "positionId") as position from members where "churchId" = ${churchId} order by id desc limit 6`;
 
     const lastCertificates =
-      await sql`SELECT "memberName" as name, (SELECT name from certificatetypes where id = "certificateTypeId") as type from certificates where "churchId" = ${churchId} order by id desc limit 6`;
+      await sql`SELECT "member" as name, (SELECT name from certificatetypes where id = "certificateTypeId") as type from certificates where "churchId" = ${churchId} order by id desc limit 6`;
 
     const lastSubjects =
       await sql`SELECT "title" from subjects where (SELECT "churchId" from classes where id = "classId") = ${churchId} order by id desc limit 6`;
