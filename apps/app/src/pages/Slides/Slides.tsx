@@ -78,7 +78,7 @@ export const Slides = () => {
         );
     };
 
-    const SortableSlide = ({ slide, index, isSelected, onSelect }) => {
+    const SortableSlide = ({ slide, index, isSelected, onSelect }: any) => {
         const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
             id: slide,
             attributes: {

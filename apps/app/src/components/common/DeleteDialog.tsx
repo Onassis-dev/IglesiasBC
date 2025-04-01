@@ -21,7 +21,7 @@ interface props {
     open: boolean;
     setOpen: any;
     path: DeleteMethodPaths;
-    id: string;
+    id: string | number;
     successMessage: string;
 }
 
@@ -29,7 +29,7 @@ const DeleteDialog = ({ text, setOpen, open, id, successMessage, path }: props) 
     const client = useQueryStore((queryClient) => queryClient.queryClient);
 
     const fetchDelete = async () => {
-        await tsr[path].delete.mutate({ params: { id } });
+        await tsr[path].delete.mutate({ params: { id: String(id) } });
 
         client.refetchQueries({ queryKey: [path] });
     };
