@@ -18,15 +18,16 @@ import { CirclePlus, Copy, LogIn, RotateCcw } from 'lucide-react';
 import { saveUserData } from '@/lib/accountFunctions';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { useUserStore } from '@/lib/store';
 
 const WelcomeDialog = ({ open }: { open: boolean }) => {
     const [show, setShow] = useState(false);
-    const [email, setEmail] = useState('');
     const [isCreatingChurch, setIsCreatingChurch] = useState(false);
     const [isJoiningChurch, setIsJoiningChurch] = useState(false);
     const churchForm = useChurchSchema();
     const selectChurchForm = useSelectChurchSchema();
     const client = tsr.useQueryClient();
+    const user = useUserStore((state) => state.user);
 
     const createChurch = async (values: any) => {
         const userData: any = await api(tsr.churches.create, values);
@@ -42,7 +43,7 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
     };
 
     const copyLink = async () => {
-        await navigator.clipboard.writeText(email);
+        await navigator.clipboard.writeText(user?.email || '');
     };
 
     const { data: { body: data } = {} } = tsr.users.get.useQuery({
@@ -52,7 +53,6 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
 
     useEffect(() => {
         if (!data) return;
-        setEmail(data?.user?.email);
         if (!data?.user?.churchId) return setShow(true);
     }, [data]);
 
@@ -150,7 +150,7 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
                                         className="cursor-pointer bg-gray-background rounded-sm px-1"
                                     >
                                         <Copy className="inline-block size-3.5" /> {''}
-                                        {email}
+                                        {user?.email || ''}
                                     </span>{' '}
                                     {''}a tu pastor para que te registre en tu iglesia y luego selecciona la iglesia que quieres unirte.
                                 </AlertDialogDescription>
