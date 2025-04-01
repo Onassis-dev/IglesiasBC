@@ -92,7 +92,7 @@ const BlogForm = ({ id, open, setOpen }: props) => {
             <DialogTrigger asChild>
                 <RegisterButton>Publicar post</RegisterButton>
             </DialogTrigger>
-            <DialogContent className="max-h-[98vh] h-full max-w-2xl flex flex-col p-0" closeButton={false}>
+            <DialogContent className="max-h-[90vh] h-full max-w-2xl flex flex-col p-0" closeButton={false}>
                 <DialogHeader className="flex flex-row items-center border-b border-input min-h-10 p-2 space-y-0 gap-0.5">
                     <Toggle
                         size="sm"

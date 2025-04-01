@@ -31,16 +31,6 @@ const parameters: Parameters[] = [
     baseFont: 'playfair',
     customFont: 'Allura-Regular',
   },
-  {
-    imagePosition: 470,
-    baseFont: 'playfair',
-    customFont: 'Allura-Regular',
-  },
-  {
-    imagePosition: 470,
-    baseFont: 'playfair',
-    customFont: 'Allura-Regular',
-  },
 ];
 
 const createCertificate = async (

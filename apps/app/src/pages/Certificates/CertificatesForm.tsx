@@ -322,12 +322,6 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                                 <RadioGroupItem value="2" className="w-full aspect-[11/8] rounded-sm border">
                                                     <img src="/certificates/2.webp" alt="Diseño 2" className="" />
                                                 </RadioGroupItem>
-                                                <RadioGroupItem value="3" className="w-full aspect-[11/8] rounded-sm border">
-                                                    <img src="/certificates/3.webp" alt="Diseño 3" className="" />
-                                                </RadioGroupItem>
-                                                <RadioGroupItem value="4" className="w-full aspect-[11/8] rounded-sm border">
-                                                    <img src="/certificates/4.webp" alt="Diseño 4" className="" />
-                                                </RadioGroupItem>
                                             </RadioGroup>
                                         </FormControl>
                                         <FormMessage />
