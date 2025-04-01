@@ -34,6 +34,7 @@ export default defineConfig({
                         form_factor: 'wide',
                     },
                 ],
+                lang: 'es',
             },
             workbox: {
                 globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
