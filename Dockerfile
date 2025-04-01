@@ -12,9 +12,6 @@ RUN pnpm install
 
 RUN pnpm turbo run build --filter=@iglesiasbc/api
 
-FROM node:20-alpine AS runtime
-
-
 EXPOSE 3000
-RUN ls
-CMD ["node", "/app/apps/api/dist/main.js"]
+
+CMD ["node", "apps/api/dist/main.js"]
