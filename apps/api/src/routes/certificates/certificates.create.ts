@@ -67,6 +67,7 @@ const createCertificate = async (
   const pdfDoc = await PDFDocument.load(existingPDF);
   const pages = pdfDoc.getPages();
   const page = pages[0];
+  const certificateDesign = parameters[Number(certificateInfo.design) - 1];
 
   if (img) {
     let imageBytes;
@@ -94,7 +95,7 @@ const createCertificate = async (
 
         page.drawImage(image, {
           x: page.getWidth() / 2 - width / 2,
-          y: parameters[Number(certificateInfo.design) - 1].imagePosition,
+          y: certificateDesign.imagePosition,
           width: width,
           height: height,
         });
@@ -108,11 +109,9 @@ const createCertificate = async (
 
   pdfDoc.registerFontkit(fontkit);
 
-  const baseFont = await pdfDoc.embedFont(
-    loadFont(parameters[certificateInfo.design].baseFont),
-  );
+  const baseFont = await pdfDoc.embedFont(loadFont(certificateDesign.baseFont));
   const customFont = await pdfDoc.embedFont(
-    loadFont(parameters[certificateInfo.design].customFont),
+    loadFont(certificateDesign.customFont),
   );
 
   drawCenteredText({
