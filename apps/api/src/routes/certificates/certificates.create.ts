@@ -94,7 +94,7 @@ const createCertificate = async (
 
         page.drawImage(image, {
           x: page.getWidth() / 2 - width / 2,
-          y: parameters[certificateInfo.design].imagePosition,
+          y: parameters[Number(certificateInfo.design) - 1].imagePosition,
           width: width,
           height: height,
         });
