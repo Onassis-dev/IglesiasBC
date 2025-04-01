@@ -1,6 +1,6 @@
 FROM node:20-alpine AS builder
 
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 WORKDIR /app
 
@@ -8,9 +8,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY . .
 
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
-RUN pnpx turbo run build --filter=@iglesiasbc/api
+RUN ls
+
+RUN pnpm turbo run build --filter=@iglesiasbc/api 
 
 EXPOSE 3000
 
