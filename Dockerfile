@@ -16,4 +16,5 @@ FROM node:20-alpine AS runtime
 
 
 EXPOSE 3000
-CMD ["node", "apps/api/dist/main"]
+RUN ls
+CMD ["node", "apps/api/dist/main.js"]
