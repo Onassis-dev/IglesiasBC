@@ -12,6 +12,7 @@ import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, S
 import { PostMemberSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useFormQuery } from '@/lib/hooks/useFormQuery';
 
 interface props {
     id: string | number;
@@ -20,12 +21,25 @@ interface props {
 }
 
 const MembersForm = ({ id, open, setOpen }: props) => {
+    const defaultValues: z.infer<typeof PostMemberSchema> = {
+        name: '',
+        cellphone: '',
+        baptized: '',
+        email: '',
+        genre: '',
+        civilStatus: '',
+        positionId: '',
+        birthday: '',
+        joinDate: '',
+    };
+
     const client = tsr.useQueryClient();
     const membersForm = useForm<z.infer<typeof PostMemberSchema>>({
         resolver: zodResolver(PostMemberSchema),
+        defaultValues: defaultValues,
     });
 
-    const { data: { body: member } = {} } = tsr.members.getOne.useQuery({
+    const member = useFormQuery(tsr.members.getOne.useQuery, {
         queryKey: ['member', id],
         enabled: !!id && open,
         queryData: {
@@ -46,20 +60,21 @@ const MembersForm = ({ id, open, setOpen }: props) => {
         if (!id) await api(tsr.members.post, body);
 
         client.invalidateQueries({ queryKey: ['members'] });
-        membersForm.reset();
         setOpen(false);
     }
 
     useEffect(() => {
-        if (!member) return;
-
-        membersForm.reset({
-            ...member,
-            birthday: member.birthday ? formatToTZ(member.birthday) || '' : '',
-            joinDate: member.joinDate ? formatToTZ(member.joinDate) || '' : '',
-            baptized: member.baptized?.toString(),
-            positionId: member.positionId?.toString(),
-        });
+        if (member) {
+            membersForm.reset({
+                ...member,
+                birthday: member.birthday ? formatToTZ(member.birthday) || '' : '',
+                joinDate: member.joinDate ? formatToTZ(member.joinDate) || '' : '',
+                baptized: member.baptized?.toString(),
+                positionId: member.positionId?.toString(),
+            });
+        } else {
+            membersForm.reset(defaultValues);
+        }
     }, [member]);
 
     const { data: { body: positions } = {} } = tsr.options.getPositions.useQuery({

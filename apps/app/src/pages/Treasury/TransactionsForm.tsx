@@ -18,12 +18,21 @@ interface Props {
     transaction: (z.infer<typeof PostTransactionSchema> & { id?: number }) | null;
     open: boolean;
     setOpen: (open: boolean) => void;
+    treasuryId?: number;
 }
 
-const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
+const TransactionsForm = ({ transaction, open, setOpen, treasuryId }: Props) => {
+    const defaultValues: z.infer<typeof PostTransactionSchema> = {
+        concept: '',
+        categoryId: '',
+        amount: '',
+        date: '',
+        notes: '',
+    };
     const client = tsr.useQueryClient();
     const transactionForm = useForm<z.infer<typeof PostTransactionSchema>>({
         resolver: zodResolver(PostTransactionSchema),
+        defaultValues,
     });
 
     const [categories, setCategories] = useState<{ name: string; isIncome: boolean; id: number }[]>([]);
@@ -33,15 +42,17 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
     const handleSubmit = async (values: z.infer<typeof PostTransactionSchema>) => {
         const data = { ...values, date: formatToUTC(values.date) || values.date };
 
-        if (transaction?.id) await api(tsr.transactions.put, { ...data, id: transaction.id });
-        if (!transaction?.id) await api(tsr.transactions.post, { ...data });
+        if (transaction?.id) await api(tsr.transactions.put, { ...data, id: transaction.id, treasuryId });
+        if (!transaction?.id) await api(tsr.transactions.post, { ...data, treasuryId });
         client.refetchQueries({ queryKey: ['transactions'] });
         setOpen(false);
     };
 
     useEffect(() => {
         if (!transaction) return;
+        if (!open) return;
 
+        console.log(transaction);
         transactionForm.reset({
             ...transaction,
             date: transaction.date ? formatToTZ(transaction.date) || '' : '',
@@ -59,6 +70,12 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
     }, [isIncome]);
 
     useEffect(() => {
+        if (!open) {
+            transactionForm.reset(defaultValues);
+        }
+    }, [open]);
+
+    useEffect(() => {
         fetchData();
     }, []);
 
@@ -66,9 +83,14 @@ const TransactionsForm = ({ transaction, open, setOpen }: Props) => {
         setCategories((await tsr.options.getCategories.query()).body as any);
     };
 
-    const submit = transactionForm.handleSubmit((values: z.infer<typeof PostTransactionSchema>) => {
-        showPromise(handleSubmit(values), transaction ? 'Información actualizada' : 'Transacción registrada');
-    });
+    const submit = transactionForm.handleSubmit(
+        async (values: z.infer<typeof PostTransactionSchema>) => {
+            showPromise(handleSubmit(values), transaction ? 'Información actualizada' : 'Transacción registrada');
+        },
+        (errors) => {
+            console.log('Form errors:', errors);
+        }
+    );
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>

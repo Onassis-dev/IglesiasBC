@@ -18,8 +18,20 @@ interface props {
 }
 
 const UserForm = ({ user, open, setOpen }: props) => {
+    const defaultValues: z.infer<typeof EditPermissionSchema> = {
+        id: 0,
+        perm_members: false,
+        perm_inventory: false,
+        perm_certificates: false,
+        perm_blog: false,
+        perm_finances: false,
+        perm_website: false,
+        perm_presentations: false,
+    };
+
     const userForm = useForm<z.infer<typeof EditPermissionSchema>>({
         resolver: zodResolver(EditPermissionSchema),
+        defaultValues: defaultValues,
     });
     const client = tsr.useQueryClient();
 
@@ -30,9 +42,17 @@ const UserForm = ({ user, open, setOpen }: props) => {
     };
 
     useEffect(() => {
+        if (!open) {
+            userForm.reset(defaultValues);
+            return;
+        }
+
         if (!user) return;
-        userForm.reset({ ...user });
-    }, [user]);
+
+        userForm.reset({
+            ...user,
+        });
+    }, [user, open]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

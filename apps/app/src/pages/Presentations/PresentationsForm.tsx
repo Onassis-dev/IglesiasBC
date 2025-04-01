@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PostPresentationSchema } from '@iglesiasbc/schemas';
 import ColorPicker2 from '@/components/common/ColorPicker2';
+import { useFormQuery } from '@/lib/hooks/useFormQuery';
 
 interface props {
     id: string | number;
@@ -19,22 +20,23 @@ interface props {
 }
 
 const PresentationsForm = ({ open, setOpen, id, trigger = true }: props) => {
+    const defaultValues: z.infer<typeof PostPresentationSchema> = {
+        title: '',
+        background: '#000000',
+        text: '#FFFFFF',
+    };
+
     const client = tsr.useQueryClient();
     const presentationForm = useForm<z.infer<typeof PostPresentationSchema>>({
         resolver: zodResolver(PostPresentationSchema),
-        defaultValues: {
-            background: '#000000',
-            text: '#FFFFFF',
-        },
+        defaultValues: defaultValues,
     });
 
-    const { data: { body: item } = {} } = tsr.presentations.getOne.useQuery({
+    const item = useFormQuery(tsr.presentations.getOne.useQuery, {
         queryKey: ['presentationsData', id],
         enabled: !!id && open,
         queryData: {
-            params: {
-                id: String(id),
-            },
+            params: { id: String(id) },
         },
     });
 
@@ -52,8 +54,11 @@ const PresentationsForm = ({ open, setOpen, id, trigger = true }: props) => {
     };
 
     useEffect(() => {
-        if (!item) return;
-        presentationForm.reset({ ...item });
+        if (item) {
+            presentationForm.reset({ ...item });
+        } else {
+            presentationForm.reset(defaultValues);
+        }
     }, [item]);
 
     const submit = presentationForm.handleSubmit((values: z.infer<typeof PostPresentationSchema>) =>

@@ -30,6 +30,7 @@ export const Finances = () => {
     const { data: { body: stats } = {} } = tsr.treasuries.getStats.useQuery({
         queryKey: ['treasuries', 'stats'],
     });
+
     useEffect(() => {
         if (!open && !open1) setTimeout(() => setSelectedTreasury({}), 200);
     }, [open, open1]);

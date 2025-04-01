@@ -26,11 +26,11 @@ export const Presentations = () => {
         },
     });
 
-    useEffect(() => {
-        if (!open && !open1) setTimeout(() => setSelectedTreasury({}), 200);
-    }, [open, open1]);
-
     const columns: Column[] = [{ title: 'Título', data: 'title' }];
+
+    useEffect(() => {
+        if (!open && !open1) setSelectedTreasury({});
+    }, [open, open1]);
 
     return (
         <div className="space-y-3 bg-dashboardbg">

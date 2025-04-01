@@ -40,7 +40,7 @@ export function Blog() {
     });
 
     useEffect(() => {
-        if (!open && !open1) setTimeout(() => setSelectedPost({}), 200);
+        if (!open && !open1) setSelectedPost({});
     }, [open, open1]);
 
     return (

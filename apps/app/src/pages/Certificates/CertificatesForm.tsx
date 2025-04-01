@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { api, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button, RegisterButton } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
@@ -22,9 +22,20 @@ interface props {
 }
 
 const CertificatesForm = ({ open, setOpen }: props) => {
+    const defaultValues: z.infer<typeof PostCertificateSchema> = {
+        certificateTypeId: '',
+        expeditionDate: '',
+        member: '',
+        member2: '',
+        pastor: '',
+        pastor2: '',
+        design: '',
+    };
+
     const client = tsr.useQueryClient();
     const membersForm = useForm<z.infer<typeof PostCertificateSchema>>({
         resolver: zodResolver(PostCertificateSchema),
+        defaultValues: defaultValues,
     });
 
     const [certificateId, setCertificateId] = useState('');
@@ -33,6 +44,13 @@ const CertificatesForm = ({ open, setOpen }: props) => {
     const [open2, setOpen2] = useState(false);
     const [open3, setOpen3] = useState(false);
     const [open4, setOpen4] = useState(false);
+
+    useEffect(() => {
+        if (!open) {
+            membersForm.reset(defaultValues);
+            setCertificateId('');
+        }
+    }, [open]);
 
     const handleSubmit = async (values: z.infer<typeof PostCertificateSchema>) => {
         await api(tsr.certificates.create, {

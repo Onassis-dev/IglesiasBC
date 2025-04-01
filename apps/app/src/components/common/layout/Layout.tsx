@@ -25,6 +25,7 @@ export const Layout = () => {
     useEffect(() => {
         if (userLoading) return;
         if (!user) {
+            localStorage.clear();
             navigate('/login');
             return;
         }

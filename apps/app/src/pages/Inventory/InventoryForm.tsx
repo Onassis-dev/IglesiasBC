@@ -9,6 +9,7 @@ import { Button, RegisterButton } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PostInventorySchema } from '@iglesiasbc/schemas';
 import { useForm } from 'react-hook-form';
+import { useFormQuery } from '@/lib/hooks/useFormQuery';
 
 interface props {
     id: string | number;
@@ -17,18 +18,28 @@ interface props {
 }
 
 const InventoryForm = ({ id, open, setOpen }: props) => {
+    const defaultValues: z.infer<typeof PostInventorySchema> = {
+        name: '',
+        brand: '',
+        amount: '',
+        bill: '',
+        model: '',
+        price: '',
+        serie: '',
+        observations: '',
+    };
+
     const client = tsr.useQueryClient();
     const itemForm = useForm<z.infer<typeof PostInventorySchema>>({
         resolver: zodResolver(PostInventorySchema),
+        defaultValues: defaultValues,
     });
 
-    const { data: { body: item } = {} } = tsr.inventory.getOne.useQuery({
+    const item = useFormQuery(tsr.inventory.getOne.useQuery, {
         queryKey: ['item', id],
         enabled: !!id && open,
         queryData: {
-            params: {
-                id: String(id),
-            },
+            params: { id: String(id) },
         },
     });
 
@@ -41,8 +52,11 @@ const InventoryForm = ({ id, open, setOpen }: props) => {
     };
 
     useEffect(() => {
-        if (!item) return;
-        itemForm.reset({ ...item });
+        if (item) {
+            itemForm.reset({ ...item });
+        } else {
+            itemForm.reset(defaultValues);
+        }
     }, [item]);
 
     const submit = itemForm.handleSubmit((values: z.infer<typeof PostInventorySchema>) =>

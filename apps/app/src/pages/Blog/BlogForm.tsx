@@ -16,6 +16,7 @@ import './tiptap.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { PostPostSchema } from '@iglesiasbc/schemas';
+import { useFormQuery } from '@/lib/hooks/useFormQuery';
 
 interface props {
     id: string | number;
@@ -24,8 +25,15 @@ interface props {
 }
 
 const BlogForm = ({ id, open, setOpen }: props) => {
+    const defaultValues: z.infer<typeof PostPostSchema> = {
+        title: '',
+        description: '',
+        body: '',
+    };
+
     const blogForm = useForm<z.infer<typeof PostPostSchema>>({
         resolver: zodResolver(PostPostSchema),
+        defaultValues: defaultValues,
     });
     const [showEditor, setShowEditor] = useState(false);
     const [selectedFile, setSelectedFile]: any = useState(null);
@@ -49,13 +57,11 @@ const BlogForm = ({ id, open, setOpen }: props) => {
         },
     });
 
-    const { data: { body: post } = {} } = tsr.posts.getOne.useQuery({
+    const post = useFormQuery(tsr.posts.getOne.useQuery, {
         queryKey: ['posts', id],
         enabled: !!id && open,
         queryData: {
-            params: {
-                id: String(id),
-            },
+            params: { id: String(id) },
         },
     });
 
@@ -78,13 +84,25 @@ const BlogForm = ({ id, open, setOpen }: props) => {
     };
 
     useEffect(() => {
-        blogForm.reset({ ...post });
-        setSelectedFile(null);
-        editor?.commands.setContent(post?.body);
+        if (!open) {
+            blogForm.reset(defaultValues);
+            setSelectedFile(null);
+            editor?.commands.setContent('');
+            setShowEditor(false);
+            return;
+        }
 
-        if (post?.id) return setShowEditor(true);
-        if (open && !id) return setShowEditor(true);
-        setShowEditor(false);
+        if (!post) {
+            setShowEditor(true);
+            return;
+        }
+
+        blogForm.reset({
+            ...post,
+        });
+        setSelectedFile(null);
+        editor?.commands.setContent(post?.body || '');
+        setShowEditor(true);
     }, [post, open]);
 
     return (

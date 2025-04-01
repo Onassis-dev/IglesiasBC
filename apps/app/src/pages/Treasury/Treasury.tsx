@@ -88,7 +88,7 @@ export const Treasury = () => {
                     setOpen={setOpen1}
                     id={selectedTransaction.id}
                 />
-                <TransactionsForm open={open} setOpen={setOpen} transaction={selectedTransaction} />
+                <TransactionsForm open={open} setOpen={setOpen} transaction={selectedTransaction} treasuryId={Number(id)} />
             </OptionsGrid>
 
             <Card>

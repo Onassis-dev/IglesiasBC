@@ -1,5 +1,5 @@
 import '@/lib/boilerplate';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
 import { CalendarClock, FileBadge, FileCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -38,10 +38,6 @@ const Certificates = () => {
     const downloadCertificate = (row: Record<string, any>) => {
         window.open(row.url, '_blank');
     };
-
-    useEffect(() => {
-        if (!open && !open1) setTimeout(() => setSelectedCertificate({}), 200);
-    }, [open, open1]);
 
     const columns: Column[] = [
         { title: 'Miembros', data: ['member', 'member2'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || '') },

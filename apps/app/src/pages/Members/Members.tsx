@@ -41,7 +41,7 @@ export function Members() {
     });
 
     useEffect(() => {
-        if (!open && !open1 && !open2) setTimeout(() => setSelectedMember({}), 150);
+        if (!open && !open1 && !open2) setSelectedMember({});
     }, [open, open1, open2]);
 
     const columns: Column[] = [
