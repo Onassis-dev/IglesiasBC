@@ -24,7 +24,20 @@
     "onlyBuiltDependencies": [
       "@iglesiasbc/api",
       "@iglesiasbc/app",
-      "@iglesiasbc/www"
+      "@iglesiasbc/www",
+      "@firebase/util",
+      "@nestjs/core",
+      "@swc/core",
+      "aws-sdk",
+      "core-js",
+      "esbuild",
+      "protobufjs",
+      "sharp",
+      "workerd",
+      "zod",
+      "prettier",
+      "turbo",
+      "typescript"
     ]
   }
 }
