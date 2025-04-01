@@ -10,7 +10,7 @@ COPY . .
 
 RUN pnpm install
 
-RUN pnpm turbo run build --filter=@iglesiasbc/api
+RUN pnpx turbo run build --filter=@iglesiasbc/api
 
 EXPOSE 3000
 
