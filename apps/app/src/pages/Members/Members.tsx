@@ -12,7 +12,7 @@ import MembersCard from './MembersCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { displayDate } from '@/lib/timeFunctions';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
-import { calculateAge } from './members.lib';
+import { calculateAge, setCurrentYear } from './members.lib';
 import MembersForm from './MembersForm';
 import ImportMembers from './ImportMembers';
 
@@ -117,7 +117,7 @@ export function Members() {
                                 birthdays?.map((birthday: any, i: any) => (
                                     <TableRow key={i}>
                                         <TableCell>{birthday.name}</TableCell>
-                                        <TableCell>{displayDate(birthday.birthday, `EEEE d 'de' MMMM`)}</TableCell>
+                                        <TableCell>{displayDate(setCurrentYear(birthday.birthday), `EEEE d 'de' MMMM`)}</TableCell>
                                         <TableCell>{calculateAge(birthday.birthday)}</TableCell>
                                     </TableRow>
                                 ))
