@@ -53,6 +53,10 @@
     scrollbar-width: thin;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Geist', sans-serif;
     font-optical-sizing: auto;

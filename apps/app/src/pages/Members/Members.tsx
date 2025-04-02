@@ -60,7 +60,7 @@ export function Members() {
                 <InfoCard color="purple" title="Miembros activos" data={stats?.active}>
                     <UserCheck2 />
                 </InfoCard>
-                <InfoCard color="purple" title="Cumpleaneros del mes" data={stats?.birthdays}>
+                <InfoCard href="#birthdays" color="purple" title="Cumpleañeros del mes" data={stats?.birthdays}>
                     <BadgeCheck />
                 </InfoCard>
             </StatsGrid>
@@ -99,7 +99,9 @@ export function Members() {
             </Card>
             <PaginationMenu page={page} setPage={setPage} count={members?.count} rowsDisplayed={10} />
 
-            <h3 className=" ml-1 pt-10 font-semibold text-xl">Cumpleañeros del mes</h3>
+            <h3 className=" ml-1 pt-10 font-semibold text-xl" id="birthdays">
+                Cumpleañeros del mes
+            </h3>
             <Card>
                 <CardContent className="p-0">
                     <Table>
