@@ -13,8 +13,8 @@ export default defineConfig({
                 short_name: 'IglesiasBC',
                 start_url: '/',
                 display: 'standalone',
-                background_color: '#000000',
-                theme_color: '#fefefe',
+                background_color: '#f6f6f6',
+                theme_color: '#000000',
                 icons: [
                     { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
                     { src: '/icon-256x256.png', sizes: '256x256', type: 'image/png' },
