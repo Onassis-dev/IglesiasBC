@@ -10,7 +10,7 @@ import { Loader2 } from 'lucide-react';
 
 export const Layout = () => {
     const navigate = useNavigate();
-    const { registerOpen, setRegisterOpen } = useUIStore((state) => state);
+    const { setRegisterOpen } = useUIStore((state) => state);
     const { user, userLoading } = useUserStore((state) => state);
     const [loading, setLoading] = useState(true);
 
@@ -41,7 +41,7 @@ export const Layout = () => {
 
     return (
         <>
-            <WelcomeDialog open={registerOpen} />
+            <WelcomeDialog />
             <SideBar />
 
             <div className="flex flex-col flex-1 relative w-1 bg-dashboardbg min-h-[100lvh] h-screen">

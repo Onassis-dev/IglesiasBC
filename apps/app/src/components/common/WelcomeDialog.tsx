@@ -18,9 +18,9 @@ import { CirclePlus, Copy, LogIn, RotateCcw } from 'lucide-react';
 import { saveUserData } from '@/lib/accountFunctions';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { useUserStore } from '@/lib/store';
+import { useUIStore, useUserStore } from '@/lib/store';
 
-const WelcomeDialog = ({ open }: { open: boolean }) => {
+const WelcomeDialog = () => {
     const [show, setShow] = useState(false);
     const [isCreatingChurch, setIsCreatingChurch] = useState(false);
     const [isJoiningChurch, setIsJoiningChurch] = useState(false);
@@ -28,6 +28,7 @@ const WelcomeDialog = ({ open }: { open: boolean }) => {
     const selectChurchForm = useSelectChurchSchema();
     const client = tsr.useQueryClient();
     const user = useUserStore((state) => state.user);
+    const { registerOpen: open } = useUIStore((state) => state);
 
     const createChurch = async (values: any) => {
         const userData: any = await api(tsr.churches.create, values);
