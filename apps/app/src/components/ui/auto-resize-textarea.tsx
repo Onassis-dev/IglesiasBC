@@ -49,29 +49,43 @@ export type AutosizeTextAreaRef = {
 };
 
 type AutosizeTextAreaProps = {
-    maxHeight?: number;
     minHeight?: number;
+    maintainAspectRatio?: boolean;
 } & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
 export const AutosizeTextarea = React.forwardRef<AutosizeTextAreaRef, AutosizeTextAreaProps>(
     (
-        { maxHeight = Number.MAX_SAFE_INTEGER, minHeight = 52, className, onChange, value, ...props }: AutosizeTextAreaProps,
+        { minHeight = 52, maintainAspectRatio = false, className, onChange, value, ...props }: AutosizeTextAreaProps,
         ref: React.Ref<AutosizeTextAreaRef>
     ) => {
+        const [height, setHeight] = React.useState(Number.MAX_SAFE_INTEGER);
+
+        const handleResize = () => {
+            const slide = document.getElementById('slide');
+            if (slide && maintainAspectRatio) setHeight(slide.clientWidth * (9 / 16) - 50);
+            if (slide && !maintainAspectRatio) setHeight(slide.clientHeight - 50);
+        };
+
+        React.useEffect(() => {
+            handleResize();
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }, []);
+
         const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
         const [triggerAutoSize, setTriggerAutoSize] = React.useState('');
 
         useAutosizeTextArea({
             textAreaRef,
             triggerAutoSize: triggerAutoSize,
-            maxHeight,
+            maxHeight: height,
             minHeight,
         });
 
         useImperativeHandle(ref, () => ({
             textArea: textAreaRef.current as HTMLTextAreaElement,
             focus: () => textAreaRef?.current?.focus(),
-            maxHeight,
+            maxHeight: height,
             minHeight,
         }));
 

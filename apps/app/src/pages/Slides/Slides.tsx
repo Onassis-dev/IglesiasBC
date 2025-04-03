@@ -1,5 +1,5 @@
 import '@/lib/boilerplate';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api, tsr } from '@/lib/boilerplate';
 import { usePathStore } from '@/lib/store';
 import { AutosizeTextarea } from '@/components/ui/auto-resize-textarea';
@@ -18,7 +18,6 @@ export const Slides = () => {
     const [slides, setSlides] = useState<string[]>([]);
     const [selectedId, setSelectedId] = useState<number>(0);
     const [open, setOpen] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -112,12 +111,12 @@ export const Slides = () => {
     };
 
     return (
-        <div className="grid md:grid-cols-[auto_1fr] gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col gap-4">
                 <Button
                     variant="outline"
                     size="sm"
-                    className="text-left whitespace-nowrap overflow-hidden text-ellipsis w-72 block"
+                    className="text-left whitespace-nowrap overflow-hidden text-ellipsis md:w-72 block"
                     onClick={() => setOpen(true)}
                 >
                     {presentation?.title}
@@ -132,9 +131,9 @@ export const Slides = () => {
                     </DndContext>
                 </div>
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 flex-1">
                 <div className="flex items-center gap-2">
-                    <div className="flex justify-between  w-full">
+                    <div className="flex justify-between w-full">
                         <div className="flex items-center gap-2">
                             <Button
                                 variant="outline"
@@ -199,7 +198,7 @@ export const Slides = () => {
                     </div>
                 </div>
                 <div
-                    ref={containerRef}
+                    id="slide"
                     className="flex items-center justify-center rounded-xl p-4 aspect-video border w-full"
                     style={{
                         background: `${presentation?.background}`,
@@ -210,7 +209,7 @@ export const Slides = () => {
                 >
                     <AutosizeTextarea
                         minHeight={1}
-                        maxHeight={containerRef.current?.clientHeight}
+                        maintainAspectRatio
                         className="text-lg sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl text-center h-fit min-h-0 w-full py-2.5 bg-transparent resize-none outline-none"
                         value={slides[selectedId]}
                         onChange={(e) => {
