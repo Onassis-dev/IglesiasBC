@@ -32,6 +32,7 @@ const Projection = () => {
 
     return (
         <div
+            id="slide"
             className="flex items-center justify-center p-4 h-screen w-full transition-all duration-700"
             style={{
                 background: `${presentation?.background}`,

@@ -61,6 +61,7 @@ export const AutosizeTextarea = React.forwardRef<AutosizeTextAreaRef, AutosizeTe
         const [height, setHeight] = React.useState(Number.MAX_SAFE_INTEGER);
 
         const handleResize = () => {
+            setTriggerAutoSize(new Date().getTime().toString());
             const slide = document.getElementById('slide');
             if (slide && maintainAspectRatio) setHeight(slide.clientWidth * (9 / 16) - 50);
             if (slide && !maintainAspectRatio) setHeight(slide.clientHeight - 50);
