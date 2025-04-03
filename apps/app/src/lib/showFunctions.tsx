@@ -5,8 +5,7 @@ export const showError = (err: any) => {
     toast.error(getMessage(err), { icon: <CircleX className="size-5 text-destructive"></CircleX> });
 };
 
-export const showPromise = (promise: Promise<any>, success: string, error: any = 'Error', loading: string = 'Cargando...') => {
-    error = getMessage(error);
+export const showPromise = (promise: Promise<any>, success: string, loading: string = 'Cargando...') => {
     toast.promise(
         promise,
         {

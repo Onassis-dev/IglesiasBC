@@ -7,6 +7,7 @@ import { CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { format } from 'date-fns';
+import { showError } from '@/lib/showFunctions';
 
 const DatePicker = ({ field }: any) => {
     const [date, setDate] = useState(field.value ? format(field.value, 'MM/dd/yyy', { locale: es }) : '');
@@ -63,6 +64,7 @@ const DatePicker = ({ field }: any) => {
                     if (!isNaN(new Date(e.target.value).getTime())) {
                         field.onChange(new Date(e.target.value));
                     } else {
+                        showError('Fecha inválida');
                         field.onChange(field.value);
                         setDate('');
                     }
