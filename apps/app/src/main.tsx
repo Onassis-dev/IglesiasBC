@@ -6,7 +6,6 @@ import Members from './pages/Members/Members';
 import Finances from './pages/Finances/Finances';
 import Blog from './pages/Blog/Blog';
 import Website from './pages/Website/Website';
-// import Classes from "./pages/Classes/Classes";
 import Certificates from './pages/Certificates/Certificates';
 import Inventory from './pages/Inventory/Inventory';
 import LoginForm from './pages/Auth/LoginForm';

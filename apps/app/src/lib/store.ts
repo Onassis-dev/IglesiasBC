@@ -60,3 +60,13 @@ export const usePathStore = create<PathState>((set) => ({
     path: '',
     setPath: (path) => set({ path }),
 }));
+
+interface InstallState {
+    deferredPrompt: any;
+    setDeferredPrompt: (deferredPrompt: any) => void;
+}
+
+export const useInstallStore = create<InstallState>((set) => ({
+    deferredPrompt: null,
+    setDeferredPrompt: (deferredPrompt) => set({ deferredPrompt }),
+}));

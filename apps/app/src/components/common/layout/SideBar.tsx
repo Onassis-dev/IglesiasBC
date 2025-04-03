@@ -4,6 +4,7 @@ import {
     Award,
     Church,
     CircleDollarSign,
+    Download,
     FileBadge,
     Home,
     MessageSquareQuote,
@@ -11,11 +12,14 @@ import {
     Settings,
     Users2,
 } from 'lucide-react';
-import { useUIStore } from '@/lib/store';
+import { useUIStore, useInstallStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router';
 import { traductions } from '@/lib/traductions';
+
+const aClass = 'flex w-full items-center rounded-md text-muted-foreground transition-colors hover:text-foreground px-2 py-1.5 gap-2 text-sm';
+const selectedClass = 'bg-accent text-foreground';
 
 const SideBar = () => {
     const [userData, setUserData] = useState<Record<string, string | null>>({
@@ -31,6 +35,7 @@ const SideBar = () => {
         plan: '0',
     });
     const { menuOpen, setMenuOpen } = useUIStore((state) => state);
+    const { deferredPrompt, setDeferredPrompt } = useInstallStore((state) => state);
 
     useEffect(() => {
         document.querySelector('#asidebg')?.addEventListener('click', () => {
@@ -62,6 +67,12 @@ const SideBar = () => {
         if (asidebg && menuOpen) asidebg.classList.add('openbg');
         if (asidebg && !menuOpen) asidebg.classList.remove('openbg');
     }, [menuOpen]);
+
+    async function installApp() {
+        await deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice.outcome === 'accepted') setDeferredPrompt(null);
+    }
 
     return (
         <>
@@ -112,6 +123,12 @@ const SideBar = () => {
                             <Award className="size-4 text-yellow" />
                         </SideBarButton>
                     )}
+                    {deferredPrompt && (
+                        <button onClick={installApp} className={cn(aClass, '')}>
+                            <Download className="size-4" />
+                            <span>Instalar</span>
+                        </button>
+                    )}
                     <SideBarButton permRequired={userData.owner} href="settings">
                         <Settings className="size-4" />
                     </SideBarButton>
@@ -121,20 +138,15 @@ const SideBar = () => {
     );
 };
 
-const SideBarButton = ({ children, href, permRequired }: { children: any; href: string; permRequired: string | null }) => {
-    const aClass = 'flex w-full items-center rounded-md text-muted-foreground transition-colors hover:text-foreground px-2 py-1.5 gap-2 text-sm';
-    const selectedClass = 'bg-accent text-foreground';
-
-    return (
-        <>
-            {permRequired === 'true' && (
-                <Link to={'/' + href} className={cn(aClass, (location.pathname.split('/').filter((e) => e)[0] || '') === href ? selectedClass : '')}>
-                    {children}
-                    <span>{(traductions as any)[href || '']}</span>
-                </Link>
-            )}
-        </>
-    );
-};
+const SideBarButton = ({ children, href, permRequired }: { children: any; href: string; permRequired: string | null }) => (
+    <>
+        {permRequired === 'true' && (
+            <Link to={'/' + href} className={cn(aClass, (location.pathname.split('/').filter((e) => e)[0] || '') === href ? selectedClass : '')}>
+                {children}
+                <span>{(traductions as any)[href || '']}</span>
+            </Link>
+        )}
+    </>
+);
 
 export default SideBar;
