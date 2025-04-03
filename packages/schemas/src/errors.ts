@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
-  console.log(issue);
   if (issue.code === z.ZodIssueCode.too_small) {
     return {
       message:
