@@ -32,7 +32,7 @@ const SideBar = () => {
         perm_website: 'true',
         perm_certificates: 'true',
         perm_presentations: 'true',
-        plan: '0',
+        plan: '2',
     });
     const { menuOpen, setMenuOpen } = useUIStore((state) => state);
     const { deferredPrompt, setDeferredPrompt } = useInstallStore((state) => state);

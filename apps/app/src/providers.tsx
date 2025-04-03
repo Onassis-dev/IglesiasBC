@@ -12,15 +12,18 @@ export function Providers({ children }: { children: React.ReactNode }) {
     const { setDeferredPrompt } = useInstallStore();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
-        return unsubscribe;
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+
+            if (!/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return;
+
+            setDeferredPrompt(event);
+        });
     }, []);
 
     useEffect(() => {
-        window.addEventListener('beforeinstallprompt', (event) => {
-            event.preventDefault();
-            setDeferredPrompt(event);
-        });
+        const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
+        return unsubscribe;
     }, []);
 
     return (
