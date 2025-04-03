@@ -45,7 +45,7 @@ const ImagesForm = () => {
         client.refetchQueries({ queryKey: ['pageInfo'] });
     };
 
-    const sendPromise = (apiPath: ApiPath) => showPromise(uploadImage(apiPath), 'Imagen subida', 'Error al subir la imagen', 'Subiendo imagen');
+    const sendPromise = (apiPath: ApiPath) => showPromise(uploadImage(apiPath), 'Imagen subida', 'Subiendo imagen');
 
     const uploadImage = async (apiPath: ApiPath) => {
         if (!selectedFile) throw new Error('No se seleccionó ninguna imagen');
