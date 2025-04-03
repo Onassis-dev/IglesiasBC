@@ -39,7 +39,7 @@ const Dashboard = () => {
                     />
                 </div>
 
-                <div className="grid 2xl:grid-cols-3  gap-6">
+                <div className="grid 2xl:grid-cols-2  gap-6">
                     <Card className="w-full">
                         <CardHeader>
                             <CardTitle className="text-xl">Últimos miembros registrados</CardTitle>
@@ -84,27 +84,6 @@ const Dashboard = () => {
                                             <TableCell>
                                                 <Badge variant="outline">{row.type}</Badge>
                                             </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                    </Card>
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle className="text-xl">Ultimas materias agregadas</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Nombre</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {body?.lastSubjects?.map((row: any, i: number) => (
-                                        <TableRow key={i}>
-                                            <TableCell>{row.title}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
