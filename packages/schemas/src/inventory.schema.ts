@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { initContract } from "@ts-rest/core";
 import { IdSchema } from "./general.schema";
+import { decimalRegex, integerRegex } from "./regex";
 
 export const getInventorySchema = z.object({
   name: z.string().nullable(),
@@ -8,14 +9,14 @@ export const getInventorySchema = z.object({
 });
 
 export const PostInventorySchema = z.object({
-  name: z.string(),
-  brand: z.string().optional().nullable(),
-  model: z.string().optional().nullable(),
-  price: z.string().regex(/^\d+(\.\d+)?$/),
-  serie: z.string().optional().nullable(),
-  amount: z.string().regex(/^[1-9]\d*$/),
-  bill: z.string().optional().nullable(),
-  observations: z.string().optional().nullable(),
+  name: z.string().min(1),
+  brand: z.string().nullish(),
+  model: z.string().nullish(),
+  price: z.string().regex(decimalRegex),
+  amount: z.string().regex(integerRegex),
+  serie: z.string().nullish(),
+  bill: z.string().nullish(),
+  observations: z.string().nullish(),
 });
 
 export const PutInventorySchema = PostInventorySchema.extend({

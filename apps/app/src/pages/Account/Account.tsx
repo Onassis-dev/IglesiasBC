@@ -10,15 +10,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { saveUserData } from '@/lib/accountFunctions';
 import CreateChurchDialog from './CreateChurchDialog';
 import { useEffect } from 'react';
-import { UserSchema } from '@iglesiasbc/schemas';
+import { FrontendUserSchema } from '@iglesiasbc/schemas';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUserStore } from '@/lib/store';
 import { updateProfile } from 'firebase/auth';
 
 const Account = () => {
-    const userConfigForm = useForm<z.infer<typeof UserSchema>>({
-        resolver: zodResolver(UserSchema),
+    const userConfigForm = useForm<z.infer<typeof FrontendUserSchema>>({
+        resolver: zodResolver(FrontendUserSchema),
     });
 
     const user = useUserStore((state) => state.user);
@@ -34,7 +34,7 @@ const Account = () => {
         });
     }, [data, user]);
 
-    const handleSubmit: any = async (values: z.infer<typeof UserSchema>) => {
+    const handleSubmit: any = async (values: z.infer<typeof FrontendUserSchema>) => {
         const userData: any = await api(tsr.users.editUser, { churchId: values.churchId });
         if (user) await updateProfile(user, { displayName: values.username });
         saveUserData(userData);
@@ -50,7 +50,7 @@ const Account = () => {
                 <Form {...userConfigForm}>
                     <form
                         className="space-y-4"
-                        onSubmit={userConfigForm.handleSubmit((values: z.infer<typeof UserSchema>) =>
+                        onSubmit={userConfigForm.handleSubmit((values: z.infer<typeof FrontendUserSchema>) =>
                             showPromise(handleSubmit(values), 'Datos actualizados')
                         )}
                     >

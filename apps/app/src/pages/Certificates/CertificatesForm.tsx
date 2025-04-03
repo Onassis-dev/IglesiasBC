@@ -15,6 +15,7 @@ import DatePicker from '@/components/common/DatePicker';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formatToUTC } from '@/lib/timeFunctions';
+import { cn } from '@/lib/utils';
 
 interface props {
     open: boolean;
@@ -139,7 +140,12 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                         <FormControl>
                                             <Popover open={open1} onOpenChange={setOpen1}>
                                                 <PopoverTrigger asChild>
-                                                    <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between w-full">
+                                                    <Button
+                                                        variant="outline"
+                                                        role="combobox"
+                                                        aria-expanded={open}
+                                                        className={cn('justify-between w-full', !field.value && 'text-muted-foreground')}
+                                                    >
                                                         {field.value
                                                             ? members.find((member: any) => member.name === field.value)?.name
                                                             : 'Elige un miembro'}
@@ -159,7 +165,8 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                                                             setOpen1(false);
                                                                             membersForm.setValue(
                                                                                 'member',
-                                                                                members.find((member: any) => member.name === currentValue)?.name
+                                                                                members.find((member: any) => member.name === currentValue)?.name,
+                                                                                { shouldValidate: true }
                                                                             );
                                                                         }}
                                                                     >
@@ -192,7 +199,7 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                                             variant="outline"
                                                             role="combobox"
                                                             aria-expanded={open}
-                                                            className="justify-between w-full"
+                                                            className={cn('justify-between w-full', !field.value && 'text-muted-foreground')}
                                                         >
                                                             {field.value
                                                                 ? members.find((member: any) => member.name === field.value)?.name
@@ -213,7 +220,8 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                                                                 setOpen2(false);
                                                                                 membersForm.setValue(
                                                                                     'member2',
-                                                                                    members.find((member: any) => member.name === currentValue)?.name
+                                                                                    members.find((member: any) => member.name === currentValue)?.name,
+                                                                                    { shouldValidate: true }
                                                                                 );
                                                                             }}
                                                                         >
@@ -241,7 +249,12 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                         <FormControl>
                                             <Popover open={open3} onOpenChange={setOpen3}>
                                                 <PopoverTrigger asChild>
-                                                    <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between w-full">
+                                                    <Button
+                                                        variant="outline"
+                                                        role="combobox"
+                                                        aria-expanded={open}
+                                                        className={cn('justify-between w-full', !field.value && 'text-muted-foreground')}
+                                                    >
                                                         {field.value
                                                             ? members.find((member: any) => member.name === field.value)?.name
                                                             : 'Elige un miembro'}
@@ -261,7 +274,8 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                                                             setOpen3(false);
                                                                             membersForm.setValue(
                                                                                 'pastor',
-                                                                                members.find((member: any) => member.name === currentValue)?.name
+                                                                                members.find((member: any) => member.name === currentValue)?.name,
+                                                                                { shouldValidate: true }
                                                                             );
                                                                         }}
                                                                     >
@@ -288,7 +302,12 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                         <FormControl>
                                             <Popover open={open4} onOpenChange={setOpen4}>
                                                 <PopoverTrigger asChild>
-                                                    <Button variant="outline" role="combobox" aria-expanded={open} className="justify-between w-full">
+                                                    <Button
+                                                        variant="outline"
+                                                        role="combobox"
+                                                        aria-expanded={open}
+                                                        className={cn('justify-between w-full', !field.value && 'text-muted-foreground')}
+                                                    >
                                                         {field.value
                                                             ? members.find((member: any) => member.name === field.value)?.name
                                                             : 'Elige un miembro'}
@@ -308,7 +327,8 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                                                             setOpen4(false);
                                                                             membersForm.setValue(
                                                                                 'pastor2',
-                                                                                members.find((member: any) => member.name === currentValue)?.name
+                                                                                members.find((member: any) => member.name === currentValue)?.name,
+                                                                                { shouldValidate: true }
                                                                             );
                                                                         }}
                                                                     >

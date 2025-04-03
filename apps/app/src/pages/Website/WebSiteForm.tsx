@@ -150,7 +150,7 @@ const WebSiteForm = () => {
                                         <FormLabel>Idioma</FormLabel>
                                         <FormControl>
                                             <div className="flex gap-2">
-                                                <Select onValueChange={field.onChange} value={field.value} defaultValue="es">
+                                                <Select onValueChange={field.onChange} value={field.value}>
                                                     <FormControl>
                                                         <SelectTrigger>
                                                             <SelectValue placeholder="Selecciona un idioma" />

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { initContract } from "@ts-rest/core";
 import { IdSchema } from "./general.schema";
+import { decimalRegex } from "./regex";
 
 export const getTransactionsSchema = z.object({
   name: z.string().nullable(),
@@ -10,11 +11,11 @@ export const getTransactionsSchema = z.object({
 
 export const PostTransactionSchema = z.object({
   date: z.string().date().or(z.date()),
-  notes: z.string().optional().nullable(),
-  concept: z.string(),
-  categoryId: z.string(),
+  concept: z.string().min(1),
+  categoryId: z.string().min(1),
   treasuryId: z.number().optional(),
-  amount: z.string().regex(/^\d+(\.\d+)?$/),
+  amount: z.string().regex(decimalRegex),
+  notes: z.string().nullish(),
 });
 
 export const EditTransactionSchema = PostTransactionSchema.extend({

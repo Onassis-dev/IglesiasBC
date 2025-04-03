@@ -11,7 +11,6 @@ import { CertificatesModule } from './routes/certificates/certificates.module';
 import { PostsModule } from './routes/posts/posts.module';
 import { PermissionsModule } from './routes/permissions/permissions.module';
 import { InventoryModule } from './routes/inventory/inventory.module';
-import { ClassesModule } from './routes/classes/classes.module';
 import { TreasuriesModule } from './routes/treasuries/treasuries.module';
 import { TransactionsModule } from './routes/transactions/transactions.module';
 import { DashboardModule } from './routes/dashboard/dashboard.module';
@@ -25,7 +24,6 @@ import { PresentationsModule } from './routes/presentations/presentations.module
     PaymentsModule,
     MembersModule,
     OptionsModule,
-    ClassesModule,
     InventoryModule,
     PermissionsModule,
     PostsModule,

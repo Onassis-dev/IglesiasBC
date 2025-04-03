@@ -32,6 +32,7 @@ export * from "./general.schema.js";
 export * from "./options.schema.js";
 export * from "./dashboard.schema.js";
 export * from "./presentations.schema.js";
+export * from "./errors.js";
 
 const c = initContract();
 

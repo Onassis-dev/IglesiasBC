@@ -66,8 +66,8 @@ const BlogForm = ({ id, open, setOpen }: props) => {
     });
 
     const handleSubmit = async (values: z.infer<typeof PostPostSchema>) => {
-        console.log(values.title);
         const formdata = new FormData();
+        if (!selectedFile) throw new Error('No se seleccionó ninguna imagen');
         formdata.append('title', values.title);
         if (id) await api(tsr.posts.put, { ...values, id: Number(id) });
         else await api(tsr.posts.post, { ...values, file: selectedFile });

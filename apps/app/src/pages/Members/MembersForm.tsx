@@ -126,6 +126,19 @@ const MembersForm = ({ id, open, setOpen }: props) => {
                             />
                             <FormField
                                 control={membersForm.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Correo</FormLabel>
+                                        <FormControl>
+                                            <Input value={field.value || ''} onChange={field.onChange} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={membersForm.control}
                                 name="baptized"
                                 render={({ field }) => (
                                     <FormItem>
@@ -145,19 +158,7 @@ const MembersForm = ({ id, open, setOpen }: props) => {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={membersForm.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Correo</FormLabel>
-                                        <FormControl>
-                                            <Input value={field.value || ''} onChange={field.onChange} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+
                             <FormField
                                 control={membersForm.control}
                                 name="genre"

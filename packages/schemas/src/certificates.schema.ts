@@ -8,13 +8,13 @@ export const getCertificateSchema = z.object({
 });
 
 export const PostCertificateSchema = z.object({
-  member: z.string(),
-  design: z.string(),
-  member2: z.string().optional().nullable(),
-  pastor: z.string(),
-  pastor2: z.string().optional().nullable(),
+  member: z.string().min(1),
+  design: z.string().min(1, { message: "Elige una opción" }),
+  member2: z.string().nullish(),
+  pastor: z.string().min(1),
+  pastor2: z.string().nullish(),
   expeditionDate: z.string().date().or(z.date()),
-  certificateTypeId: z.string(),
+  certificateTypeId: z.string().min(1),
 });
 
 export const UploadLogoSchema = z.object({

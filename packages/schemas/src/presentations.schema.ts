@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { initContract } from "@ts-rest/core";
 import { IdSchema } from "./general.schema";
+import { colorRegex } from "./regex";
 
 export const getPresentationSchema = z.object({
   title: z.string().nullable(),
@@ -8,9 +9,13 @@ export const getPresentationSchema = z.object({
 });
 
 export const PostPresentationSchema = z.object({
-  title: z.string(),
-  background: z.string(),
-  text: z.string(),
+  title: z.string().min(1),
+  background: z.string().regex(colorRegex, {
+    message: "Color invalido",
+  }),
+  text: z.string().regex(colorRegex, {
+    message: "Color invalido",
+  }),
   slides: z.array(z.string()).optional(),
 });
 

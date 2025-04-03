@@ -2,8 +2,13 @@ import { z } from "zod";
 import { initContract } from "@ts-rest/core";
 
 export const UserSchema = z.object({
+  churchId: z.string().min(1),
   username: z.string().optional(),
-  churchId: z.string(),
+});
+
+export const FrontendUserSchema = z.object({
+  username: z.string().min(3),
+  churchId: z.string().min(1),
 });
 
 export const SelectChurchSchema = z.object({

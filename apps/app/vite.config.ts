@@ -8,9 +8,6 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            devOptions: {
-                enabled: true,
-            },
             manifest: {
                 name: 'IglesiasBC',
                 short_name: 'IglesiasBC',

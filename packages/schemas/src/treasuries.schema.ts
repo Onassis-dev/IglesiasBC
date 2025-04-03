@@ -8,7 +8,7 @@ export const getTreasurySchema = z.object({
 });
 
 export const PostTreasurySchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
 });
 
 export const EditTreasurySchema = PostTreasurySchema.extend({

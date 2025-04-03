@@ -87,7 +87,7 @@ export const WebsiteSchema = z.object({
 });
 
 export const StartSchema = z.object({
-  preachLink: z.string().max(255).optional().nullable(),
+  preachLink: z.string().max(255).nullish(),
 });
 
 export const UploadEventSchema = z.object({

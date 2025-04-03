@@ -12,9 +12,9 @@ export const getPostSchema = z.object({
 });
 
 export const PostPostSchema = z.object({
-  title: z.string(),
-  body: z.string(),
-  description: z.string(),
+  title: z.string().min(3),
+  body: z.string().min(10),
+  description: z.string().min(10),
   file: z.any(),
 });
 

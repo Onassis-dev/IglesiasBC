@@ -4,6 +4,10 @@ import { tsr } from './lib/boilerplate';
 import { auth } from './lib/firebase';
 import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
+import { customErrorMap } from '@iglesiasbc/schemas';
+import { z } from 'zod';
+
+z.setErrorMap(customErrorMap);
 
 const queryClient = useQueryStore.getState().queryClient;
 

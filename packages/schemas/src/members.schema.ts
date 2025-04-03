@@ -8,9 +8,9 @@ export const getMembersSchema = z.object({
 });
 
 export const PostMemberSchema = z.object({
-  name: z.string(),
-  cellphone: z.string().optional().nullable(),
-  baptized: z.string(),
+  name: z.string().min(1),
+  cellphone: z.string().nullish(),
+  baptized: z.string().min(1),
   email: z
     .string()
     .transform((v) => (v === "" ? null : v))
@@ -27,9 +27,9 @@ export const PostMemberSchema = z.object({
     ),
   birthday: z.string().date().or(z.date()),
   joinDate: z.string().date().or(z.date()),
-  genre: z.string().length(1),
-  civilStatus: z.string(),
-  positionId: z.string(),
+  genre: z.string().min(1),
+  civilStatus: z.string().min(1),
+  positionId: z.string().min(1),
 });
 
 export const PutMemberSchema = PostMemberSchema.extend({

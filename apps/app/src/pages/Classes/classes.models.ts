@@ -1,10 +1,10 @@
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export const ClassSchema = z.object({
-    id: z.number().optional().nullable(),
-    title: z.string({ required_error: "Requerido" }),
+    id: z.number().nullish(),
+    title: z.string({ required_error: 'Requerido' }),
 });
 
 export const useClassSchema = () =>
@@ -13,8 +13,8 @@ export const useClassSchema = () =>
     });
 
 export const SubjectSchema = z.object({
-    id: z.number().optional().nullable(),
-    title: z.string({ required_error: "Requerido" }),
+    id: z.number().nullish(),
+    title: z.string({ required_error: 'Requerido' }),
 });
 
 export const useSubjectSchema = () =>
@@ -23,8 +23,8 @@ export const useSubjectSchema = () =>
     });
 
 export const StudentSchema = z.object({
-    id: z.number().optional().nullable(),
-    memberId: z.string({ required_error: "Requerido" }),
+    id: z.number().nullish(),
+    memberId: z.string({ required_error: 'Requerido' }),
 });
 
 export const useStudentSchema = () =>
