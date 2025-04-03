@@ -10,10 +10,10 @@ import { format } from 'date-fns';
 import { showError } from '@/lib/showFunctions';
 
 const DatePicker = ({ field }: any) => {
-    const [date, setDate] = useState(field.value ? format(field.value, 'MM/dd/yyy', { locale: es }) : '');
+    const [date, setDate] = useState(field.value ? format(field.value, 'dd/MM/yyyy', { locale: es }) : '');
 
     useEffect(() => {
-        setDate(field.value ? format(field.value, 'MM/dd/yyy', { locale: es }) : '');
+        setDate(field.value ? format(field.value, 'dd/MM/yyyy', { locale: es }) : '');
     }, [field.value]);
 
     const formatDate = (value: string) => {
@@ -58,11 +58,13 @@ const DatePicker = ({ field }: any) => {
             </Popover>
             <Input
                 type="text"
-                placeholder="mm/dd/yyy"
+                placeholder="dd/MM/yyyy"
                 value={date}
                 onBlur={(e) => {
-                    if (!isNaN(new Date(e.target.value).getTime())) {
-                        field.onChange(new Date(e.target.value));
+                    const [day, month, year] = e.target.value.split('/');
+                    const date = new Date(`${month}/${day}/${year}`);
+                    if (!isNaN(date.getTime())) {
+                        field.onChange(date);
                     } else {
                         showError('Fecha inválida');
                         field.onChange(field.value);
