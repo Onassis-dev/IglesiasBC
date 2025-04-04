@@ -210,7 +210,7 @@ export const Slides = () => {
                     <AutosizeTextarea
                         minHeight={1}
                         maintainAspectRatio
-                        className="text-lg sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl text-center h-fit min-h-0 w-full py-2.5 bg-transparent resize-none outline-none"
+                        className="text-md sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl text-center h-fit min-h-0 w-full py-2.5 bg-transparent resize-none outline-none"
                         value={slides[selectedId]}
                         onChange={(e) => {
                             const newSlides = [...slides];
