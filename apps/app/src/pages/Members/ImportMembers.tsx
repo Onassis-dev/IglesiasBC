@@ -1,7 +1,7 @@
 import { api, tsr } from '@/lib/boilerplate';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DialogHeader } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { ActionButton, Button } from '@/components/ui/button';
 import { FileUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
@@ -36,10 +36,9 @@ const ImportMembers = () => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
-                <Button variant="outline">
-                    <FileUp className="size-3.5 mr-2" />
-                    Importar
-                </Button>
+                <ActionButton text="Importar">
+                    <FileUp className="size-3.5" />
+                </ActionButton>
             </DialogTrigger>
             <DialogContent className="w-xl">
                 <DialogHeader>

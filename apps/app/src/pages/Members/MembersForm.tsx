@@ -5,10 +5,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useEffect } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { Button, RegisterButton } from '@/components/ui/button';
+import { RegisterButton } from '@/components/ui/button';
 import { formatToTZ, formatToUTC } from '@/lib/timeFunctions';
 import DatePicker from '@/components/common/DatePicker';
-import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PostMemberSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -90,12 +90,11 @@ const MembersForm = ({ id, open, setOpen }: props) => {
             <SheetTrigger asChild>
                 <RegisterButton>Registrar miembro</RegisterButton>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent onSubmit={submit}>
+                <SheetHeader>
+                    <SheetTitle>{id ? 'Editar miembro' : 'Registrar miembro'}</SheetTitle>
+                </SheetHeader>
                 <SheetBody>
-                    <SheetHeader>
-                        <SheetTitle>{id ? 'Actualizar miembro' : 'Registrar nuevo miembro'}</SheetTitle>
-                    </SheetHeader>
-
                     <Form {...membersForm}>
                         <form onSubmit={submit}>
                             <FormField
@@ -258,15 +257,6 @@ const MembersForm = ({ id, open, setOpen }: props) => {
                         </form>
                     </Form>
                 </SheetBody>
-
-                <SheetFooter>
-                    <Button className="w-full sm:w-auto" onClick={submit}>
-                        Guardar
-                    </Button>
-                    <Button asChild variant="outline">
-                        <SheetClose className="w-full sm:w-auto">Cerrar</SheetClose>
-                    </Button>
-                </SheetFooter>
             </SheetContent>
         </Sheet>
     );

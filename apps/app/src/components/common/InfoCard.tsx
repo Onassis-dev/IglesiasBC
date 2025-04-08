@@ -21,19 +21,19 @@ const InfoCard = ({ title, data, children, color, href }: props) => {
     };
 
     return (
-        <Card className="flex items-center">
-            <CardContent
-                className="flex gap-4 items-center  p-3 lg:p-6"
-                onClick={
-                    href
-                        ? () => {
-                              document.getElementById('birthdays')?.scrollIntoView({
-                                  behavior: 'smooth',
-                              });
-                          }
-                        : undefined
-                }
-            >
+        <Card
+            className="flex items-center"
+            onClick={
+                href
+                    ? () => {
+                          document.getElementById('birthdays')?.scrollIntoView({
+                              behavior: 'smooth',
+                          });
+                      }
+                    : undefined
+            }
+        >
+            <CardContent className="flex gap-4 items-center  p-3 lg:p-6">
                 <div className={colors[color]}>{children}</div>
                 <div>
                     <div className="text-sm text-muted-foreground ">{title}</div>

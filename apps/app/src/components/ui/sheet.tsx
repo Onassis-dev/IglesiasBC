@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as SheetPrimitive from '@radix-ui/react-dialog';
-import { cva, type VariantProps } from 'class-variance-authority';
-
 import { cn } from '@/lib/utils';
+import { ChevronLeft } from 'lucide-react';
+import { X } from 'lucide-react';
+import { Button } from './button';
 
 const Sheet = SheetPrimitive.Root;
 
@@ -30,43 +31,35 @@ const SheetOverlay = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Ove
 );
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
-const sheetVariants = cva(
-    'fixed z-50 bg-background flex flex-col shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 ',
-    {
-        variants: {
-            side: {
-                top: 'inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
-                bottom: 'inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
-                left: 'inset-y-0 left-0 h-full w-full border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-lg',
-                right: 'inset-y-0 right-0 h-full w-full sm:rounded-l-xl  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-lg',
-                adaptive: 'inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
-            },
-        },
-        defaultVariants: {
-            side: 'right',
-        },
-    }
-);
+const sheetClass =
+    'fixed z-50 bg-background flex flex-col shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 sm:inset-y-3 right-0 sm:right-3 sm:h-[calc(100vh-1.5rem)] h-full w-full sm:rounded-xl border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-lg';
 
-interface SheetContentProps extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>, VariantProps<typeof sheetVariants> {}
+interface SheetContentProps extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content> {
+    className?: string;
+    onSubmit?: () => void;
+}
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Content>, SheetContentProps>(
-    ({ side = 'right', className, children, ...props }, ref) => (
+    ({ className, children, ...props }, ref) => (
         <SheetPortal>
             <SheetOverlay />
-            <SheetPrimitive.Content
-                onOpenAutoFocus={(e) => {
-                    if (window.innerWidth < 640) e.preventDefault();
-                }}
-                ref={ref}
-                className={cn(sheetVariants({ side }), className)}
-                {...props}
-            >
+            <SheetPrimitive.Content onOpenAutoFocus={(e) => e.preventDefault()} ref={ref} className={cn(sheetClass, className)} {...props}>
                 {children}
-                {/* <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </SheetPrimitive.Close> */}
+
+                <SheetPrimitive.Close className="absolute left-8 sm:left-auto right-auto sm:right-8 top-5 rounded-sm ring-offset-background transition-opacity focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+                    <X className="size-4 hidden sm:flex" />
+                    <ChevronLeft className="size-4 sm:hidden" />
+                    <span className="sr-only">Close</span>
+                </SheetPrimitive.Close>
+
+                <SheetFooter>
+                    <Button asChild variant="outline" className="hidden sm:flex h-8" size="sm">
+                        <SheetPrimitive.Close>Cerrar</SheetPrimitive.Close>
+                    </Button>
+                    <Button className="w-full sm:w-auto h-8" size="sm" onClick={props.onSubmit}>
+                        Guardar
+                    </Button>
+                </SheetFooter>
             </SheetPrimitive.Content>
         </SheetPortal>
     )
@@ -74,18 +67,24 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
 const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn('flex flex-col space-y-2 text-center sm:text-left', className)} {...props} />
+    <div className={cn('flex sm:text-left p-0 border-b min-h-14 px-8 items-center justify-center sm:justify-start', className)} {...props} />
 );
 SheetHeader.displayName = 'SheetHeader';
 
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn('flex border-t pb-3 pt-3 rounded-b-xl px-8 mt-auto left-0 right-0 bg-background flex-row space-x-2', className)} {...props} />
+    <div
+        className={cn(
+            'flex border-t justify-end items-center h-14 rounded-b-xl px-8 mt-auto left-0 right-0 bg-background flex-row space-x-2 ',
+            className
+        )}
+        {...props}
+    />
 );
 SheetFooter.displayName = 'SheetFooter';
 
 const SheetTitle = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Title>, React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>>(
     ({ className, ...props }, ref) => (
-        <SheetPrimitive.Title ref={ref} className={cn('text-lg font-semibold text-foreground pb-6', className)} {...props} />
+        <SheetPrimitive.Title ref={ref} className={cn('text-md font-medium sm:font-semibold text-foreground', className)} {...props} />
     )
 );
 SheetTitle.displayName = SheetPrimitive.Title.displayName;
