@@ -14,7 +14,7 @@ export const PostTransactionSchema = z.object({
   concept: z.string().min(1),
   categoryId: z.string().min(1),
   treasuryId: z.number().optional(),
-  amount: z.string().regex(decimalRegex),
+  amount: z.coerce.string().regex(decimalRegex),
   notes: z.string().nullish(),
 });
 
