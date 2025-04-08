@@ -41,12 +41,13 @@ const Certificates = () => {
 
     const columns: Column[] = [
         { title: 'Miembros', data: ['member', 'member2'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || '') },
-        { title: 'Pastores', data: ['pastor', 'pastor2'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || '') },
+        { title: 'Pastores', data: ['pastor', 'pastor2'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || ''), hide: true },
         { title: 'Tipo', data: 'type', badge: true },
         {
             title: 'Fecha de expedición',
             data: 'expeditionDate',
             transform: (e) => format(formatToTZ(e) || new Date(), "d 'de' MMMM 'de' yyyy", { locale: es }),
+            hide: true,
         },
     ];
 

@@ -59,8 +59,8 @@ export const Treasury = () => {
 
     const columns: Column[] = [
         { title: 'Concepto', data: 'concept' },
-        { title: 'Fecha', data: 'date', transform: (e) => displayDate(e) },
-        { title: 'Categoría', data: 'category', badge: true },
+        { title: 'Fecha', data: 'date', transform: (e) => displayDate(e), hide: true },
+        { title: 'Categoría', data: 'category', badge: true, hide: true },
         { title: 'Cantidad', data: 'amount' },
     ];
 
