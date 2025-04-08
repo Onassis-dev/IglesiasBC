@@ -40,14 +40,14 @@ export const Finances = () => {
     return (
         <div className="space-y-3 bg-dashboardbg">
             <StatsGrid>
+                <InfoCard color="green" title="Balance" data={stats?.balance}>
+                    <CircleDollarSign />
+                </InfoCard>
                 <InfoCard color="green" title="Total de ingresos" data={stats?.income}>
                     <PlusCircle />
                 </InfoCard>
                 <InfoCard color="green" title="Total de egresos" data={stats?.expense}>
                     <MinusCircle />
-                </InfoCard>
-                <InfoCard color="green" title="Balance" data={stats?.balance}>
-                    <CircleDollarSign />
                 </InfoCard>
             </StatsGrid>
             <OptionsGrid>

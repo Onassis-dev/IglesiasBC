@@ -46,11 +46,11 @@ export function Blog() {
     return (
         <div className="space-y-3 bg-dashboardbg">
             <StatsGrid>
-                <InfoCard color="orange" title="Numero de publicaciones" data={stats?.posts}>
-                    <MessageSquarePlus />
-                </InfoCard>
                 <InfoCard color="orange" title="Vistas en el ultimo mes" data={stats?.views}>
                     <Eye />
+                </InfoCard>
+                <InfoCard color="orange" title="Numero de publicaciones" data={stats?.posts}>
+                    <MessageSquarePlus />
                 </InfoCard>
                 <InfoCard color="orange" title="Publicaciones en el ultimo mes" data={stats?.postsMonthly}>
                     <CalendarPlus />
