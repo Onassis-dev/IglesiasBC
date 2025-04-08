@@ -49,7 +49,7 @@ const UploadEvent = () => {
                     <PlusIcon strokeWidth={1} className="w-14 h-14"></PlusIcon>
                 </button>
             </SheetTrigger>
-            <SheetContent className="sm:max-w-[425px]" onSubmit={submit}>
+            <SheetContent submit={submit} className="sm:max-w-[425px]">
                 <SheetHeader>
                     <SheetTitle>Subir evento</SheetTitle>
                 </SheetHeader>

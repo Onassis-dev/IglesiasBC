@@ -72,7 +72,7 @@ const PresentationsForm = ({ open, setOpen, id, trigger = true }: props) => {
                     <RegisterButton>Crear presentación</RegisterButton>
                 </SheetTrigger>
             )}
-            <SheetContent onSubmit={submit}>
+            <SheetContent submit={submit}>
                 <SheetHeader>
                     <SheetTitle>{id ? 'Editar presentación' : 'Crear presentación'}</SheetTitle>
                 </SheetHeader>

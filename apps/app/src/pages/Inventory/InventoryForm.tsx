@@ -68,7 +68,7 @@ const InventoryForm = ({ id, open, setOpen }: props) => {
             <SheetTrigger asChild>
                 <RegisterButton>Registrar articulo</RegisterButton>
             </SheetTrigger>
-            <SheetContent onSubmit={submit}>
+            <SheetContent submit={submit}>
                 <SheetHeader>
                     <SheetTitle>{id ? 'Editar articulo' : 'Registrar articulo'}</SheetTitle>
                 </SheetHeader>

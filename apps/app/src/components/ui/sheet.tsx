@@ -36,7 +36,7 @@ const sheetClass =
 
 interface SheetContentProps extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content> {
     className?: string;
-    onSubmit?: () => void;
+    submit?: () => void;
 }
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Content>, SheetContentProps>(
@@ -56,7 +56,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
                     <Button asChild variant="outline" className="hidden sm:flex h-8" size="sm">
                         <SheetPrimitive.Close>Cerrar</SheetPrimitive.Close>
                     </Button>
-                    <Button className="w-full sm:w-auto h-8" size="sm" onClick={props.onSubmit}>
+                    <Button className="w-full sm:w-auto h-8" size="sm" onClick={props.submit}>
                         Guardar
                     </Button>
                 </SheetFooter>
@@ -74,7 +74,7 @@ SheetHeader.displayName = 'SheetHeader';
 const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div
         className={cn(
-            'flex border-t justify-end items-center h-14 rounded-b-xl px-8 mt-auto left-0 right-0 bg-background flex-row space-x-2 ',
+            'flex border-t justify-end items-center h-20 sm:h-14 pb-2 sm:pb-0 rounded-b-xl px-8 mt-auto left-0 right-0 bg-background flex-row space-x-2 ',
             className
         )}
         {...props}

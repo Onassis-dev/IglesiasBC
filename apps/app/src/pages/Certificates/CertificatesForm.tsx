@@ -79,7 +79,7 @@ const CertificatesForm = ({ open, setOpen }: props) => {
             <SheetTrigger asChild>
                 <RegisterButton>Crear certificado</RegisterButton>
             </SheetTrigger>
-            <SheetContent onSubmit={submit}>
+            <SheetContent submit={submit}>
                 <SheetHeader>
                     <SheetTitle>Crear certificado</SheetTitle>
                 </SheetHeader>

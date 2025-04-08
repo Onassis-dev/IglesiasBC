@@ -90,7 +90,7 @@ const MembersForm = ({ id, open, setOpen }: props) => {
             <SheetTrigger asChild>
                 <RegisterButton>Registrar miembro</RegisterButton>
             </SheetTrigger>
-            <SheetContent onSubmit={submit}>
+            <SheetContent submit={submit}>
                 <SheetHeader>
                     <SheetTitle>{id ? 'Editar miembro' : 'Registrar miembro'}</SheetTitle>
                 </SheetHeader>

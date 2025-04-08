@@ -68,7 +68,7 @@ const UploadActivity = ({ activity }: any) => {
                     </button>
                 )}
             </SheetTrigger>
-            <SheetContent className="sm:max-w-[425px]" onSubmit={submit}>
+            <SheetContent submit={submit} className="sm:max-w-[425px]">
                 <SheetHeader>
                     <SheetTitle>{activity ? 'Editar actividad' : 'Registrar nueva actividad'}</SheetTitle>
                 </SheetHeader>

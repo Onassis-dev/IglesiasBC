@@ -97,7 +97,7 @@ const TransactionsForm = ({ transaction, open, setOpen, treasuryId }: Props) => 
             <SheetTrigger asChild>
                 <RegisterButton>Registrar transacción</RegisterButton>
             </SheetTrigger>
-            <SheetContent onSubmit={submit}>
+            <SheetContent submit={submit}>
                 <SheetHeader>
                     <SheetTitle>{transaction ? 'Editar transacción' : 'Registrar transacción'}</SheetTitle>
                 </SheetHeader>

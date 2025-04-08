@@ -63,7 +63,7 @@ const TreasuriesForm = ({ open, setOpen, id }: props) => {
             <SheetTrigger asChild>
                 <RegisterButton>Registrar tesorería</RegisterButton>
             </SheetTrigger>
-            <SheetContent onSubmit={submit}>
+            <SheetContent submit={submit}>
                 <SheetHeader>
                     <SheetTitle>{id ? 'Editar tesorería' : 'Registrar  tesorería'}</SheetTitle>
                 </SheetHeader>
