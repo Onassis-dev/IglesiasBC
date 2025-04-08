@@ -5,7 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import type { QueryStatus } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { cn } from '@/lib/utils';
 
 interface props {
     columns: Column[];
@@ -32,6 +33,8 @@ export const CrudTable = ({
     viewHref,
     enableOpenOnRowClick,
 }: props) => {
+    const navigate = useNavigate();
+
     return (
         <Table>
             <TableHeader>
@@ -46,7 +49,7 @@ export const CrudTable = ({
                 {status === 'success' &&
                     data?.map((row: any) => (
                         <TableRow className="w-full" key={row.id}>
-                            {columns?.map((column, i) => {
+                            {columns?.map((column) => {
                                 const cellContent =
                                     Array.isArray(column.data) && column.transform
                                         ? column.transform(column.data.map((data) => row[data]))
@@ -56,31 +59,17 @@ export const CrudTable = ({
 
                                 return (
                                     <TableCell
+                                        onClick={() => {
+                                            if (enableOpenOnRowClick) {
+                                                setSelectedRow(row);
+                                                if (setOpenView) setOpenView(true);
+                                                if (viewHref) navigate(viewHref + row.id);
+                                            }
+                                        }}
                                         key={Array.isArray(column.data) ? column.data[0] : column.data}
-                                        className={column.hide ? 'hidden sm:table-cell' : ''}
+                                        className={cn(column.hide ? 'hidden sm:table-cell' : '', enableOpenOnRowClick && 'cursor-pointer')}
                                     >
-                                        {column.badge ? (
-                                            <Badge variant="outline">{cellContent}</Badge>
-                                        ) : enableOpenOnRowClick && i === 0 ? (
-                                            (setOpenView && (
-                                                <span
-                                                    onClick={() => {
-                                                        setSelectedRow(row);
-                                                        setOpenView(true);
-                                                    }}
-                                                    className="cursor-pointer"
-                                                >
-                                                    {cellContent}
-                                                </span>
-                                            )) ||
-                                            (viewHref && (
-                                                <Link to={viewHref + row.id}>
-                                                    <span>{cellContent}</span>
-                                                </Link>
-                                            ))
-                                        ) : (
-                                            <span>{cellContent}</span>
-                                        )}
+                                        {column.badge ? <Badge variant="outline">{cellContent}</Badge> : <span>{cellContent}</span>}
                                     </TableCell>
                                 );
                             })}
