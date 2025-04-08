@@ -1,6 +1,6 @@
 import { api, tsr } from '@/lib/boilerplate';
-import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DialogHeader } from '@/components/ui/dialog';
+import { Modal, ModalContent, ModalDescription, ModalTitle, ModalTrigger } from '@/components/ui/auto-modal';
+import { ModalHeader } from '@/components/ui/auto-modal';
 import { ActionButton, Button } from '@/components/ui/button';
 import { FileUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -34,17 +34,17 @@ const ImportMembers = () => {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>
+        <Modal open={open} onOpenChange={setOpen}>
+            <ModalTrigger>
                 <ActionButton text="Importar">
                     <FileUp className="size-3.5" />
                 </ActionButton>
-            </DialogTrigger>
-            <DialogContent className="w-xl">
-                <DialogHeader>
-                    <DialogTitle>Importar miembros</DialogTitle>
-                    <DialogDescription>Llena nuestra plantilla de excel e importa todos tus miembros en un solo movimiento!</DialogDescription>
-                </DialogHeader>
+            </ModalTrigger>
+            <ModalContent className="w-xl">
+                <ModalHeader>
+                    <ModalTitle>Importar miembros</ModalTitle>
+                    <ModalDescription>Llena nuestra plantilla de excel e importa todos tus miembros en un solo movimiento!</ModalDescription>
+                </ModalHeader>
 
                 <Button asChild className="max-w-48" variant={'outline'}>
                     <a href="https://cdn.iglesiasbc.com/plantilla_miembros.xlsx">Descargar plantilla</a>
@@ -53,8 +53,8 @@ const ImportMembers = () => {
                 <Input type="file" accept=".xlsx .xls" id="username" onChange={(e) => handleFile(e)} />
 
                 <Button onClick={() => showPromise(handleSubmit(), 'Miembros importados')}>Importar</Button>
-            </DialogContent>
-        </Dialog>
+            </ModalContent>
+        </Modal>
     );
 };
 

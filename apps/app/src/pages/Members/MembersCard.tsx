@@ -1,6 +1,6 @@
 import { tsr } from '@/lib/boilerplate';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { DialogHeader } from '@/components/ui/dialog';
+import { Modal, ModalContent, ModalTitle } from '@/components/ui/auto-modal';
+import { ModalHeader } from '@/components/ui/auto-modal';
 import { BadgeCheck, BriefcaseBusiness, Cake, DoorOpen, Heart, MailIcon, Phone, UsersRound } from 'lucide-react';
 import { displayDate } from '@/lib/timeFunctions';
 import { calculateAge } from './members.lib';
@@ -33,11 +33,11 @@ const MembersCard = ({ id, open, setOpen }: props) => {
     });
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="w-xl">
-                <DialogHeader>
-                    <DialogTitle>{member?.name}</DialogTitle>
-                </DialogHeader>
+        <Modal open={open} onOpenChange={setOpen}>
+            <ModalContent className="w-xl">
+                <ModalHeader>
+                    <ModalTitle>{member?.name}</ModalTitle>
+                </ModalHeader>
 
                 <div className="grid grid-cols-2 gap-6 mt-4">
                     <div className="flex items-center gap-3">
@@ -140,8 +140,8 @@ const MembersCard = ({ id, open, setOpen }: props) => {
                         </div>
                     </div>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </ModalContent>
+        </Modal>
     );
 };
 

@@ -1,5 +1,5 @@
 import { ActionButton, Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Modal, ModalContent, ModalFooter, ModalHeader, ModalTitle, ModalTrigger } from '@/components/ui/auto-modal';
 import { Input } from '@/components/ui/input';
 import { api, tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
@@ -29,24 +29,24 @@ const LogoUpload = () => {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <Modal open={open} onOpenChange={setOpen}>
+            <ModalTrigger asChild>
                 <ActionButton text="Subir logo">
                     <Image className="size-3.5" />
                 </ActionButton>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>Subir logo de tu iglesia</DialogTitle>
-                </DialogHeader>
+            </ModalTrigger>
+            <ModalContent className="sm:max-w-[425px]">
+                <ModalHeader>
+                    <ModalTitle>Subir logo de tu iglesia</ModalTitle>
+                </ModalHeader>
                 <Input type="file" accept="image/*" id="username" onChange={(e) => handleFile(e)} />
-                <DialogFooter>
+                <ModalFooter>
                     <Button type="submit" onClick={() => showPromise(handleSubmit(), 'Logo Subido')} size="sm">
                         Subir
                     </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 };
 

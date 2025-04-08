@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-
 import { CheckIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -12,11 +11,6 @@ const UpgradePlanMessage = () => {
     useEffect(() => {
         setPlan(parseInt(localStorage.getItem('plan') || '0'));
         setUserId(localStorage.getItem('userId'));
-
-        document.addEventListener('astro:after-swap', () => {
-            setPlan(parseInt(localStorage.getItem('plan') || '0'));
-            setUserId(localStorage.getItem('userId'));
-        });
     }, []);
 
     return (

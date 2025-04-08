@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Modal, ModalContent, ModalFooter, ModalHeader, ModalTitle, ModalTrigger } from '@/components/ui/auto-modal';
 import { Input } from '@/components/ui/input';
 import { PlusIcon } from 'lucide-react';
 
@@ -23,8 +23,8 @@ const ImageUpload = <TApiPath,>({ uploadImage, setSelectedFile, text, apiPath, e
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <Modal open={open} onOpenChange={setOpen}>
+            <ModalTrigger asChild>
                 {edit ? (
                     <Button>Cambiar</Button>
                 ) : (
@@ -32,17 +32,17 @@ const ImageUpload = <TApiPath,>({ uploadImage, setSelectedFile, text, apiPath, e
                         <PlusIcon className="w-14 h-14" />
                     </button>
                 )}
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                    <DialogTitle>{text}</DialogTitle>
-                </DialogHeader>
+            </ModalTrigger>
+            <ModalContent className="sm:max-w-[425px]">
+                <ModalHeader>
+                    <ModalTitle>{text}</ModalTitle>
+                </ModalHeader>
                 <Input type="file" accept="image/*" onChange={handleFile} />
-                <DialogFooter>
+                <ModalFooter>
                     <Button onClick={() => uploadImage(apiPath)}>Subir</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 };
 

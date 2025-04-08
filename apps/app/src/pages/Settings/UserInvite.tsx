@@ -1,7 +1,7 @@
 import { api, tsr } from '@/lib/boilerplate';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Modal, ModalContent, ModalTitle, ModalTrigger } from '@/components/ui/auto-modal';
 import type { z } from 'zod';
-import { DialogHeader } from '@/components/ui/dialog';
+import { ModalHeader } from '@/components/ui/auto-modal';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
@@ -25,14 +25,14 @@ const UserInvite = () => {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <Modal open={open} onOpenChange={setOpen}>
+            <ModalTrigger asChild>
                 <RegisterButton>Invitar usuario</RegisterButton>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Agregar miembro</DialogTitle>
-                </DialogHeader>
+            </ModalTrigger>
+            <ModalContent>
+                <ModalHeader>
+                    <ModalTitle>Agregar miembro</ModalTitle>
+                </ModalHeader>
 
                 <Form {...inviteForm}>
                     <form
@@ -56,8 +56,8 @@ const UserInvite = () => {
                         <Button type="submit">Agregar</Button>
                     </form>
                 </Form>
-            </DialogContent>
-        </Dialog>
+            </ModalContent>
+        </Modal>
     );
 };
 
