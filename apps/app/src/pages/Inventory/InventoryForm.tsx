@@ -1,11 +1,11 @@
-import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { api, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useEffect } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { Button, RegisterButton } from '@/components/ui/button';
+import { RegisterButton } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PostInventorySchema } from '@iglesiasbc/schemas';
 import { useForm } from 'react-hook-form';
@@ -68,12 +68,11 @@ const InventoryForm = ({ id, open, setOpen }: props) => {
             <SheetTrigger asChild>
                 <RegisterButton>Registrar articulo</RegisterButton>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent onSubmit={submit}>
+                <SheetHeader>
+                    <SheetTitle>{id ? 'Editar articulo' : 'Registrar articulo'}</SheetTitle>
+                </SheetHeader>
                 <SheetBody>
-                    <SheetHeader>
-                        <SheetTitle>{id ? 'Actualizar articulo' : 'Registrar articulo'}</SheetTitle>
-                    </SheetHeader>
-
                     <Form {...itemForm}>
                         <form onSubmit={submit}>
                             <FormField
@@ -183,15 +182,6 @@ const InventoryForm = ({ id, open, setOpen }: props) => {
                         </form>
                     </Form>
                 </SheetBody>
-
-                <SheetFooter>
-                    <Button className="w-full sm:w-auto" onClick={submit}>
-                        Guardar
-                    </Button>
-                    <Button asChild variant="outline">
-                        <SheetClose className="w-full sm:w-auto">Cerrar</SheetClose>
-                    </Button>
-                </SheetFooter>
             </SheetContent>
         </Sheet>
     );

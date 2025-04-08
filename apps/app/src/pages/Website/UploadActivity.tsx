@@ -1,4 +1,4 @@
-import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
@@ -68,12 +68,11 @@ const UploadActivity = ({ activity }: any) => {
                     </button>
                 )}
             </SheetTrigger>
-            <SheetContent className="sm:max-w-[425px]">
+            <SheetContent className="sm:max-w-[425px]" onSubmit={submit}>
+                <SheetHeader>
+                    <SheetTitle>{activity ? 'Editar actividad' : 'Registrar nueva actividad'}</SheetTitle>
+                </SheetHeader>
                 <SheetBody>
-                    <SheetHeader>
-                        <SheetTitle>{activity ? 'Actualizar actividad' : 'Registrar nueva actividad'}</SheetTitle>
-                    </SheetHeader>
-
                     <Form {...activitiesForm}>
                         <form onSubmit={submit}>
                             <FormField
@@ -112,14 +111,6 @@ const UploadActivity = ({ activity }: any) => {
                         </form>
                     </Form>
                 </SheetBody>
-                <SheetFooter>
-                    <Button className="w-full sm:w-auto" onClick={submit}>
-                        Guardar
-                    </Button>
-                    <Button asChild variant="outline">
-                        <SheetClose className="w-full sm:w-auto">Cerrar</SheetClose>
-                    </Button>
-                </SheetFooter>
             </SheetContent>
         </Sheet>
     );

@@ -1,6 +1,5 @@
-import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import type { z } from 'zod';
@@ -50,12 +49,11 @@ const UploadEvent = () => {
                     <PlusIcon strokeWidth={1} className="w-14 h-14"></PlusIcon>
                 </button>
             </SheetTrigger>
-            <SheetContent className="sm:max-w-[425px]">
+            <SheetContent className="sm:max-w-[425px]" onSubmit={submit}>
+                <SheetHeader>
+                    <SheetTitle>Subir evento</SheetTitle>
+                </SheetHeader>
                 <SheetBody>
-                    <SheetHeader>
-                        <SheetTitle>Subir evento</SheetTitle>
-                    </SheetHeader>
-
                     <Form {...eventsForm}>
                         <form onSubmit={submit}>
                             <FormField
@@ -94,15 +92,6 @@ const UploadEvent = () => {
                         </form>
                     </Form>
                 </SheetBody>
-
-                <SheetFooter>
-                    <Button className="w-full sm:w-auto" onClick={submit}>
-                        Guardar
-                    </Button>
-                    <Button asChild variant="outline">
-                        <SheetClose className="w-full sm:w-auto">Cerrar</SheetClose>
-                    </Button>
-                </SheetFooter>
             </SheetContent>
         </Sheet>
     );

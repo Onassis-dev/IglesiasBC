@@ -1,5 +1,5 @@
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group-card';
-import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api, tsr } from '@/lib/boilerplate';
 import type { z } from 'zod';
@@ -79,12 +79,11 @@ const CertificatesForm = ({ open, setOpen }: props) => {
             <SheetTrigger asChild>
                 <RegisterButton>Crear certificado</RegisterButton>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent onSubmit={submit}>
+                <SheetHeader>
+                    <SheetTitle>Crear certificado</SheetTitle>
+                </SheetHeader>
                 <SheetBody>
-                    <SheetHeader>
-                        <SheetTitle>Crear certificado</SheetTitle>
-                    </SheetHeader>
-
                     <Form {...membersForm}>
                         <form onSubmit={submit}>
                             <FormField
@@ -369,14 +368,6 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                         </form>
                     </Form>
                 </SheetBody>
-                <SheetFooter>
-                    <Button className="w-full sm:w-auto" onClick={submit}>
-                        Guardar
-                    </Button>
-                    <Button asChild variant="outline">
-                        <SheetClose className="w-full sm:w-auto">Cerrar</SheetClose>
-                    </Button>
-                </SheetFooter>
             </SheetContent>
         </Sheet>
     );

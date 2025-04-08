@@ -1,11 +1,11 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { api, tsr } from '@/lib/boilerplate';
-import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { Button, RegisterButton } from '@/components/ui/button';
+import { RegisterButton } from '@/components/ui/button';
 import { formatToTZ, formatToUTC } from '@/lib/timeFunctions';
 import { Textarea } from '@/components/ui/textarea';
 import DatePicker from '@/components/common/DatePicker';
@@ -97,12 +97,11 @@ const TransactionsForm = ({ transaction, open, setOpen, treasuryId }: Props) => 
             <SheetTrigger asChild>
                 <RegisterButton>Registrar transacción</RegisterButton>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent onSubmit={submit}>
+                <SheetHeader>
+                    <SheetTitle>{transaction ? 'Editar transacción' : 'Registrar transacción'}</SheetTitle>
+                </SheetHeader>
                 <SheetBody>
-                    <SheetHeader>
-                        <SheetTitle>{transaction ? 'Actualizar transacción' : 'Registrar nueva transacción'}</SheetTitle>
-                    </SheetHeader>
-
                     <Form {...transactionForm}>
                         <form onSubmit={submit}>
                             <FormField
@@ -201,14 +200,6 @@ const TransactionsForm = ({ transaction, open, setOpen, treasuryId }: Props) => 
                         </form>
                     </Form>
                 </SheetBody>
-                <SheetFooter>
-                    <Button className="w-full sm:w-auto" onClick={submit}>
-                        Guardar
-                    </Button>
-                    <Button asChild variant="outline">
-                        <SheetClose className="w-full sm:w-auto">Cerrar</SheetClose>
-                    </Button>
-                </SheetFooter>
             </SheetContent>
         </Sheet>
     );
