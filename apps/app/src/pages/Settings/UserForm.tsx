@@ -35,6 +35,7 @@ const UserForm = ({ user, open, setOpen }: props) => {
     const client = tsr.useQueryClient();
 
     const handleSubmit = async (values: z.infer<typeof EditPermissionSchema>) => {
+        console.log(values);
         await api(tsr.permissions.edit, values);
         client.refetchQueries({ queryKey: ['permissions'] });
         setOpen(false);
@@ -53,25 +54,20 @@ const UserForm = ({ user, open, setOpen }: props) => {
         });
     }, [user, open]);
 
+    const submit = userForm.handleSubmit((values: z.infer<typeof EditPermissionSchema>) =>
+        showPromise(handleSubmit(values), 'Información actualizada')
+    );
+
     return (
         <Sheet open={open} onOpenChange={setOpen}>
-            <SheetContent
-                className="max-w-4xl"
-                onSubmit={userForm.handleSubmit((values: z.infer<typeof EditPermissionSchema>) =>
-                    showPromise(handleSubmit(values), 'Información actualizada')
-                )}
-            >
+            <SheetContent className="max-w-4xl" submit={submit}>
                 <SheetHeader>
                     <SheetTitle>Actualizar usuario</SheetTitle>
                 </SheetHeader>
 
                 <SheetBody>
                     <Form {...userForm}>
-                        <form
-                            onSubmit={userForm.handleSubmit((values: z.infer<typeof EditPermissionSchema>) =>
-                                showPromise(handleSubmit(values), 'Información actualizada')
-                            )}
-                        >
+                        <form onSubmit={submit}>
                             <FormField
                                 control={userForm.control}
                                 name="perm_members"
