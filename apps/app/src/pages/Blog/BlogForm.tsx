@@ -1,13 +1,12 @@
 import { api, tsr } from '@/lib/boilerplate';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Sheet, SheetBody, SheetContent, SheetTitle, SheetTrigger, SheetHeader } from '@/components/ui/sheet';
 import type { z } from 'zod';
-import { DialogHeader } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Button, RegisterButton } from '@/components/ui/button';
-import { Bold, Check, HeadingIcon, Image, Italic, LoaderIcon, Strikethrough, Upload, X } from 'lucide-react';
+import { Bold, Check, HeadingIcon, Image, Italic, LoaderIcon, Strikethrough } from 'lucide-react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -49,7 +48,7 @@ const BlogForm = ({ id, open, setOpen }: props) => {
         content: blogForm.getValues('body'),
         editorProps: {
             attributes: {
-                class: 'max-h-full h-full overflow-y-auto p-3 mb-0 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-ring  ',
+                class: 'max-h-full h-full overflow-y-auto p-0 mb-0 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-ring  ',
             },
         },
         onUpdate({ editor }) {
@@ -109,120 +108,119 @@ const BlogForm = ({ id, open, setOpen }: props) => {
     }, [post, open]);
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+        <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
                 <RegisterButton>Publicar post</RegisterButton>
-            </DialogTrigger>
-            <DialogContent className="max-h-[90vh] h-full max-w-2xl flex flex-col p-0" closeButton={false}>
-                <DialogHeader className="flex flex-row items-center border-b border-input min-h-10 p-2 space-y-0 gap-0.5">
+            </SheetTrigger>
+            <SheetContent
+                submit={blogForm.handleSubmit((values: z.infer<typeof PostPostSchema>) =>
+                    showPromise(handleSubmit(values), id ? 'Post actualizado' : 'Post publicado')
+                )}
+            >
+                <SheetHeader>
+                    <SheetTitle>{id ? 'Editar post' : 'Publicar post'}</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-row items-center border-b border-input min-h-9 px-4 sm:px-6 gap-2">
                     <Toggle
-                        size="sm"
                         pressed={editor?.isActive('heading')}
                         onPressedChange={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-                        className="aspect-square"
+                        className="size-6 p-0"
                     >
                         <HeadingIcon className="size-4" />
                     </Toggle>
                     <Toggle
-                        size="sm"
                         pressed={editor?.isActive('bold')}
                         onPressedChange={() => editor?.chain().focus().toggleBold().run()}
-                        className="aspect-square"
+                        className="size-6 p-0"
                     >
                         <Bold className="size-4" />
                     </Toggle>
                     <Toggle
-                        size="sm"
                         pressed={editor?.isActive('italic')}
                         onPressedChange={() => editor?.chain().focus().toggleItalic().run()}
-                        className="aspect-square"
+                        className="size-6 p-0"
                     >
                         <Italic className="size-4" />
                     </Toggle>
                     <Toggle
-                        size="sm"
                         pressed={editor?.isActive('strike')}
                         onPressedChange={() => editor?.chain().focus().toggleStrike().run()}
-                        className="aspect-square"
+                        className="size-6 p-0"
                     >
                         <Strikethrough className="size-4" />
                     </Toggle>
-                    <label className="h-9 px-2.5 flex items-center justify-center gap-2 rounded-md hover:bg-muted cursor-pointer ml-auto relative">
-                        <Image className="size-4 " />
-                        {selectedFile && <Check className="size-3.5 bottom-0.5 right-1 absolute text-green" />}
-                        {!selectedFile && !id && <span className="size-3.5 bottom-3 -right-1 absolute text-destructive">!</span>}
-                        <Input type="file" accept="image/*" id="username" onChange={(e) => handleFile(e)} className="hidden" />
-                    </label>
-
-                    <Button
-                        onClick={blogForm.handleSubmit((values: z.infer<typeof PostPostSchema>) =>
-                            showPromise(handleSubmit(values), id ? 'Post actualizado' : 'Post publicado')
-                        )}
-                        className="max-w-32 h-8 gap-2"
-                        size="sm"
-                    >
-                        <Upload className="size-3.5" />
-                        Subir
+                    <Button asChild className="ml-auto h-7 px-2 cursor-pointer relative" variant="ghost">
+                        <label>
+                            <Image className="size-4 mr-1" />
+                            Portada
+                            {selectedFile && <Check className="size-3.5 -bottom-0 right-0.5 absolute text-green" />}
+                            {!selectedFile && !id && <span className="size-3.5 bottom-2.5 -right-2 absolute text-destructive">!</span>}
+                            <Input type="file" accept="image/*" id="username" onChange={(e) => handleFile(e)} className="hidden" />
+                        </label>
                     </Button>
-                    <Button className="size-8 sm:hidden" variant="ghost" size="icon" onClick={() => setOpen(false)}>
-                        <X className="size-3.5" />
-                    </Button>
-                </DialogHeader>
-                <Form {...blogForm}>
-                    <form
-                        onSubmit={blogForm.handleSubmit((values: z.infer<typeof PostPostSchema>) =>
-                            showPromise(handleSubmit(values), id ? 'Post actualizado' : 'Post publicado')
-                        )}
-                        className="grid h-full overflow-y-auto p-2 sm:p-6 pt-1 "
-                        style={{ gridTemplateRows: 'auto auto 1fr' }}
-                    >
-                        <FormField
-                            control={blogForm.control}
-                            name="title"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input placeholder="Titulo" {...field} className="border-none font-semibold text-2xl" />
-                                    </FormControl>
-                                    <FormMessage className="h-5" />
-                                </FormItem>
-                            )}
-                        />
+                </div>
 
-                        <FormField
-                            control={blogForm.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <Input placeholder="Descripción" {...field} className="border-none h-8 text-muted-foreground" />
-                                    </FormControl>
-                                    <FormMessage className="h-5" />
-                                </FormItem>
+                <SheetBody className="p-0">
+                    <Form {...blogForm}>
+                        <form
+                            onSubmit={blogForm.handleSubmit((values: z.infer<typeof PostPostSchema>) =>
+                                showPromise(handleSubmit(values), id ? 'Post actualizado' : 'Post publicado')
                             )}
-                        />
-                        <FormField
-                            control={blogForm.control}
-                            name="body"
-                            render={() => (
-                                <FormItem>
-                                    <FormControl>
-                                        {showEditor ? (
-                                            <EditorContent editor={editor}></EditorContent>
-                                        ) : (
-                                            <div className="w-full h-full flex justify-center items-center">
-                                                <LoaderIcon className="animate-spin size-8" />
-                                            </div>
-                                        )}
-                                    </FormControl>
-                                    <FormMessage className="h-5" />
-                                </FormItem>
-                            )}
-                        />
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
+                            className="grid h-full overflow-y-auto "
+                            style={{ gridTemplateRows: 'auto auto 1fr' }}
+                        >
+                            <FormField
+                                control={blogForm.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem className="px-4 sm:px-6 pt-6">
+                                        <FormControl>
+                                            <Input placeholder="Titulo" {...field} className="border-none font-semibold text-2xl !ring-0 p-0" />
+                                        </FormControl>
+                                        <FormMessage className="h-5" />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={blogForm.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem className="px-4 sm:px-6">
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Descripción"
+                                                {...field}
+                                                className="border-none h-8 text-muted-foreground !ring-0 p-0"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="h-5" />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={blogForm.control}
+                                name="body"
+                                render={() => (
+                                    <FormItem className="px-4 sm:px-6">
+                                        <FormControl>
+                                            {showEditor ? (
+                                                <EditorContent editor={editor}></EditorContent>
+                                            ) : (
+                                                <div className="w-full h-full flex justify-center items-center">
+                                                    <LoaderIcon className="animate-spin size-8" />
+                                                </div>
+                                            )}
+                                        </FormControl>
+                                        <FormMessage className="h-5" />
+                                    </FormItem>
+                                )}
+                            />
+                        </form>
+                    </Form>
+                </SheetBody>
+            </SheetContent>
+        </Sheet>
     );
 };
 

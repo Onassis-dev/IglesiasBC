@@ -35,18 +35,17 @@ export class PostsController {
   @TsRestHandler(postsContract.post)
   @UseInterceptors(FileInterceptor('file'), new ImageHandler(1000))
   create(@UploadedFile() file: File) {
-    return tsRestHandler(postsContract.post, async ({ body }) => {
-      console.log(body, file);
-      return this.postsService.post(body, file);
-    });
+    return tsRestHandler(postsContract.post, async ({ body }) =>
+      this.postsService.post(body, file),
+    );
   }
 
   @TsRestHandler(postsContract.put)
   @UseInterceptors(FileInterceptor('file'), new ImageHandler(1000))
   edit(@UploadedFile() file: File) {
-    return tsRestHandler(postsContract.put, async ({ body }) => {
-      return this.postsService.edit(body, file);
-    });
+    return tsRestHandler(postsContract.put, async ({ body }) =>
+      this.postsService.edit(body, file),
+    );
   }
 
   @TsRestHandler(postsContract.delete)
