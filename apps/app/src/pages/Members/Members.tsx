@@ -80,7 +80,7 @@ export function Members() {
                     <ImportMembers />
                     <MembersForm open={open} setOpen={setOpen} id={selectedMember.id} />
                 </div>
-                <MembersCard open={open1} setOpen={setOpen1} id={selectedMember.id} />
+                <MembersCard open={open1} setOpen={setOpen1} id={selectedMember.id} setDelete={setOpen2} setEdit={setOpen} />
             </OptionsGrid>
 
             <Card>

@@ -46,9 +46,9 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
             <SheetPrimitive.Content onOpenAutoFocus={(e) => e.preventDefault()} ref={ref} className={cn(sheetClass, className)} {...props}>
                 {children}
 
-                <SheetPrimitive.Close className="absolute left-8 sm:left-auto right-auto sm:right-8 top-5 rounded-sm ring-offset-background transition-opacity focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+                <SheetPrimitive.Close className="absolute left-8 sm:left-auto right-auto sm:right-8 top-[1.125rem] sm:top-5 rounded-sm ring-offset-background transition-opacity focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
                     <X className="size-4 hidden sm:flex" />
-                    <ChevronLeft className="size-4 sm:hidden" />
+                    <ChevronLeft className="size-5 sm:hidden" />
                     <span className="sr-only">Close</span>
                 </SheetPrimitive.Close>
 
