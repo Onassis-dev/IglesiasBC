@@ -147,7 +147,6 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                 <div className="mt-4 gap-2 grid grid-cols-4 border-t pt-2">
                     <Button
                         variant="outline"
-                        className="space-x-1 px-3"
                         onClick={() => {
                             setOpen(false);
                             setDelete(true);
@@ -157,7 +156,6 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                     </Button>
                     <Button
                         variant="outline"
-                        className="space-x-1 px-3"
                         onClick={() => {
                             setOpen(false);
                             setEdit(true);
@@ -165,10 +163,10 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                     >
                         <Edit className="size-4" />
                     </Button>
-                    <Button variant="outline" className="space-x-1 px-3" onClick={() => window.open('tel:1231231234')}>
+                    <Button variant="outline" onClick={() => window.open(`tel:${member?.cellphone}`)}>
                         <Phone className="size-4" />
                     </Button>
-                    <Button variant="outline" className="space-x-1 px-3" onClick={() => window.open('https://wa.me/1231231234', '_blank')}>
+                    <Button variant="outline" onClick={() => window.open(`https://wa.me/${member?.cellphone}`, '_blank')}>
                         <MessageCircle className="size-4" />
                     </Button>
                 </div>
