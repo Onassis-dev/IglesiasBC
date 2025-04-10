@@ -45,7 +45,7 @@ const Share = ({ url, title, children }: props) => {
 
     return (
         <>
-            {navigator.share ? (
+            {typeof navigator.share === 'function' ? (
                 <>{clonedChild}</>
             ) : (
                 <DropdownMenu>
