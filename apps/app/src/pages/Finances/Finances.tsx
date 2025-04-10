@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
 import { CircleDollarSign, MinusCircle, PlusCircle } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
-import { Card, CardContent } from '@/components/ui/card';
 import { SearchInput } from '@/components/ui/input';
 import PaginationMenu from '@/components/common/PaginationMenu';
 import InfoCard from '@/components/common/InfoCard';
@@ -64,20 +63,15 @@ export const Finances = () => {
                 <TreasuriesForm open={open} setOpen={setOpen} id={selectedTreasury.id} />
             </OptionsGrid>
 
-            <Card>
-                <CardContent className="p-0">
-                    <CrudTable
-                        columns={columns}
-                        data={treasuries?.rows}
-                        status={status}
-                        setSelectedRow={setSelectedTreasury}
-                        viewHref="/finances/treasury?id="
-                        setOpenEdit={setOpen}
-                        setOpenDelete={setOpen1}
-                        enableOpenOnRowClick={true}
-                    ></CrudTable>
-                </CardContent>
-            </Card>
+            <CrudTable
+                columns={columns}
+                data={treasuries?.rows}
+                status={status}
+                setSelectedRow={setSelectedTreasury}
+                viewHref="/finances/treasury?id="
+                setOpenEdit={setOpen}
+                setOpenDelete={setOpen1}
+            ></CrudTable>
             <PaginationMenu page={page} setPage={setPage} count={treasuries?.count} rowsDisplayed={10} />
         </div>
     );

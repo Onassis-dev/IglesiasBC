@@ -2,7 +2,6 @@ import '@/lib/boilerplate';
 import { useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
 import { CalendarClock, FileBadge, FileCheck } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import { SearchInput } from '@/components/ui/input';
 import PaginationMenu from '@/components/common/PaginationMenu';
 import CertificatesForm from './CertificatesForm';
@@ -82,18 +81,14 @@ const Certificates = () => {
                 </div>
             </OptionsGrid>
 
-            <Card>
-                <CardContent className="p-0">
-                    <CrudTable
-                        columns={columns}
-                        data={certificates?.rows}
-                        status={status}
-                        setSelectedRow={setSelectedCertificate}
-                        setOpenDelete={setOpen1}
-                        downloadFunc={downloadCertificate}
-                    ></CrudTable>
-                </CardContent>
-            </Card>
+            <CrudTable
+                columns={columns}
+                data={certificates?.rows}
+                status={status}
+                setSelectedRow={setSelectedCertificate}
+                setOpenDelete={setOpen1}
+                downloadFunc={downloadCertificate}
+            ></CrudTable>
             <PaginationMenu page={page} setPage={setPage} count={certificates?.count} rowsDisplayed={10} />
         </div>
     );

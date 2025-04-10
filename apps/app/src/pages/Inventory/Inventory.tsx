@@ -5,7 +5,6 @@ import { tsr } from '@/lib/boilerplate';
 import { Boxes, DollarSign, FileDown, Package } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { Card, CardContent } from '@/components/ui/card';
 import { SearchInput } from '@/components/ui/input';
 import PaginationMenu from '@/components/common/PaginationMenu';
 import InfoCard from '@/components/common/InfoCard';
@@ -89,20 +88,16 @@ export function Inventory() {
                 <InventoryCard open={open1} setOpen={setOpen1} id={selectedItem.id} />
             </OptionsGrid>
 
-            <Card>
-                <CardContent className="p-0">
-                    <CrudTable
-                        columns={columns}
-                        status={status}
-                        data={inventory?.rows}
-                        setSelectedRow={setSelectedItem}
-                        setOpenView={setOpen1}
-                        setOpenEdit={setOpen}
-                        setOpenDelete={setOpen2}
-                        enableOpenOnRowClick={true}
-                    />
-                </CardContent>
-            </Card>
+            <CrudTable
+                columns={columns}
+                status={status}
+                data={inventory?.rows}
+                setSelectedRow={setSelectedItem}
+                setOpenView={setOpen1}
+                setOpenEdit={setOpen}
+                setOpenDelete={setOpen2}
+                onRowClick={setOpen1}
+            />
             <PaginationMenu page={page} setPage={setPage} count={inventory?.count} rowsDisplayed={10} />
         </div>
     );

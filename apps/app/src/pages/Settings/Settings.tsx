@@ -1,4 +1,3 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { api, tsr } from '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
@@ -8,9 +7,6 @@ import { Input } from '@/components/ui/input';
 import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { CircleMinus, CircleCheck, EditIcon, MoreHorizontal, Trash, Award } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import UserForm from './UserForm';
 import UserInvite from './UserInvite';
@@ -19,6 +15,9 @@ import { displayDate } from '@/lib/timeFunctions';
 import { ChurchSchema, EditPermissionSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { OptionsGrid } from '@/components/ui/grids';
+import { Column, CrudTable } from '@/components/common/CrudTable';
+import { Award } from 'lucide-react';
 
 const planNames = ['Plan Gratuito', 'Plan básico', 'Plan avanzado'];
 
@@ -39,7 +38,7 @@ const Settings = () => {
         settingsForm.setValue('name', church?.name);
     }, [church, settingsForm]);
 
-    const { data: { body: users } = {} } = tsr.permissions.get.useQuery({
+    const { data: { body: users } = {}, status } = tsr.permissions.get.useQuery({
         queryKey: ['permissions'],
     });
 
@@ -52,6 +51,17 @@ const Settings = () => {
     const handleSubmit: any = async (values: z.infer<typeof ChurchSchema>) => {
         api(tsr.churches.edit, values);
     };
+
+    const columns: Column[] = [
+        { title: 'Usuario', data: 'username' },
+        { title: 'Perm. Miembros', data: 'perm_members', checkbox: true },
+        { title: 'Perm. Finanzas', data: 'perm_finances', checkbox: true },
+        { title: 'Perm. Inventario', data: 'perm_inventory', checkbox: true },
+        { title: 'Perm. Certificados', data: 'perm_certificates', checkbox: true },
+        { title: 'Perm. Presentaciones', data: 'perm_presentations', checkbox: true },
+        { title: 'Perm. Pagina', data: 'perm_website', checkbox: true },
+        { title: 'Perm. Blog', data: 'perm_blog', checkbox: true },
+    ];
 
     return (
         <div className="space-y-4 w-full">
@@ -123,107 +133,20 @@ const Settings = () => {
                 </Card>
             </div>
 
-            <Card className="w-full">
-                <CardHeader className="flex gap-2 flex-row justify-between items-center">
-                    <CardTitle>Usuarios</CardTitle>
-                    <UserInvite />
-                </CardHeader>
+            <OptionsGrid className="!mt-8">
+                <CardTitle className="pl-1 flex items-center">Usuarios</CardTitle>
+                <UserInvite />
+            </OptionsGrid>
 
-                <CardContent className="w-full overflow-auto max-w-full">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Usuario</TableHead>
-                                <TableHead className="text-center">Perm. Miembros</TableHead>
-                                <TableHead className="text-center">Perm. Finanzas</TableHead>
-                                <TableHead className="text-center">Perm. Inventarios</TableHead>
-                                <TableHead className="text-center">Perm. Certificados</TableHead>
-                                <TableHead className="text-center">Perm. Presentaciones</TableHead>
-                                <TableHead className="text-center">Perm. Pagina</TableHead>
-                                <TableHead className="text-center">Perm. Blog</TableHead>
-                                <TableHead className="text-center"></TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {users?.map((user: any, i: number) => (
-                                <TableRow key={user.id}>
-                                    <TableCell>{user.username}</TableCell>
-                                    <TableCell className="text-center">
-                                        <Badge className="p-0 rounded-full" variant={user.perm_members ? 'green' : 'orange'}>
-                                            {user.perm_members ? <CircleCheck /> : <CircleMinus />}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <Badge className="p-0 rounded-full" variant={user.perm_finances ? 'green' : 'orange'}>
-                                            {user.perm_finances ? <CircleCheck /> : <CircleMinus />}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <Badge className="p-0 rounded-full" variant={user.perm_inventory ? 'green' : 'orange'}>
-                                            {user.perm_inventory ? <CircleCheck /> : <CircleMinus />}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <Badge className="p-0 rounded-full" variant={user.perm_certificates ? 'green' : 'orange'}>
-                                            {user.perm_certificates ? <CircleCheck /> : <CircleMinus />}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <Badge className="p-0 rounded-full" variant={user.perm_presentations ? 'green' : 'orange'}>
-                                            {user.perm_presentations ? <CircleCheck /> : <CircleMinus />}
-                                        </Badge>
-                                    </TableCell>
-                                    {/* <TableCell className="text-center">
-                                        <Badge className="p-0 rounded-full" variant={user.perm_classes ? 'green' : 'orange'}>
-                                            {user.perm_classes ? <CircleCheck /> : <CircleMinus />}
-                                        </Badge>
-                                    </TableCell> */}
-                                    <TableCell className="text-center">
-                                        <Badge className="p-0 rounded-full" variant={user.perm_website ? 'green' : 'orange'}>
-                                            {user.perm_website ? <CircleCheck /> : <CircleMinus />}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <Badge className="p-0 rounded-full" variant={user.perm_blog ? 'green' : 'orange'}>
-                                            {user.perm_blog ? <CircleCheck /> : <CircleMinus />}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="w-0 space-x-1">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button aria-haspopup="true" size="icon" variant="ghost">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                    <span className="sr-only">Toggle menu</span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem
-                                                    onClick={() => {
-                                                        setOpen(true);
-                                                        setSelectedUser(users[i]);
-                                                    }}
-                                                >
-                                                    <EditIcon className="size-4 mr-2" />
-                                                    Editar
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onClick={() => {
-                                                        setSelectedUser(users[i]);
-                                                        setOpen1(true);
-                                                    }}
-                                                >
-                                                    <Trash className="size-4 mr-2" />
-                                                    Eliminar
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+            <CrudTable
+                columns={columns}
+                data={users}
+                status={status}
+                setSelectedRow={setSelectedUser}
+                setOpenEdit={setOpen}
+                setOpenDelete={setOpen1}
+                onRowClick={setOpen}
+            />
 
             <DeleteDialog
                 text="¿Estás seguro de que quieres eliminar a este usuario de tu iglesia?"

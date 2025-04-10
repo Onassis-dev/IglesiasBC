@@ -2,7 +2,6 @@ import '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
 import DeleteDialog from '@/components/common/DeleteDialog';
-import { Card, CardContent } from '@/components/ui/card';
 import { SearchInput } from '@/components/ui/input';
 import PaginationMenu from '@/components/common/PaginationMenu';
 import { OptionsGrid } from '@/components/ui/grids';
@@ -48,20 +47,15 @@ export const Presentations = () => {
                 <PresentationsForm open={open} setOpen={setOpen} id={selectedTreasury.id} />
             </OptionsGrid>
 
-            <Card>
-                <CardContent className="p-0">
-                    <CrudTable
-                        columns={columns}
-                        data={presentations?.rows}
-                        status={status}
-                        setSelectedRow={setSelectedTreasury}
-                        viewHref="/presentations/slides?id="
-                        setOpenEdit={setOpen}
-                        setOpenDelete={setOpen1}
-                        enableOpenOnRowClick={true}
-                    ></CrudTable>
-                </CardContent>
-            </Card>
+            <CrudTable
+                columns={columns}
+                data={presentations?.rows}
+                status={status}
+                setSelectedRow={setSelectedTreasury}
+                viewHref="/presentations/slides?id="
+                setOpenEdit={setOpen}
+                setOpenDelete={setOpen1}
+            ></CrudTable>
             <PaginationMenu page={page} setPage={setPage} count={presentations?.count} rowsDisplayed={10} />
         </div>
     );

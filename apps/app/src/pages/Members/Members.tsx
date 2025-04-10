@@ -83,26 +83,22 @@ export function Members() {
                 <MembersCard open={open1} setOpen={setOpen1} id={selectedMember.id} setDelete={setOpen2} setEdit={setOpen} />
             </OptionsGrid>
 
-            <Card>
-                <CardContent className="p-0 w-full">
-                    <CrudTable
-                        columns={columns}
-                        data={members?.rows}
-                        status={status}
-                        setSelectedRow={setSelectedMember}
-                        setOpenView={setOpen1}
-                        setOpenEdit={setOpen}
-                        setOpenDelete={setOpen2}
-                        enableOpenOnRowClick={true}
-                    ></CrudTable>
-                </CardContent>
-            </Card>
+            <CrudTable
+                columns={columns}
+                data={members?.rows}
+                status={status}
+                setSelectedRow={setSelectedMember}
+                setOpenView={setOpen1}
+                setOpenEdit={setOpen}
+                setOpenDelete={setOpen2}
+                onRowClick={setOpen1}
+            ></CrudTable>
             <PaginationMenu page={page} setPage={setPage} count={members?.count} rowsDisplayed={10} />
 
             <h3 className=" ml-1 pt-10 font-semibold text-xl" id="birthdays">
                 Cumpleañeros del mes
             </h3>
-            <Card>
+            <Card className="overflow-hidden">
                 <CardContent className="p-0">
                     <Table>
                         <TableHeader>

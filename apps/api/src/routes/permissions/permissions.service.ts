@@ -23,14 +23,17 @@ export class PermissionsService {
     }
 
     const rows =
-      await sql`SELECT * FROM permissions WHERE "churchId" = ${this.req.getChurchId()}`;
+      await sql`SELECT * FROM permissions WHERE "churchId" = ${this.req.getChurchId()} order by id desc`;
 
     const query = await auth.getUsers(rows.map((row) => ({ uid: row.userId })));
-    const result = rows.map((row) => ({
-      ...row,
-      username: query.users.find((user) => user.uid === row.userId)
-        ?.displayName,
-    }));
+    const result = rows
+      .map((row) => ({
+        ...row,
+
+        username: query.users.find((user) => user.uid === row.userId)
+          ?.displayName,
+      }))
+      .filter((row: any) => row.userId !== this.req.getUserId());
 
     return res(200, result);
   }
@@ -53,8 +56,10 @@ export class PermissionsService {
       return res(403, { message: 'No cuentas con los permisos necesarios' });
     }
 
-    const { uid } = await auth.getUserByEmail(body.email);
-    if (!uid) {
+    let uid;
+    try {
+      ({ uid } = await auth.getUserByEmail(body.email));
+    } catch (error) {
       return res(400, {
         message: 'No se encontró un usuario con ese correo electrónico',
       });
