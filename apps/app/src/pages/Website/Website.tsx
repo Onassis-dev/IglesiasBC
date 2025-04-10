@@ -1,15 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ExternalLinkIcon, RefreshCcwIcon, Rocket, Share2Icon } from 'lucide-react';
-import { showPromise } from '@/lib/showFunctions.tsx';
 import { useEffect } from 'react';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import '@/lib/boilerplate';
 import { tsr } from '@/lib/boilerplate';
 import WebSiteForm from './WebSiteForm';
@@ -18,6 +9,7 @@ import ActivitiesForm from './ActivitiesForm';
 import ImagesForm from './ImagesForm';
 import { keepPreviousData } from '@tanstack/react-query';
 import { useQueryStore } from '@/lib/store';
+import Share from '@/components/common/Share';
 
 const Website = () => {
     const client = useQueryStore((queryClient) => queryClient.queryClient);
@@ -32,10 +24,6 @@ const Website = () => {
         const iframe: any = document.querySelector('iframe');
         iframe.src = import.meta.env.VITE_WEBSITES_URL + '/' + pageInfo?.title;
     }, [isFetching]);
-
-    const copyLink = async (text: string) => {
-        await navigator.clipboard.writeText(text);
-    };
 
     return (
         <>
@@ -73,39 +61,15 @@ const Website = () => {
                             {pageInfo && (
                                 <>
                                     <a href={import.meta.env.VITE_WEBSITES_URL + '/' + pageInfo?.title} target="_blank">
-                                        <ExternalLinkIcon className="h-5 w-5"></ExternalLinkIcon>
+                                        <ExternalLinkIcon className="size-5"></ExternalLinkIcon>
                                     </a>
 
-                                    <DropdownMenu
-                                        onOpenChange={(open) => {
-                                            if (open && navigator.share) {
-                                                navigator.share({
-                                                    url: `${import.meta.env.VITE_WEBSITES_URL}/${pageInfo?.title?.replaceAll(' ', '-')}`,
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        <DropdownMenuTrigger>
-                                            <Share2Icon className="h-5 w-5" />
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuLabel>Tus links</DropdownMenuLabel>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem
-                                                onClick={() =>
-                                                    showPromise(
-                                                        copyLink(`${import.meta.env.VITE_WEBSITES_URL}/${pageInfo?.title?.replaceAll(' ', '-')}`),
-                                                        'Enlace copiado'
-                                                    )
-                                                }
-                                            >
-                                                https://iglesiasbc.com/
-                                                {pageInfo?.title?.replaceAll(' ', '-')}
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    <Share url={`${import.meta.env.VITE_WEBSITES_URL}/${pageInfo?.title?.replaceAll(' ', '-')}`}>
+                                        <Share2Icon className="size-5 cursor-pointer" />
+                                    </Share>
+
                                     <RefreshCcwIcon
-                                        className="h-5 w-5 cursor-pointer"
+                                        className="size-5 cursor-pointer"
                                         onClick={() => client.refetchQueries({ queryKey: ['pageInfo'] })}
                                     />
                                 </>
