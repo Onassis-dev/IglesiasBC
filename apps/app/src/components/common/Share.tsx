@@ -9,10 +9,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { CopyIcon } from 'lucide-react';
 import { showSuccess } from '@/lib/showFunctions';
-import { Button } from '../ui/button';
+import { cloneElement } from 'react';
 
 interface props {
-    children: React.ReactNode;
+    children: React.ReactElement;
     url: string;
 }
 
@@ -29,21 +29,18 @@ const Share = ({ url, children }: props) => {
         window.open(link, '_blank');
     };
 
+    const clonedChild = cloneElement(children, {
+        onClick: () => {
+            navigator.share({
+                url: url,
+            });
+        },
+    });
+
     return (
         <>
             {navigator.share ? (
-                <Button
-                    asChild
-                    variant="outline"
-                    size="icon"
-                    onClick={() => {
-                        navigator.share({
-                            url: url,
-                        });
-                    }}
-                >
-                    {children}
-                </Button>
+                <>{clonedChild}</>
             ) : (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
