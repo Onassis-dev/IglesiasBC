@@ -64,7 +64,7 @@ const Website = () => {
                                         <ExternalLinkIcon className="size-5"></ExternalLinkIcon>
                                     </a>
 
-                                    <Share url={`${import.meta.env.VITE_WEBSITES_URL}/${pageInfo?.title?.replaceAll(' ', '-')}`}>
+                                    <Share url={`${import.meta.env.VITE_WEBSITES_URL}/${pageInfo?.title}`} title={pageInfo?.title}>
                                         <Share2Icon className="size-5 cursor-pointer" />
                                     </Share>
 

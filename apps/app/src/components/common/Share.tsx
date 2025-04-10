@@ -14,14 +14,18 @@ import { cloneElement } from 'react';
 interface props {
     children: React.ReactElement;
     url: string;
+    title: string;
 }
 
-const Share = ({ url, children }: props) => {
-    const FB_LINK = `https://www.facebook.com/sharer/sharer.php?u=${'https://iglesiasbc.com/Iglesia%20pro%20curada/eventos#Iglesia%20pro%20curada'}&quote=${url}`;
-    const WA_LINK = `https://wa.me/?text=${url}%20${url}`;
+const Share = ({ url, title, children }: props) => {
+    const encodedUrl = (url as any).replaceAll(' ', '-');
+    const encondedTitle = (title as any).replaceAll(' ', '-');
 
-    const copyLink = async (text: string) => {
-        await navigator.clipboard.writeText(text);
+    const FB_LINK = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encondedTitle}`;
+    const WA_LINK = `https://wa.me/?text=${encondedTitle}%20${encodedUrl}`;
+
+    const copyLink = async () => {
+        await navigator.clipboard.writeText(encodedUrl);
         showSuccess('Enlace copiado');
     };
 
@@ -32,7 +36,8 @@ const Share = ({ url, children }: props) => {
     const clonedChild = cloneElement(children, {
         onClick: () => {
             navigator.share({
-                url: url,
+                title,
+                url,
             });
         },
     });
@@ -66,7 +71,7 @@ const Share = ({ url, children }: props) => {
                                 </svg>
                                 Whatsapp
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="flex items-center gap-2" onClick={() => copyLink(url)}>
+                            <DropdownMenuItem className="flex items-center gap-2" onClick={copyLink}>
                                 <CopyIcon className="size-4" />
                                 Copiar
                             </DropdownMenuItem>

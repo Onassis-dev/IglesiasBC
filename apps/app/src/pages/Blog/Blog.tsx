@@ -2,7 +2,7 @@ import '@/lib/boilerplate';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
-import { CalendarPlus, EditIcon, Eye, EyeIcon, Inbox, MessageSquarePlus, Trash } from 'lucide-react';
+import { CalendarPlus, EditIcon, Eye, EyeIcon, Inbox, MessageSquarePlus, Share2Icon, Trash } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { SearchInput } from '@/components/ui/input';
@@ -12,6 +12,7 @@ import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { displayDate } from '@/lib/timeFunctions';
 import BlogAlert from './BlogAlert';
 import InfoCard from '@/components/common/InfoCard';
+import Share from '@/components/common/Share';
 
 export function Blog() {
     const [open, setOpen] = useState(false);
@@ -89,8 +90,7 @@ export function Blog() {
                                     target="_blank"
                                 >
                                     <Button className="h-8 px-2" variant="outline">
-                                        <EyeIcon className="size-4 mr-2" />
-                                        Ver
+                                        <EyeIcon className="size-4" />
                                     </Button>
                                 </a>
                                 <Button
@@ -101,8 +101,7 @@ export function Blog() {
                                         setOpen(true);
                                     }}
                                 >
-                                    <EditIcon className="size-4 mr-2" />
-                                    Editar
+                                    <EditIcon className="size-4" />
                                 </Button>
                                 <Button
                                     className="h-8 px-2"
@@ -112,9 +111,21 @@ export function Blog() {
                                         setOpen1(true);
                                     }}
                                 >
-                                    <Trash className="size-4 mr-2" />
-                                    Eliminar
+                                    <Trash className="size-4" />
                                 </Button>
+
+                                <Share url={`${import.meta.env.VITE_WEBSITES_URL}/${posts.websiteTitle}/blog/${post.title}`} title={post.title}>
+                                    <Button
+                                        className="h-8 px-2 ml-auto"
+                                        variant="outline"
+                                        onClick={() => {
+                                            setSelectedPost(posts.rows[i]);
+                                            setOpen1(true);
+                                        }}
+                                    >
+                                        <Share2Icon className="size-4" />
+                                    </Button>
+                                </Share>
                             </CardFooter>
                         </Card>
                     ))
