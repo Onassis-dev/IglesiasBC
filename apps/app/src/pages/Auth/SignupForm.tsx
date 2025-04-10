@@ -5,23 +5,16 @@ import PasswordInput from '@/components/common/PasswordInput';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import '@/lib/boilerplate';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { useEffect, useState } from 'react';
 import { useRegisterSchema } from './auth.models';
 import { useNavigate } from 'react-router';
 import { Separator } from '@/components/ui/separator';
 import { signInWithGoogle, signup } from './auth.lib';
 
+const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || '/';
+
 const SignupForm = () => {
     const registerForm = useRegisterSchema();
-    const [redirect, setRedirect] = useState('');
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const queryParams = new URLSearchParams(window.location.search);
-        const redirectUrl = queryParams.get('redirect') || '/';
-
-        setRedirect(redirectUrl);
-    }, []);
 
     return (
         <>
@@ -31,7 +24,7 @@ const SignupForm = () => {
                     <CardDescription className="text-center">Regístrate con tu cuenta de google</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
-                    <Button variant={'outline'} className="w-full flex gap-3" onClick={() => signInWithGoogle(() => navigate(redirect))}>
+                    <Button variant={'outline'} className="w-full flex gap-3" onClick={() => signInWithGoogle(() => navigate(redirectUrl))}>
                         <img src="/google.svg" alt="google" className="w-5 h-5" />
                         Continuar con Google
                     </Button>
@@ -42,7 +35,7 @@ const SignupForm = () => {
                         <form
                             onSubmit={registerForm.handleSubmit((v: any) =>
                                 showPromise(
-                                    signup(v, () => navigate(redirect)),
+                                    signup(v, () => navigate(redirectUrl)),
                                     'Ingreso'
                                 )
                             )}

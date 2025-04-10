@@ -48,7 +48,7 @@ export const Slides = () => {
         if (presentation?.name) setPath(presentation.name);
         if (presentation?.slides) setSlides(presentation.slides);
         localStorage.setItem('presentation', JSON.stringify(presentation));
-    }, [presentation]);
+    }, [presentation, setPath]);
 
     useEffect(() => {
         localStorage.setItem('slide', slides[selectedId]);

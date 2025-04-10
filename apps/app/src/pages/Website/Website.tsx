@@ -23,7 +23,7 @@ const Website = () => {
         if (isFetching) return;
         const iframe: any = document.querySelector('iframe');
         iframe.src = import.meta.env.VITE_WEBSITES_URL + '/' + pageInfo?.title;
-    }, [isFetching]);
+    }, [isFetching, pageInfo?.title]);
 
     return (
         <>

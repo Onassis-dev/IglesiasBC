@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 
 interface props {
     url: string;
-    fetchData: Function;
+    fetchData: () => void;
 }
 
 const ChurchImage = ({ url, fetchData }: props) => {

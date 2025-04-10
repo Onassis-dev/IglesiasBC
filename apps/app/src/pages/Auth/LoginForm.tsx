@@ -21,7 +21,7 @@ const LoginForm = () => {
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         if (userId) navigate('/');
-    }, []);
+    }, [navigate]);
 
     return (
         <Card className="w-full border-0 shadow-none sm:shadow-sm sm:border max-w-sm">

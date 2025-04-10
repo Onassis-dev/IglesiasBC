@@ -51,7 +51,7 @@ export const Treasury = () => {
 
     useEffect(() => {
         if (treasury?.name) setPath(treasury.name);
-    }, [treasury]);
+    }, [treasury, setPath]);
 
     useEffect(() => {
         if (!open && !open1) setTimeout(() => setSelectedTransaction({}), 200);

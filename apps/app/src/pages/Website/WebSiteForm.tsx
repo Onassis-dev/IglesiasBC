@@ -30,7 +30,7 @@ const WebSiteForm = () => {
 
             setColor(websiteData.color || '#000000');
         }
-    }, [websiteData]);
+    }, [websiteData, websiteForm]);
 
     const handleSubmit: any = async (values: z.infer<typeof WebsiteSchema>) => {
         if (websiteData) {

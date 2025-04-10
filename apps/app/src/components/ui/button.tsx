@@ -42,7 +42,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, va
 });
 Button.displayName = 'Button';
 
-const SelectButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, children = false, ...props }, ref) => {
+const SelectButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, children = false, ...props }, ref) => {
     return (
         <Button className={cn('gap-2 flex justify-start shadow-sm', className)} ref={ref} size="sm" {...props} variant={variant || 'outline'}>
             <span className="bg-primary-foreground"></span>
@@ -52,7 +52,7 @@ const SelectButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ classNa
     );
 });
 
-const RegisterButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, children = false, ...props }, ref) => {
+const RegisterButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, children = false, ...props }, ref) => {
     return (
         <Button className={cn('gap-2 shadow-sm', className)} ref={ref} size="sm" {...props}>
             <PlusCircleIcon className="size-3.5" />
@@ -61,7 +61,7 @@ const RegisterButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ class
     );
 });
 
-const ActionButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, text, children = false, ...props }, ref) => {
+const ActionButton = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, text, children = false, ...props }, ref) => {
     return (
         <Button className={cn('gap-2 shadow-sm', className)} ref={ref} size="sm" variant="outline" {...props}>
             {children}
