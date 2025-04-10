@@ -75,7 +75,16 @@ const Website = () => {
                                     <a href={import.meta.env.VITE_WEBSITES_URL + '/' + pageInfo?.title} target="_blank">
                                         <ExternalLinkIcon className="h-5 w-5"></ExternalLinkIcon>
                                     </a>
-                                    <DropdownMenu>
+
+                                    <DropdownMenu
+                                        onOpenChange={(open) => {
+                                            if (open && navigator.share) {
+                                                navigator.share({
+                                                    url: `${import.meta.env.VITE_WEBSITES_URL}/${pageInfo?.title?.replaceAll(' ', '-')}`,
+                                                });
+                                            }
+                                        }}
+                                    >
                                         <DropdownMenuTrigger>
                                             <Share2Icon className="h-5 w-5" />
                                         </DropdownMenuTrigger>

@@ -1,7 +1,7 @@
 import { tsr } from '@/lib/boilerplate';
 import { Modal, ModalContent, ModalTitle } from '@/components/ui/auto-modal';
 import { ModalHeader } from '@/components/ui/auto-modal';
-import { BadgeCheck, BriefcaseBusiness, Cake, DoorOpen, Edit, Heart, MailIcon, MessageCircle, Phone, Trash, UsersRound } from 'lucide-react';
+import { BadgeCheck, BriefcaseBusiness, Cake, DoorOpen, Edit, Heart, MailIcon, Phone, Trash, UsersRound } from 'lucide-react';
 import { displayDate } from '@/lib/timeFunctions';
 import { calculateAge } from './members.lib';
 import { useEffect, useState } from 'react';
@@ -144,7 +144,7 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                     </div>
                 </div>
 
-                <div className="mt-4 gap-2 grid grid-cols-4 border-t pt-2">
+                <div className="mt-4 gap-2 grid grid-cols-3 border-t pt-2">
                     <Button
                         variant="outline"
                         onClick={() => {
@@ -165,9 +165,6 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                     </Button>
                     <Button variant="outline" onClick={() => window.open(`tel:${member?.cellphone}`)}>
                         <Phone className="size-4" />
-                    </Button>
-                    <Button variant="outline" onClick={() => window.open(`https://wa.me/${member?.cellphone}`, '_blank')}>
-                        <MessageCircle className="size-4" />
                     </Button>
                 </div>
             </ModalContent>
