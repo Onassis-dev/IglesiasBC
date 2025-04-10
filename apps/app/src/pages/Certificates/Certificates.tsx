@@ -51,7 +51,7 @@ const Certificates = () => {
     ];
 
     return (
-        <div className="space-y-3 bg-dashboardbg">
+        <div className="flex flex-col gap-3">
             <StatsGrid>
                 <InfoCard color="cyan" title="Total de certificados" data={stats?.total}>
                     <FileCheck />

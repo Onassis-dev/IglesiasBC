@@ -45,7 +45,7 @@ export function Blog() {
     }, [open, open1]);
 
     return (
-        <div className="space-y-3 bg-dashboardbg">
+        <div className="flex flex-col gap-3">
             <StatsGrid>
                 <InfoCard color="orange" title="Vistas en el ultimo mes" data={stats?.views}>
                     <Eye />

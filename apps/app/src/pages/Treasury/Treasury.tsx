@@ -64,7 +64,7 @@ export const Treasury = () => {
     ];
 
     return (
-        <div className="space-y-3 bg-dashboardbg">
+        <div className="flex flex-col gap-3">
             <StatsGrid>
                 <InfoCard color="green" title="Balance" data={stats?.balance}>
                     <CircleDollarSign />

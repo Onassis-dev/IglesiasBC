@@ -32,7 +32,7 @@ export const Presentations = () => {
     }, [open, open1]);
 
     return (
-        <div className="space-y-3 bg-dashboardbg">
+        <div className="flex flex-col gap-3">
             <OptionsGrid>
                 <SearchInput placeholder="Buscar..." value={filters.title} onChange={(e) => setFilters({ ...filters, title: e.target.value })} />
 

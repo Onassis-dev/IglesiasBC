@@ -52,7 +52,7 @@ export function Members() {
     ];
 
     return (
-        <div className="space-y-3 bg-dashboardbg">
+        <div className="flex flex-col gap-3">
             <StatsGrid>
                 <InfoCard color="purple" title="Total de miembros" data={stats?.total}>
                     <User />

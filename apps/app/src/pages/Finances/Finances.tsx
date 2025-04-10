@@ -37,7 +37,7 @@ export const Finances = () => {
     const columns: Column[] = [{ title: 'Tesorería', data: 'name' }];
 
     return (
-        <div className="space-y-3 bg-dashboardbg">
+        <div className="flex flex-col gap-3">
             <StatsGrid>
                 <InfoCard color="green" title="Balance" data={stats?.balance}>
                     <CircleDollarSign />

@@ -13,11 +13,10 @@
 // import { downloadFile } from "@/lib/downloadFile";
 // import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-
 // import { CrudTable, type Column } from "@/components/common/CrudTable";
 
 // export const Classes = () => {
-    
+
 //     const [open, setOpen] = useState(false);
 //     const [open1, setOpen1] = useState(false);
 //     const [open2, setOpen2] = useState(false);
@@ -40,7 +39,7 @@
 //     const columns: Column[] = [{ title: "Clase", data: "title" }];
 
 //     return (
-//         <div className="space-y-3 bg-dashboardbg">
+//         <div className="flex flex-col gap-3">
 //             <StatsGrid>
 //                 <InfoCard color="blue" title="Total de clases" data={stats?.classes}>
 //                     <Presentation />
