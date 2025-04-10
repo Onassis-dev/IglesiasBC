@@ -16,18 +16,18 @@ interface props {
     setOpen: (open: boolean) => void;
 }
 
-const UserForm = ({ user, open, setOpen }: props) => {
-    const defaultValues: z.infer<typeof EditPermissionSchema> = {
-        id: 0,
-        perm_members: false,
-        perm_inventory: false,
-        perm_certificates: false,
-        perm_blog: false,
-        perm_finances: false,
-        perm_website: false,
-        perm_presentations: false,
-    };
+const defaultValues: z.infer<typeof EditPermissionSchema> = {
+    id: 0,
+    perm_members: false,
+    perm_inventory: false,
+    perm_certificates: false,
+    perm_blog: false,
+    perm_finances: false,
+    perm_website: false,
+    perm_presentations: false,
+};
 
+const UserForm = ({ user, open, setOpen }: props) => {
     const userForm = useForm<z.infer<typeof EditPermissionSchema>>({
         resolver: zodResolver(EditPermissionSchema),
         defaultValues: defaultValues,
@@ -52,7 +52,7 @@ const UserForm = ({ user, open, setOpen }: props) => {
         userForm.reset({
             ...user,
         });
-    }, [user, open]);
+    }, [user, open, userForm]);
 
     const submit = userForm.handleSubmit((values: z.infer<typeof EditPermissionSchema>) =>
         showPromise(handleSubmit(values), 'Información actualizada')

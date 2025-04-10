@@ -1,34 +1,15 @@
 import '@/lib/boilerplate';
-import { AppWindow, Box, DollarSign, Inbox, MessageSquareQuote, Users2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { AppWindow, Box, DollarSign, FileBadge, Inbox, MessageSquareQuote, Presentation, Users2 } from 'lucide-react';
 import { tsr } from '@/lib/boilerplate';
-import { saveUserData } from '@/lib/accountFunctions';
 import InfoCard from '@/components/common/InfoCard';
 import { Link } from 'react-router';
 
 const Dashboard = () => {
-    const [greeting, setGreeting] = useState('Buenas tardes');
-
     const { data: { body: data } = {} } = tsr.dashboard.getUser.useQuery({
         queryKey: ['user-dashboard'],
     });
 
-    const updateGreeting = () => {
-        const currentHour = new Date().getHours();
-        if (currentHour < 12) {
-            setGreeting('Buenos días');
-        } else {
-            setGreeting('Buenas tardes');
-        }
-    };
-
-    useEffect(() => {
-        updateGreeting();
-    }, []);
-
-    useEffect(() => {
-        if (data?.userData) saveUserData(data?.userData);
-    }, [data?.userData]);
+    const greeting = new Date().getHours() < 12 ? 'Buenos días' : 'Buenas tardes';
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -43,14 +24,14 @@ const Dashboard = () => {
                         </InfoCard>
                     </Link>
                 )}
-                {/* {data?.stats?.certificates && (
+                {data?.stats?.certificates && (
                     <Link to="/certificates">
                         <InfoCard color="cyan" title="Total de certificados" data={data?.stats?.certificates}>
                             <FileBadge />
                         </InfoCard>
                     </Link>
                 )}
-                {data?.stats?.students && (
+                {/* {data?.stats?.students && (
                     <Link to="/classes">
                         <InfoCard color="blue" title="Total de alumnos" data={data?.stats?.students}>
                             <GraduationCap />
@@ -68,6 +49,13 @@ const Dashboard = () => {
                     <Link to="/inventory">
                         <InfoCard color="yellow" title="Total en inventario" data={data?.stats?.inventory}>
                             <Box />
+                        </InfoCard>
+                    </Link>
+                )}
+                {data?.stats?.presentations && (
+                    <Link to="/presentations">
+                        <InfoCard color="pink" title="Total de presentaciones" data={data?.stats?.presentations}>
+                            <Presentation />
                         </InfoCard>
                     </Link>
                 )}

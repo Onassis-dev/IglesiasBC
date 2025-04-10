@@ -14,15 +14,15 @@ export const Layout = () => {
     const { user, userLoading } = useUserStore((state) => state);
     const [loading, setLoading] = useState(true);
 
-    async function checkUserData() {
-        const { body }: any = await tsr.users.getData.query();
-
-        saveUserData(body);
-        if (!body.churchId) setRegisterOpen(true);
-        setLoading(false);
-    }
-
     useEffect(() => {
+        async function checkUserData() {
+            const { body }: any = await tsr.users.getData.query();
+
+            saveUserData(body);
+            if (!body.churchId) setRegisterOpen(true);
+            setLoading(false);
+        }
+
         if (userLoading) return;
         if (!user) {
             localStorage.clear();
@@ -30,7 +30,7 @@ export const Layout = () => {
             return;
         }
         checkUserData();
-    }, [user, userLoading]);
+    }, [user, userLoading, navigate, setRegisterOpen]);
 
     if (loading)
         return (

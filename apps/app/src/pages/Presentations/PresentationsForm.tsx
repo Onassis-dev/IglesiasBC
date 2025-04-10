@@ -19,13 +19,13 @@ interface props {
     trigger?: boolean;
 }
 
-const PresentationsForm = ({ open, setOpen, id, trigger = true }: props) => {
-    const defaultValues: z.infer<typeof PostPresentationSchema> = {
-        title: '',
-        background: '#000000',
-        text: '#FFFFFF',
-    };
+const defaultValues: z.infer<typeof PostPresentationSchema> = {
+    title: '',
+    background: '#000000',
+    text: '#FFFFFF',
+};
 
+const PresentationsForm = ({ open, setOpen, id, trigger = true }: props) => {
     const client = tsr.useQueryClient();
     const presentationForm = useForm<z.infer<typeof PostPresentationSchema>>({
         resolver: zodResolver(PostPresentationSchema),
@@ -59,7 +59,7 @@ const PresentationsForm = ({ open, setOpen, id, trigger = true }: props) => {
         } else {
             presentationForm.reset(defaultValues);
         }
-    }, [item]);
+    }, [item, presentationForm]);
 
     const submit = presentationForm.handleSubmit((values: z.infer<typeof PostPresentationSchema>) =>
         showPromise(handleSubmit(values), id ? 'Presentación actualizada' : 'Presentación creada')

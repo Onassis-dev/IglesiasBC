@@ -4,7 +4,6 @@ import { ModalHeader } from '@/components/ui/auto-modal';
 import { BadgeCheck, BriefcaseBusiness, Cake, DoorOpen, Edit, Heart, MailIcon, Phone, Trash, UsersRound } from 'lucide-react';
 import { displayDate } from '@/lib/timeFunctions';
 import { calculateAge } from './members.lib';
-import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 interface props {
@@ -16,14 +15,11 @@ interface props {
 }
 
 const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
-    const [positions, setPositions] = useState<Record<string, string>>({});
     const { data: { body: positionsList } = {} } = tsr.options.getPositions.useQuery({
         queryKey: ['positionsObj'],
     });
 
-    useEffect(() => {
-        if (positionsList) setPositions(Object.fromEntries(positionsList.map(({ id, value }: { id: any; value: any }) => [id, value])));
-    }, [positionsList]);
+    const positions = positionsList ? Object.fromEntries(positionsList.map(({ id, value }: { id: any; value: any }) => [id, value])) : {};
 
     const { data: { body: member } = {} } = tsr.members.getOne.useQuery({
         queryKey: ['member', id],

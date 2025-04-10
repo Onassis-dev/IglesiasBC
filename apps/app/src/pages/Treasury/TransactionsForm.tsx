@@ -21,22 +21,22 @@ interface Props {
     treasuryId?: number;
 }
 
+const defaultValues: z.infer<typeof PostTransactionSchema> = {
+    concept: '',
+    categoryId: '',
+    amount: '',
+    date: '',
+    notes: '',
+};
+
 const TransactionsForm = ({ transaction, open, setOpen, treasuryId }: Props) => {
-    const defaultValues: z.infer<typeof PostTransactionSchema> = {
-        concept: '',
-        categoryId: '',
-        amount: '',
-        date: '',
-        notes: '',
-    };
     const client = tsr.useQueryClient();
     const transactionForm = useForm<z.infer<typeof PostTransactionSchema>>({
         resolver: zodResolver(PostTransactionSchema),
         defaultValues,
     });
 
-    const [categories, setCategories] = useState<{ name: string; isIncome: boolean; id: number }[]>([]);
-    const [filteredCategories, setFilteredCategories] = useState<any[]>([]);
+    const [categories, setCategories] = useState<{ value: string; isIncome: boolean; id: number }[]>([]);
     const [isIncome, setIsIncome] = useState<boolean | undefined>();
 
     const handleSubmit = async (values: z.infer<typeof PostTransactionSchema>) => {
@@ -52,7 +52,6 @@ const TransactionsForm = ({ transaction, open, setOpen, treasuryId }: Props) => 
         if (!transaction) return;
         if (!open) return;
 
-        console.log(transaction);
         transactionForm.reset({
             ...transaction,
             date: transaction.date ? formatToTZ(transaction.date) || '' : '',
@@ -60,20 +59,19 @@ const TransactionsForm = ({ transaction, open, setOpen, treasuryId }: Props) => 
         });
 
         setIsIncome(categories.filter((v) => v.id === parseInt(transaction.categoryId))[0]?.isIncome);
-    }, [transaction]);
+    }, [transaction, transactionForm, categories, open]);
 
-    useEffect(() => {
-        setFilteredCategories(categories.filter((v) => v.isIncome === isIncome));
-        if (categories.filter((v) => v.id === parseInt(transactionForm.getValues('categoryId')))[0]?.isIncome !== isIncome) {
-            transactionForm.setValue('categoryId', '');
-        }
-    }, [isIncome]);
+    const filteredCategories = categories.filter((v) => v.isIncome === isIncome);
+
+    if (categories.filter((v) => v.id === parseInt(transactionForm.getValues('categoryId')))[0]?.isIncome !== isIncome) {
+        transactionForm.setValue('categoryId', '');
+    }
 
     useEffect(() => {
         if (!open) {
             transactionForm.reset(defaultValues);
         }
-    }, [open]);
+    }, [open, transactionForm]);
 
     useEffect(() => {
         fetchData();

@@ -22,17 +22,17 @@ interface props {
     setOpen: (open: boolean) => void;
 }
 
-const CertificatesForm = ({ open, setOpen }: props) => {
-    const defaultValues: z.infer<typeof PostCertificateSchema> = {
-        certificateTypeId: '',
-        expeditionDate: '',
-        member: '',
-        member2: '',
-        pastor: '',
-        pastor2: '',
-        design: '',
-    };
+const defaultValues: z.infer<typeof PostCertificateSchema> = {
+    certificateTypeId: '',
+    expeditionDate: '',
+    member: '',
+    member2: '',
+    pastor: '',
+    pastor2: '',
+    design: '',
+};
 
+const CertificatesForm = ({ open, setOpen }: props) => {
     const client = tsr.useQueryClient();
     const membersForm = useForm<z.infer<typeof PostCertificateSchema>>({
         resolver: zodResolver(PostCertificateSchema),
@@ -51,7 +51,7 @@ const CertificatesForm = ({ open, setOpen }: props) => {
             membersForm.reset(defaultValues);
             setCertificateId('');
         }
-    }, [open]);
+    }, [open, membersForm]);
 
     const handleSubmit = async (values: z.infer<typeof PostCertificateSchema>) => {
         await api(tsr.certificates.create, {

@@ -32,7 +32,7 @@ const Account = () => {
             churchId: data?.user?.churchId ? data?.user?.churchId.toString() : '0',
             username: user?.displayName || '',
         });
-    }, [data, user]);
+    }, [data, user, userConfigForm]);
 
     const handleSubmit: any = async (values: z.infer<typeof FrontendUserSchema>) => {
         const userData: any = await api(tsr.users.editUser, { churchId: values.churchId });

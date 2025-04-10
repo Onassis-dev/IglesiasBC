@@ -23,13 +23,13 @@ interface props {
     setOpen: (open: boolean) => void;
 }
 
-const BlogForm = ({ id, open, setOpen }: props) => {
-    const defaultValues: z.infer<typeof PostPostSchema> = {
-        title: '',
-        description: '',
-        body: '',
-    };
+const defaultValues: z.infer<typeof PostPostSchema> = {
+    title: '',
+    description: '',
+    body: '',
+};
 
+const BlogForm = ({ id, open, setOpen }: props) => {
     const blogForm = useForm<z.infer<typeof PostPostSchema>>({
         resolver: zodResolver(PostPostSchema),
         defaultValues: defaultValues,
@@ -105,7 +105,7 @@ const BlogForm = ({ id, open, setOpen }: props) => {
         setSelectedFile(null);
         editor?.commands.setContent(post?.body || '');
         setShowEditor(true);
-    }, [post, open]);
+    }, [post, open, blogForm, editor?.commands]);
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>

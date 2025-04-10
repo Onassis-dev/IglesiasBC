@@ -17,18 +17,18 @@ interface props {
     setOpen: (open: boolean) => void;
 }
 
-const InventoryForm = ({ id, open, setOpen }: props) => {
-    const defaultValues: z.infer<typeof PostInventorySchema> = {
-        name: '',
-        brand: '',
-        amount: '',
-        bill: '',
-        model: '',
-        price: '',
-        serie: '',
-        observations: '',
-    };
+const defaultValues: z.infer<typeof PostInventorySchema> = {
+    name: '',
+    brand: '',
+    amount: '',
+    bill: '',
+    model: '',
+    price: '',
+    serie: '',
+    observations: '',
+};
 
+const InventoryForm = ({ id, open, setOpen }: props) => {
     const client = tsr.useQueryClient();
     const itemForm = useForm<z.infer<typeof PostInventorySchema>>({
         resolver: zodResolver(PostInventorySchema),
@@ -57,7 +57,7 @@ const InventoryForm = ({ id, open, setOpen }: props) => {
         } else {
             itemForm.reset(defaultValues);
         }
-    }, [item]);
+    }, [item, itemForm]);
 
     const submit = itemForm.handleSubmit((values: z.infer<typeof PostInventorySchema>) =>
         showPromise(handleSubmit(values), id ? 'Información actualizada' : 'Artículo registrado')

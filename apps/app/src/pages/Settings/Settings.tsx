@@ -37,7 +37,7 @@ const Settings = () => {
 
     useEffect(() => {
         settingsForm.setValue('name', church?.name);
-    }, [church]);
+    }, [church, settingsForm]);
 
     const { data: { body: users } = {} } = tsr.permissions.get.useQuery({
         queryKey: ['permissions'],

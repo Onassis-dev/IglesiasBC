@@ -5,7 +5,7 @@ import { PlusIcon } from 'lucide-react';
 
 interface Props<TApiPath> {
     uploadImage: (apiPath: TApiPath) => void;
-    setSelectedFile: Function;
+    setSelectedFile: (file: File) => void;
     text: string;
     apiPath: TApiPath;
     edit?: boolean;

@@ -23,7 +23,7 @@ const UploadActivity = ({ activity }: any) => {
     useEffect(() => {
         if (!activity) return;
         activitiesForm.reset({ ...activity });
-    }, [activity]);
+    }, [activity, activitiesForm]);
 
     const handleFile = (e: any) => {
         const files = e.target.files;

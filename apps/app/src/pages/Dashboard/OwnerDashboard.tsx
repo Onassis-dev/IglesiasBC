@@ -1,12 +1,10 @@
 import '@/lib/boilerplate';
 import { type ChartConfig } from '@/components/ui/chart';
-import { AppWindow, Box, DollarSign, MessageSquareQuote, Users2 } from 'lucide-react';
+import { AppWindow, Box, DollarSign, FileBadge, MessageSquareQuote, Presentation, Users2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
-import { saveUserData } from '@/lib/accountFunctions';
 import AreaGraph from '@/components/common/charts/AreaGraph';
 import InfoCard2 from '@/components/common/InfoCard2';
 import { displayDate } from '@/lib/timeFunctions';
@@ -16,16 +14,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const Dashboard = () => {
-    const [filteredMovements, setFilteredMovements] = useState<Record<string, any>[]>([]);
     const { data: { body } = {} } = tsr.dashboard.getOwner.useQuery({
         queryKey: ['user-dashboard'],
     });
 
-    useEffect(() => {
-        if (body?.userData) saveUserData(body.userData);
-        if (body?.movements)
-            setFilteredMovements(body.movements?.map((v: any) => ({ ...v, Ingresos: parseFloat(v.Ingresos), Egresos: parseFloat(v.Egresos) })));
-    }, [body]);
+    const filteredMovements = body?.movements?.map((v: any) => ({ ...v, Ingresos: parseFloat(v.Ingresos), Egresos: parseFloat(v.Egresos) }));
 
     return (
         <div className="grid lg:grid-cols-[1fr_20rem] gap-6">
@@ -168,11 +161,17 @@ const Dashboard = () => {
                     <InfoCard2 href="/members" color="purple" title="Miembros activos" data={body?.stats.members} perm="perm_members">
                         <Users2 />
                     </InfoCard2>
-                    {/* <InfoCard2 href="/certificates" color="cyan" title="Total de certificados" data={stats.certificates} perm="perm_certificates">
+                    <InfoCard2
+                        href="/certificates"
+                        color="cyan"
+                        title="Total de certificados"
+                        data={body?.stats.certificates}
+                        perm="perm_certificates"
+                    >
                         <FileBadge />
                     </InfoCard2>
 
-                    <InfoCard2 href="/classes" color="blue" title="Total de alumnos" data={stats.students} perm="perm_classes">
+                    {/* <InfoCard2 href="/classes" color="blue" title="Total de alumnos" data={stats.students} perm="perm_classes">
                         <GraduationCap />
                     </InfoCard2> */}
 
@@ -182,6 +181,16 @@ const Dashboard = () => {
 
                     <InfoCard2 href="/inventory" color="yellow" title="Total en inventario" data={body?.stats.inventory} perm="perm_inventory">
                         <Box />
+                    </InfoCard2>
+
+                    <InfoCard2
+                        href="/presentations"
+                        color="pink"
+                        title="Total de presentaciones"
+                        data={body?.stats.presentations}
+                        perm="perm_presentations"
+                    >
+                        <Presentation />
                     </InfoCard2>
 
                     <InfoCard2 href="/blog" color="orange" title="Total de visitas al blog" data={body?.stats.blog} perm="perm_blog">

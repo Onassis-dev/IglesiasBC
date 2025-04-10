@@ -20,19 +20,19 @@ interface props {
     setOpen: (open: boolean) => void;
 }
 
-const MembersForm = ({ id, open, setOpen }: props) => {
-    const defaultValues: z.infer<typeof PostMemberSchema> = {
-        name: '',
-        cellphone: '',
-        baptized: '',
-        email: '',
-        genre: '',
-        civilStatus: '',
-        positionId: '',
-        birthday: '',
-        joinDate: '',
-    };
+const defaultValues: z.infer<typeof PostMemberSchema> = {
+    name: '',
+    cellphone: '',
+    baptized: '',
+    email: '',
+    genre: '',
+    civilStatus: '',
+    positionId: '',
+    birthday: '',
+    joinDate: '',
+};
 
+const MembersForm = ({ id, open, setOpen }: props) => {
     const client = tsr.useQueryClient();
     const membersForm = useForm<z.infer<typeof PostMemberSchema>>({
         resolver: zodResolver(PostMemberSchema),
@@ -75,7 +75,7 @@ const MembersForm = ({ id, open, setOpen }: props) => {
         } else {
             membersForm.reset(defaultValues);
         }
-    }, [member]);
+    }, [member, membersForm]);
 
     const { data: { body: positions } = {} } = tsr.options.getPositions.useQuery({
         queryKey: ['positionsObj'],

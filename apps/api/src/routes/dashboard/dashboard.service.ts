@@ -21,8 +21,6 @@ export class DashboardService {
       });
     }
 
-    const userData = await getUserData(this.req.getUserId());
-
     const stats = (
       await sql`
       SELECT 
@@ -30,6 +28,7 @@ export class DashboardService {
         SUM(CASE WHEN financescategories."isIncome" = false THEN amount ELSE 0 END) as expense,
         (SELECT count(*) from members  WHERE "churchId" = ${this.req.getChurchId()} and "positionId" not in (2, 7)) as members,
         (SELECT count(*) FROM certificates WHERE "churchId" = ${churchId}) as certificates,
+        (SELECT count(*) FROM presentations WHERE "churchId" = ${churchId}) as presentations,
         (SELECT count(*) FROM subjects 
           JOIN classes ON subjects."classId" = classes.id
           WHERE classes."churchId" = ${churchId}) as students,
@@ -112,7 +111,6 @@ export class DashboardService {
       lastMaterials,
       members: formatMonths(members, ['Registros']),
       movements: formatMonths(movements, ['Egresos', 'Ingresos']),
-      userData,
     });
   }
 
@@ -132,6 +130,12 @@ export class DashboardService {
     if (userData.perm_certificates) {
       selectFields.push(
         sql`(SELECT count(*) FROM certificates WHERE "churchId" = ${churchId}) as certificates`,
+      );
+    }
+
+    if (userData.perm_presentations) {
+      selectFields.push(
+        sql`(SELECT count(*) FROM presentations WHERE "churchId" = ${churchId}) as presentations`,
       );
     }
 
@@ -205,6 +209,6 @@ export class DashboardService {
       stats.balance = (stats.income - stats.expense).toString();
     }
 
-    return res(200, { stats, userData });
+    return res(200, { stats });
   }
 }

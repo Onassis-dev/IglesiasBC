@@ -17,11 +17,11 @@ interface props {
     setOpen: (open: boolean) => void;
 }
 
-const TreasuriesForm = ({ open, setOpen, id }: props) => {
-    const defaultValues: z.infer<typeof PostTreasurySchema> = {
-        name: '',
-    };
+const defaultValues: z.infer<typeof PostTreasurySchema> = {
+    name: '',
+};
 
+const TreasuriesForm = ({ open, setOpen, id }: props) => {
     const client = tsr.useQueryClient();
     const treasuryForm = useForm<z.infer<typeof PostTreasurySchema>>({
         resolver: zodResolver(PostTreasurySchema),
@@ -44,7 +44,7 @@ const TreasuriesForm = ({ open, setOpen, id }: props) => {
         } else {
             treasuryForm.reset(defaultValues);
         }
-    }, [item]);
+    }, [item, treasuryForm]);
 
     const handleSubmit = async (values: z.infer<typeof PostTreasurySchema>) => {
         if (id) await api(tsr.treasuries.put, { ...values, id: Number(id) });
