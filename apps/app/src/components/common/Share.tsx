@@ -18,14 +18,15 @@ interface props {
 }
 
 const Share = ({ url, title, children }: props) => {
-    const encodedUrl = (url as any).replaceAll(' ', '-');
-    const encondedTitle = (title as any).replaceAll(' ', '-');
+    const prettyUrl = (url as any).replaceAll(' ', '-');
+    const encodedUrl = encodeURIComponent(prettyUrl);
+    const encondedTitle = encodeURIComponent((title as any).replaceAll(' ', '-'));
 
     const FB_LINK = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encondedTitle}`;
     const WA_LINK = `https://wa.me/?text=${encondedTitle}%20${encodedUrl}`;
 
     const copyLink = async () => {
-        await navigator.clipboard.writeText(encodedUrl);
+        await navigator.clipboard.writeText(prettyUrl);
         showSuccess('Enlace copiado');
     };
 
@@ -37,7 +38,7 @@ const Share = ({ url, title, children }: props) => {
         onClick: () => {
             navigator.share({
                 title,
-                url,
+                url: prettyUrl,
             });
         },
     });
