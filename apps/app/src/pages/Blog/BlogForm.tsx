@@ -105,7 +105,7 @@ const BlogForm = ({ id, open, setOpen }: props) => {
         setSelectedFile(null);
         editor?.commands.setContent(post?.body || '');
         setShowEditor(true);
-    }, [post, open, blogForm, editor?.commands]);
+    }, [post, open, blogForm, editor]);
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
