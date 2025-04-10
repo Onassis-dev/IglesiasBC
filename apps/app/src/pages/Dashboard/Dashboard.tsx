@@ -26,14 +26,14 @@ const Dashboard = () => {
                 )}
                 {data?.stats?.certificates && (
                     <Link to="/certificates">
-                        <InfoCard color="cyan" title="Total de certificados" data={data?.stats?.certificates}>
+                        <InfoCard color="cyan" title="Certificados" data={data?.stats?.certificates}>
                             <FileBadge />
                         </InfoCard>
                     </Link>
                 )}
                 {/* {data?.stats?.students && (
                     <Link to="/classes">
-                        <InfoCard color="blue" title="Total de alumnos" data={data?.stats?.students}>
+                        <InfoCard color="blue" title="alumnos" data={data?.stats?.students}>
                             <GraduationCap />
                         </InfoCard>
                     </Link>
@@ -54,21 +54,21 @@ const Dashboard = () => {
                 )}
                 {data?.stats?.presentations && (
                     <Link to="/presentations">
-                        <InfoCard color="pink" title="Total de presentaciones" data={data?.stats?.presentations}>
+                        <InfoCard color="pink" title="Presentaciones" data={data?.stats?.presentations}>
                             <Presentation />
                         </InfoCard>
                     </Link>
                 )}
                 {data?.stats?.blog && (
                     <Link to="/blog">
-                        <InfoCard color="orange" title="Total de visitas al blog" data={data?.stats?.blog}>
+                        <InfoCard color="orange" title="Visitas al blog" data={data?.stats?.blog}>
                             <MessageSquareQuote />
                         </InfoCard>
                     </Link>
                 )}
                 {data?.stats?.website && (
                     <Link to="/website">
-                        <InfoCard color="gray" title="Total de visitas a la pagina" data={data?.stats?.website}>
+                        <InfoCard color="gray" title="Visitas a la pagina" data={data?.stats?.website}>
                             <AppWindow />
                         </InfoCard>
                     </Link>
