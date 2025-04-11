@@ -63,6 +63,7 @@ createRoot(document.getElementById('root')!).render(
         </Providers>
         <Toaster
             position="top-right"
+            containerClassName="toaster"
             toastOptions={{
                 duration: 4000,
                 className: 'toast',

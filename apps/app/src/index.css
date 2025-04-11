@@ -80,6 +80,10 @@ aside,
     left: 0;
 }
 
+.toaster {
+    top: 64px !important;
+}
+
 .toast {
     width: 100%;
     max-width: 320px !important;

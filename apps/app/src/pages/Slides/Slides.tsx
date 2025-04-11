@@ -22,7 +22,7 @@ export const Slides = () => {
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                tolerance: 5,
+                distance: 5,
             },
         }),
         useSensor(KeyboardSensor, {
