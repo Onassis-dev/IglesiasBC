@@ -80,6 +80,25 @@ aside,
     left: 0;
 }
 
+.toast {
+    width: 100%;
+    max-width: 320px !important;
+    text-align: left;
+    justify-content: start;
+    border: 1px solid var(--border);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+}
+
+.toast > div {
+    justify-content: start;
+    margin: 0 0 0 8px;
+    flex: 1;
+}
+
 .openbg {
     z-index: 10;
     left: 0;

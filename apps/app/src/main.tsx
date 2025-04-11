@@ -61,6 +61,12 @@ createRoot(document.getElementById('root')!).render(
                 </Suspense>
             </BrowserRouter>
         </Providers>
-        <Toaster />
+        <Toaster
+            position="top-right"
+            toastOptions={{
+                duration: 4000,
+                className: 'toast',
+            }}
+        />
     </StrictMode>
 );

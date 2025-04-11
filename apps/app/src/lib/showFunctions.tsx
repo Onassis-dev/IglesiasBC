@@ -27,11 +27,6 @@ export const showPromise = (promise: Promise<any>, success: string, loading: str
             loading: {
                 icon: <LoaderCircle className="size-5 animate-spin"></LoaderCircle>,
             },
-            style: {
-                boxShadow: 'none',
-                border: '1px solid var(--border)',
-                borderRadius: '0.4rem',
-            },
         }
     );
 };
