@@ -22,7 +22,7 @@ export const Slides = () => {
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 5,
+                tolerance: 5,
             },
         }),
         useSensor(KeyboardSensor, {
@@ -97,6 +97,7 @@ export const Slides = () => {
         const style = {
             transform: CSS.Transform.toString(transform),
             transition,
+            touchAction: 'none',
         };
 
         return (
