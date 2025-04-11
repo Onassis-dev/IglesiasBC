@@ -10,35 +10,37 @@ let postData;
 let websiteData;
 
 try {
-    const response = await fetch(`${import.meta.env.PUBLIC_API_BASE}/websites/post?title=${title}&post=${post}`);
-    if (!response.ok) {
-        if (response.status === 404) {
-            return new Response(null, {
-                status: 404,
-            });
-        } else {
-            return new Response(null, {
-                status: 500,
-            });
-        }
-    }
-
-    const webpage = await response.json();
-    postData = webpage.post;
-    websiteData = webpage.website;
-} catch (error) {
-    return new Response(null, {
+  const response = await fetch(
+    `${import.meta.env.PUBLIC_API_BASE}/websites/post?title=${title}&post=${post}`
+  );
+  if (!response.ok) {
+    if (response.status === 404) {
+      return new Response(null, {
+        status: 404,
+      });
+    } else {
+      return new Response(null, {
         status: 500,
-    });
+      });
+    }
+  }
+
+  const webpage = await response.json();
+  postData = webpage.post;
+  websiteData = webpage.website;
+} catch (error) {
+  return new Response(null, {
+    status: 500,
+  });
 }
 ---
 
 <Layout webpage={websiteData}>
-    <div class="blogheader">
-        <p class="date">Publicado el: {formatDate(postData.publication)}</p>
-        <h1>{postData.title}</h1>
-        <strong>{postData.description}</strong>
-        <img src={postData.img} alt="" />
-    </div>
-    <article set:html={postData.body} />
+  <div class="blogheader">
+    <p class="date">Publicado el: {formatDate(postData.publication)}</p>
+    <h1>{postData.title}</h1>
+    <strong>{postData.description}</strong>
+    <img src={postData.img} alt="" />
+  </div>
+  <article set:html={postData.body} />
 </Layout>

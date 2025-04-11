@@ -1,11 +1,8 @@
 ---
 export const prerender = false;
 
+import EventsGallery from "@/components/websites/components/EventsGallery.astro";
 import Layout from "../../layouts/WebsitesLayout.astro";
-import Sencillo from "../../components/websites/pages/Sencillo.Events.astro";
-import Impactante from "../../components/websites/pages/Impactante.Events.astro";
-import Elegante from "../../components/websites/pages/Elegante.Events.astro";
-import Minimalista from "../../components/websites/pages/Moderno.Events.astro";
 import type { Website, Event } from "@/components/pages/Website/website.types";
 
 const eventName = Astro.url.searchParams.get("evento");
@@ -14,31 +11,36 @@ let webpage: Website;
 let event: Event | undefined;
 
 try {
-    const response = await fetch(`${import.meta.env.PUBLIC_API_BASE}/websites/events?title=${title}`);
+  const response = await fetch(
+    `${import.meta.env.PUBLIC_API_BASE}/websites/events?title=${title}`
+  );
 
-    if (!response.ok) {
-        if (response.status === 404) {
-            return new Response(null, {
-                status: 404,
-            });
-        } else {
-            return new Response(null, {
-                status: 500,
-            });
-        }
-    }
-
-    webpage = await response.json();
-} catch (error) {
-    return new Response(null, {
+  if (!response.ok) {
+    if (response.status === 404) {
+      return new Response(null, {
+        status: 404,
+      });
+    } else {
+      return new Response(null, {
         status: 500,
-    });
+      });
+    }
+  }
+
+  webpage = await response.json();
+} catch (error) {
+  return new Response(null, {
+    status: 500,
+  });
 }
 ---
 
 <Layout event={event} webpage={webpage}>
-    {webpage.structure === "1" && <Sencillo webpage={webpage} />}
-    {webpage.structure === "2" && <Impactante webpage={webpage} />}
-    {webpage.structure === "3" && <Elegante webpage={webpage} />}
-    {webpage.structure === "4" && <Minimalista webpage={webpage} />}
+  <div class="h-20"></div>
+  <EventsGallery
+    language={webpage.language}
+    pageTitle={webpage.title}
+    events={webpage.events}
+    animations={webpage.animations}
+  />
 </Layout>

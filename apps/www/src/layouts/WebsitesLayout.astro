@@ -4,12 +4,9 @@ import "@/components/websites/styles/websites.css";
 import "@/components/websites/styles/animations.css";
 
 // import { ViewTransitions } from "astro:transitions";
-import Header1 from "@/components/websites/components/Header1.astro";
-import Header2 from "@/components/websites/components/Header2.astro";
-import Header3 from "@/components/websites/components/Header3.astro";
-import Header4 from "@/components/websites/components/Header4.astro";
 import Footer from "@/components/websites/components/Footer.astro";
 import type { Event, Website } from "@/components/pages/Website/website.types";
+import Header from "@/components/websites/components/Header.astro";
 
 interface Props {
   webpage: Website;
@@ -49,46 +46,13 @@ webpage.blog = webpage.blog !== "0";
     class={`p${webpage.style}`}
     style=`--primary:${webpage.color}; --primarytext:${isColorDark(webpage.color)}`
   >
-    {
-      webpage.structure === "1" && (
-        <Header1
-          language={webpage.language}
-          title={webpage.title}
-          logo={webpage.logo}
-          blog={!!webpage.blog}
-        />
-      )
-    }
-    {
-      webpage.structure === "2" && (
-        <Header2
-          language={webpage.language}
-          title={webpage.title}
-          logo={webpage.logo}
-          blog={!!webpage.blog}
-        />
-      )
-    }
-    {
-      webpage.structure === "3" && (
-        <Header3
-          language={webpage.language}
-          title={webpage.title}
-          logo={webpage.logo}
-          blog={!!webpage.blog}
-        />
-      )
-    }
-    {
-      webpage.structure === "4" && (
-        <Header4
-          language={webpage.language}
-          title={webpage.title}
-          logo={webpage.logo}
-          blog={!!webpage.blog}
-        />
-      )
-    }
+    <Header
+      language={webpage.language}
+      title={webpage.title}
+      logo={webpage.logo}
+      blog={!!webpage.blog}
+    />
+
     <main>
       <slot />
     </main>

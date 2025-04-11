@@ -1,0 +1,33 @@
+---
+import type {
+  Activity as ActivityType,
+  Website,
+} from "@/components/pages/Website/website.types";
+import Activity from "./Activity.astro";
+interface Props {
+  activities?: ActivityType[];
+  animations: number;
+  language: Website["language"];
+}
+
+const { activities, animations, language } = Astro.props;
+---
+
+<h2
+  class={"text-3xl font-header text-center mt-10 mb-5 animatedscroll" +
+    animations}
+>
+  {language === "es" ? "Nuestras actividades:" : "Our activities:"}
+</h2>
+
+<div>
+  {
+    activities?.map((activity, i) => (
+      <Activity
+        animations={animations}
+        activity={activity}
+        flip={i % 2 === 1}
+      />
+    ))
+  }
+</div>

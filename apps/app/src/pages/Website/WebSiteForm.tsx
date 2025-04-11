@@ -69,7 +69,7 @@ const WebSiteForm = () => {
                                 name="structure"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Estructura</FormLabel>
+                                        <FormLabel>Portada</FormLabel>
                                         <FormControl>
                                             <Select onValueChange={field.onChange} value={field.value}>
                                                 <FormControl>
@@ -78,10 +78,9 @@ const WebSiteForm = () => {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="1">Sencillo</SelectItem>
-                                                    <SelectItem value="2">Impactante</SelectItem>
-                                                    <SelectItem value="3">Elegante</SelectItem>
-                                                    <SelectItem value="4">Moderno</SelectItem>
+                                                    <SelectItem value="1">Sencilla</SelectItem>
+                                                    <SelectItem value="2">Completa</SelectItem>
+                                                    <SelectItem value="3">Moderna</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
