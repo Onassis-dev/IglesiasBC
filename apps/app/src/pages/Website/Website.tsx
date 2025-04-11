@@ -57,19 +57,19 @@ const Website = () => {
                             <div className="inline-block w-3 h-3 rounded-full bg-green-400"></div>
                         </div>
 
-                        <div className="gap-6 flex">
+                        <div className="gap-4 flex">
                             {pageInfo && (
                                 <>
                                     <a href={import.meta.env.VITE_WEBSITES_URL + '/' + pageInfo?.title} target="_blank">
-                                        <ExternalLinkIcon className="size-5"></ExternalLinkIcon>
+                                        <ExternalLinkIcon className="size-4"></ExternalLinkIcon>
                                     </a>
 
                                     <Share url={`${import.meta.env.VITE_WEBSITES_URL}/${pageInfo?.title}`} title={pageInfo?.title}>
-                                        <Share2Icon className="size-5 cursor-pointer" />
+                                        <Share2Icon className="size-4 cursor-pointer" />
                                     </Share>
 
                                     <RefreshCcwIcon
-                                        className="size-5 cursor-pointer"
+                                        className="size-4 cursor-pointer"
                                         onClick={() => client.refetchQueries({ queryKey: ['pageInfo'] })}
                                     />
                                 </>

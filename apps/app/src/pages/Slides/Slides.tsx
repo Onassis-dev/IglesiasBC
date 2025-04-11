@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { api, tsr } from '@/lib/boilerplate';
 import { usePathStore } from '@/lib/store';
 import { AutosizeTextarea } from '@/components/ui/auto-resize-textarea';
-import { ChevronRight, ChevronLeft, PlusIcon, Trash, Save, Airplay, GripVertical } from 'lucide-react';
+import { ChevronRight, ChevronLeft, PlusIcon, Trash, Save, Airplay, GripVertical, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { showPromise } from '@/lib/showFunctions';
 import PresentationsForm from '../Presentations/PresentationsForm';
@@ -15,9 +15,10 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 export const Slides = () => {
     const [id, setId] = useState('');
     const { setPath } = usePathStore((state) => state);
-    const [slides, setSlides] = useState<string[]>([]);
+    const [slides, setSlides] = useState<{ id: string; text: string }[]>([]);
     const [selectedId, setSelectedId] = useState<number>(0);
     const [open, setOpen] = useState(false);
+
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
@@ -46,12 +47,12 @@ export const Slides = () => {
 
     useEffect(() => {
         if (presentation?.name) setPath(presentation.name);
-        if (presentation?.slides) setSlides(presentation.slides);
+        if (presentation?.slides) setSlides(presentation.slides.map((slide: any) => ({ id: crypto.randomUUID(), text: slide })));
         localStorage.setItem('presentation', JSON.stringify(presentation));
     }, [presentation, setPath]);
 
     useEffect(() => {
-        localStorage.setItem('slide', slides[selectedId]);
+        localStorage.setItem('slide', slides[selectedId]?.text);
     }, [slides, selectedId]);
 
     function handleDragEnd(event: any) {
@@ -59,8 +60,15 @@ export const Slides = () => {
 
         if (active.id !== over.id) {
             setSlides((items) => {
-                const oldIndex = slides.findIndex((slide) => slide === active.id);
-                const newIndex = slides.findIndex((slide) => slide === over.id);
+                const oldIndex = slides.findIndex((slide) => slide.id === active.id);
+                const newIndex = slides.findIndex((slide) => slide.id === over.id);
+
+                if (oldIndex < selectedId && newIndex >= selectedId) {
+                    setSelectedId(selectedId - 1);
+                } else if (oldIndex > selectedId && newIndex <= selectedId) {
+                    setSelectedId(selectedId + 1);
+                }
+                if (oldIndex === selectedId) setSelectedId(newIndex);
 
                 return arrayMove(items, oldIndex, newIndex);
             });
@@ -71,7 +79,7 @@ export const Slides = () => {
         showPromise(
             api(tsr.presentations.put, {
                 ...presentation,
-                slides,
+                slides: slides.map((slide) => slide.text),
             }),
             'Guardado'
         );
@@ -79,7 +87,7 @@ export const Slides = () => {
 
     const SortableSlide = ({ slide, index, isSelected, onSelect }: any) => {
         const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-            id: slide,
+            id: slide.id,
             attributes: {
                 role: 'button',
                 tabIndex: 0,
@@ -92,40 +100,39 @@ export const Slides = () => {
         };
 
         return (
-            <div
+            <button
                 ref={setNodeRef}
                 style={style}
-                className={`flex items-center gap-0.5 text-sm rounded-md w-full md:w-72 min-h-[30px] ${isSelected ? 'border-primary' : ''}`}
+                className={`flex items-center gap-0.5 text-sm bg-background py-0.5 px-2 border rounded-md w-full md:w-72 min-h-[30px] ${isSelected ? 'border-primary' : ''}`}
+                {...attributes}
+                {...listeners}
+                onClick={() => onSelect(index)}
             >
-                <div className="p-1 cursor-grab text-muted-foreground hover:text-foreground transition-colors" {...attributes} {...listeners}>
-                    <GripVertical className="size-4" />
-                </div>
-                <button
-                    className="cursor-pointer py-0.5 px-2 overflow-hidden text-ellipsis whitespace-nowrap text-left bg-background border rounded-md flex-1 min-h-[30px]"
-                    onClick={() => onSelect(index)}
-                >
-                    {slide}
-                </button>
-            </div>
+                <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-left">{slide.text}</span>
+
+                <GripVertical className="size-4 text-muted-foreground" />
+            </button>
         );
     };
 
     return (
         <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col gap-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-left whitespace-nowrap overflow-hidden text-ellipsis md:w-72 block"
-                    onClick={() => setOpen(true)}
-                >
-                    {presentation?.title}
+                <Button variant="outline" size="sm" className="  md:w-72 gap-2 items-center justify-start flex" onClick={() => setOpen(true)}>
+                    <Edit className="size-3.5" />
+                    <span className="flex-1 whitespace-nowrap text-ellipsis overflow-hidden text-left">{presentation?.title}</span>
                 </Button>
                 <div className="flex gap-4 flex-col">
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
-                        <SortableContext items={slides} strategy={verticalListSortingStrategy}>
+                        <SortableContext items={slides.map((slide) => slide.id)} strategy={verticalListSortingStrategy}>
                             {slides?.map((slide: any, index: number) => (
-                                <SortableSlide key={index} slide={slide} index={index} isSelected={index === selectedId} onSelect={setSelectedId} />
+                                <SortableSlide
+                                    key={slide.id}
+                                    slide={slide}
+                                    index={index}
+                                    isSelected={index === selectedId}
+                                    onSelect={setSelectedId}
+                                />
                             ))}
                         </SortableContext>
                     </DndContext>
@@ -185,7 +192,7 @@ export const Slides = () => {
                             variant="outline"
                             size="icon"
                             onClick={() => {
-                                setSlides([...slides, '']);
+                                setSlides([...slides, { id: crypto.randomUUID(), text: '' }]);
                                 setSelectedId(slides.length);
                             }}
                         >
@@ -201,7 +208,7 @@ export const Slides = () => {
                     id="slide"
                     className="flex items-center justify-center rounded-xl p-4 aspect-video border w-full"
                     style={{
-                        background: `${presentation?.background}`,
+                        backgroundColor: `${presentation?.background}`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         color: `${presentation?.text}`,
@@ -211,10 +218,10 @@ export const Slides = () => {
                         minHeight={1}
                         maintainAspectRatio
                         className="text-md sm:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl text-center h-fit min-h-0 w-full py-2.5 bg-transparent resize-none outline-none"
-                        value={slides[selectedId]}
+                        value={slides[selectedId]?.text}
                         onChange={(e) => {
                             const newSlides = [...slides];
-                            newSlides[selectedId] = e.target.value;
+                            if (newSlides[selectedId]) newSlides[selectedId].text = e.target.value;
                             setSlides(newSlides);
                         }}
                         placeholder="Escribe aqui..."
