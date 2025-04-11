@@ -67,8 +67,9 @@ export const Slides = () => {
                     setSelectedId(selectedId - 1);
                 } else if (oldIndex > selectedId && newIndex <= selectedId) {
                     setSelectedId(selectedId + 1);
+                } else if (oldIndex === selectedId) {
+                    setSelectedId(newIndex);
                 }
-                if (oldIndex === selectedId) setSelectedId(newIndex);
 
                 return arrayMove(items, oldIndex, newIndex);
             });
@@ -97,21 +98,22 @@ export const Slides = () => {
         const style = {
             transform: CSS.Transform.toString(transform),
             transition,
-            touchAction: 'none',
         };
 
         return (
             <button
                 ref={setNodeRef}
                 style={style}
-                className={`flex items-center gap-0.5 text-sm bg-background py-0.5 px-2 border rounded-md w-full md:w-72 min-h-[30px] ${isSelected ? 'border-primary' : ''}`}
-                {...attributes}
-                {...listeners}
+                className={`flex items-center gap-0.5 text-sm bg-background  border rounded-md w-full md:w-72 min-h-[30px] ${isSelected ? 'border-primary' : ''}`}
                 onClick={() => onSelect(index)}
             >
-                <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-left">{slide.text}</span>
-
-                <GripVertical className="size-4 text-muted-foreground" />
+                <GripVertical
+                    style={{ touchAction: 'none' }}
+                    className="size-8 text-muted-foreground p-2 !outline-none"
+                    {...attributes}
+                    {...listeners}
+                />
+                <span className="flex-1 overflow-hidden text-ellipsis pr-2 whitespace-nowrap text-left">{slide.text}</span>
             </button>
         );
     };
