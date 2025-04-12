@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { api, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import ChurchImage from './ChurchImage';
 import ImageUpload from './ImageUpload';
 
 type ApiPath = 'uploadChurchImage' | 'uploadPastorsImg' | 'uploadCoverImg' | 'uploadLogo';
@@ -14,13 +13,6 @@ const ImagesForm = () => {
     const [open2, setOpen2] = useState(false);
     const [open3, setOpen3] = useState(false);
     const [open4, setOpen4] = useState(false);
-
-    const limit = 12;
-
-    const { data: imagesData } = tsr.builder.getChurchImages.useQuery({
-        queryKey: ['churchImages'],
-    });
-    const images = imagesData?.body || [];
 
     const { data: pastorsImgData } = tsr.builder.getPastorsImg.useQuery({
         queryKey: ['pastorsImg'],
@@ -72,7 +64,7 @@ const ImagesForm = () => {
             </CardHeader>
             <CardContent>
                 <div className="flex gap-1 w-full min-h-32 flex-col max-w-80">
-                    <img src={logo} alt="" className="w-flex" />
+                    <img src={logo} alt="" />
                     <ImageUpload
                         text="Subir logo"
                         apiPath="uploadLogo"
@@ -89,7 +81,7 @@ const ImagesForm = () => {
             </CardHeader>
             <CardContent>
                 <div className="flex gap-1 w-full min-h-32 flex-col max-w-80">
-                    <img src={coverImg} alt="" className="w-flex" />
+                    <img src={coverImg} alt="" />
                     <ImageUpload
                         text="Subir imagen de fondo"
                         apiPath="uploadCoverImg"
@@ -106,7 +98,7 @@ const ImagesForm = () => {
             </CardHeader>
             <CardContent>
                 <div className="flex gap-1 w-full min-h-32 flex-col max-w-80">
-                    <img src={pastorsImg} alt="" className="w-flex" />
+                    <img src={pastorsImg} alt="" className="aspect-square object-cover" />
                     <ImageUpload
                         text="Subir imagen del pastorado"
                         apiPath="uploadPastorsImg"
@@ -118,7 +110,7 @@ const ImagesForm = () => {
                     ></ImageUpload>
                 </div>
             </CardContent>
-            <CardHeader>
+            {/* <CardHeader>
                 <CardTitle>Galería de tu página</CardTitle>
             </CardHeader>
             <CardContent className="p-2 sm:p-6">
@@ -140,7 +132,7 @@ const ImagesForm = () => {
                         <p>Has alcanzado el límite de imágenes</p>
                     )}
                 </div>
-            </CardContent>
+            </CardContent> */}
         </Card>
     );
 };

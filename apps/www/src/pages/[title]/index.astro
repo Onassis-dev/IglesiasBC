@@ -6,10 +6,11 @@ import type { Website } from "@/components/pages/Website/website.types";
 import Hero1 from "@/components/websites/components/Hero1.astro";
 import About from "@/components/websites/components/About.astro";
 import Mission from "@/components/websites/components/Mission.astro";
-import Gallery from "@/components/websites/components/Gallery.astro";
 import Ubication from "@/components/websites/components/Ubication.astro";
 import Hero3 from "@/components/websites/components/Hero3.astro";
 import Hero2 from "@/components/websites/components/Hero2.astro";
+import Services from "@/components/websites/components/Services.astro";
+import ActivitiesGallery from "@/components/websites/components/ActivitiesGallery.astro";
 const { title } = Astro.params;
 let webpage: Website;
 
@@ -50,10 +51,15 @@ try {
     language={webpage.language}
   />
   <Mission mission={webpage.mission} animations={webpage.animations} />
-  <Gallery
-    images={webpage.images}
-    animations={webpage.animations}
+  <Services
     language={webpage.language}
+    servicesDates={webpage.servicesDates}
+    animations={webpage.animations}
+  />
+  <ActivitiesGallery
+    language={webpage.language}
+    activities={webpage.activities}
+    animations={webpage.animations}
   />
   <Ubication
     mapsLink={webpage.mapsLink}

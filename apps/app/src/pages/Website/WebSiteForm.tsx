@@ -11,7 +11,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { WebsiteSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import ColorPicker from '@/components/common/ColorPicker';
 
 const WebSiteForm = () => {
     const websiteForm = useForm<z.infer<typeof WebsiteSchema>>({
@@ -105,9 +104,6 @@ const WebSiteForm = () => {
                                                     <SelectItem value="1">Simple</SelectItem>
                                                     <SelectItem value="2">Elegante</SelectItem>
                                                     <SelectItem value="3">Moderno</SelectItem>
-                                                    <SelectItem value="4">Creativo</SelectItem>
-                                                    <SelectItem value="5">Oscuro</SelectItem>
-                                                    <SelectItem value="6">Lujoso</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
@@ -166,7 +162,7 @@ const WebSiteForm = () => {
                                     </FormItem>
                                 )}
                             />
-                            <FormItem>
+                            {/* <FormItem>
                                 <FormLabel>Color principal</FormLabel>
                                 <FormControl>
                                     <ColorPicker color={color} setColor={setColor} />
@@ -191,7 +187,7 @@ const WebSiteForm = () => {
                                         <FormMessage />
                                     </FormItem>
                                 )}
-                            />
+                            /> */}
                             <FormField
                                 control={websiteForm.control}
                                 name="pastors"

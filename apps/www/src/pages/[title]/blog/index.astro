@@ -1,9 +1,9 @@
 ---
 export const prerender = false;
 
-import PostsGallery from "@/components/websites/components/PostsGallery.astro";
 import Layout from "../../../layouts/WebsitesLayout.astro";
 import type { Website } from "@/components/pages/Website/website.types";
+import Section1 from "@/components/websites/basics/Section1.astro";
 
 const { title } = Astro.params;
 let webpage: Website;
@@ -34,11 +34,29 @@ try {
 ---
 
 <Layout webpage={webpage}>
-  <div class="h-20"></div>
-  <PostsGallery
-    language={webpage.language}
-    posts={webpage.posts}
-    pageTitle={webpage.title}
-    animations={webpage.animations}
-  />
+  <Section1 animations={webpage.animations}>
+    <div class="flex flex-col">
+      <h1 class="font-header text-5xl mb-16 w-full">
+        {webpage.language === "es" ? "Blog" : "Our posts"}
+      </h1>
+
+      <div class="gap-6 grid sm:grid-cols-3">
+        {
+          webpage.posts.map((post: any) => (
+            <a href={`/${title}/blog/${post.title}`}>
+              <img
+                class="aspect-video bg-cover object-cover rounded-lg"
+                src={post.img}
+                alt=""
+              />
+              <h3 class="font-semibold text-xl mt-2">{post.title}</h3>
+              <p class="text-muted-foreground text-sm mt-1">
+                {post.description}
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </Section1>
 </Layout>

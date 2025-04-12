@@ -1,32 +1,41 @@
 ---
 interface Props {
-    href: string;
-    variant?: "outside" | "basic" | "outside2";
+  href: string;
+  variant?: "outside" | "basic" | "outside2";
 }
 
 const { href, variant } = Astro.props;
 ---
 
 {
-    variant === "outside" && (
-        <a class="button1 py-[6px] px-5 rounded-md text-sm font-semibold border-border shadow-sm shadow-cshadow " href={href}>
-            <slot />
-        </a>
-    )
+  variant === "outside" && (
+    <a
+      class="h-10 rounded-lg text-sm font-medium border-border flex items-center justify-center px-8"
+      href={href}
+    >
+      <slot />
+    </a>
+  )
 }
 
 {
-    (!variant || variant === "basic") && (
-        <a class="button1 py-[6px] px-5 rounded-md bg-primary text-primarytext text-sm font-semibold  shadow-sm shadow-cshadow" href={href}>
-            <slot />
-        </a>
-    )
+  (!variant || variant === "basic") && (
+    <a
+      class="px-8 h-10 flex items-center justify-center rounded-lg bg-primary text-primarytext text-sm font-medium"
+      href={href}
+    >
+      <slot />
+    </a>
+  )
 }
 
 {
-    variant === "outside2" && (
-        <a class="button1 py-[6px] px-5 rounded-md text-white text-sm font-semibold border-2 " href={href}>
-            <slot />
-        </a>
-    )
+  variant === "outside2" && (
+    <a
+      class="h-10 rounded-lg text-sm font-medium border-border flex items-center justify-center px-8"
+      href={href}
+    >
+      <slot />
+    </a>
+  )
 }

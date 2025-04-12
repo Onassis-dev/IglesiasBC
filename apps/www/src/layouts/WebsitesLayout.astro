@@ -43,8 +43,8 @@ webpage.blog = webpage.blog !== "0";
     <!-- <ViewTransitions /> -->
   </head>
   <body
-    class={`p${webpage.style}`}
-    style=`--primary:${webpage.color}; --primarytext:${isColorDark(webpage.color)}`
+    class={`p${webpage.style} flex flex-col min-h-screen`}
+    style=`--primary:${'#111'}; --primarytext:${'#fff'}`
   >
     <Header
       language={webpage.language}
@@ -56,6 +56,7 @@ webpage.blog = webpage.blog !== "0";
     <main>
       <slot />
     </main>
+
     <Footer
       language={webpage.language}
       instagramLink={webpage.instagramLink}

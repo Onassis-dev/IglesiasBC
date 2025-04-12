@@ -65,7 +65,7 @@ createRoot(document.getElementById('root')!).render(
             position="top-right"
             containerClassName="toaster"
             toastOptions={{
-                duration: 4000,
+                duration: 3000,
                 className: 'toast',
             }}
         />

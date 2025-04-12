@@ -1,4 +1,4 @@
-window.addEventListener("load", () => {
+window.addEventListener("DOMContentLoaded", () => {
   const elementAnimated =
     document.querySelector(".animatedscroll2") ||
     document.querySelector(".animatedscroll1") ||

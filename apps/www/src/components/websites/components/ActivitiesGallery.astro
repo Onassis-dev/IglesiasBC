@@ -4,6 +4,8 @@ import type {
   Website,
 } from "@/components/pages/Website/website.types";
 import Activity from "./Activity.astro";
+import Section1 from "../basics/Section1.astro";
+
 interface Props {
   activities?: ActivityType[];
   animations: number;
@@ -17,17 +19,15 @@ const { activities, animations, language } = Astro.props;
   class={"text-3xl font-header text-center mt-10 mb-5 animatedscroll" +
     animations}
 >
-  {language === "es" ? "Nuestras actividades:" : "Our activities:"}
+  {language === "es" ? "Nuestras actividades" : "Our activities"}
 </h2>
 
-<div>
-  {
-    activities?.map((activity, i) => (
-      <Activity
-        animations={animations}
-        activity={activity}
-        flip={i % 2 === 1}
-      />
-    ))
-  }
-</div>
+<Section1 animations={animations}>
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+    {
+      activities?.map((activity, i) => (
+        <Activity animations={animations} activity={activity} />
+      ))
+    }
+  </div>
+</Section1>

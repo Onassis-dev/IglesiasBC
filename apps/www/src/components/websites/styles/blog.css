@@ -1,87 +1,91 @@
 body {
-    line-height: 1.6;
-    background-color: #fefffe;
-    color: #242424;
-    margin: 0;
-    padding: 0;
-    font-weight: 400 !important;
+  line-height: 1.6;
+  background-color: #fefffe;
+  color: #242424;
+  margin: 0;
+  padding: 0;
+  font-weight: 400 !important;
 }
 
 main {
-    max-width: 680px;
-    margin: 80px auto 30px;
-    padding: 20px;
-    border-radius: 8px;
+  max-width: 720px;
+  margin: 80px auto 30px;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .blogheader h1 {
-    font-size: 42px;
-    line-height: 52px;
-    color: #242424;
-    font-weight: 600;
-    margin-bottom: 10px;
-    margin-top: 10px;
+  font-size: 42px;
+  line-height: 52px;
+  color: #242424;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .blogheader strong {
-    font-size: 18px;
-    font-weight: 400;
-    color: #555;
+  font-size: 18px;
+  font-weight: 400;
+  color: #555;
 }
 
 .blogheader .date {
-    color: #555;
-    font-size: 16px;
+  color: #555;
+  font-size: 16px;
 }
 
 article {
-    font-size: 18px;
-    letter-spacing: -0.1px;
-    line-height: 30px;
+  font-size: 18px;
+  letter-spacing: -0.1px;
+  line-height: 30px;
 }
 
 article h2 {
-    font-size: 32px !important;
-    margin-top: 80px;
-    font-weight: 600;
-    line-height: 40px;
+  font-size: 32px !important;
+  margin-top: 80px;
+  font-weight: 600;
+  line-height: 40px;
 }
 
 article p {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 article strong {
-    font-weight: 700;
+  font-weight: 700;
+}
+
+article b {
+  font-weight: 700;
 }
 
 article em {
-    font-style: italic;
+  font-style: italic;
 }
 
 article a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 article a:hover {
-    color: #2980b9;
+  color: #2980b9;
 }
 
 main img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    margin-top: 24px;
-    margin-bottom: 24px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
 header {
-    top: 0;
+  top: 0;
 }
 
 @media (max-width: 640px) {
-    article {
-        font-size: 16px;
-        line-height: 24px;
-    }
+  article {
+    font-size: 16px;
+    line-height: 24px;
+  }
 }

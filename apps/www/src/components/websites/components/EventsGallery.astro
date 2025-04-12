@@ -67,7 +67,7 @@ if (!events) events;
   import type { Event } from "@/components/pages/Website/website.types";
   import { caleandar } from "../general/calendar";
 
-  document.addEventListener("astro:page-load", () => {
+  document.addEventListener("DOMContentLoaded", () => {
     const selectEvent = () => {
       document.querySelectorAll(".eventselected").forEach((element) => {
         element.classList.remove("eventselected");

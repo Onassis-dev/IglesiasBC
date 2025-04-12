@@ -17,9 +17,12 @@ export class WebsitesService {
       const images =
         await sql`select * from "churchimages" where "churchId" = ${website.churchId}`;
 
+      const activities =
+        await sql`select "title","text","img" from "activities" where "churchId" = ${website.churchId}`;
+
       await sql`insert into websiteviews ("websiteId") values (${website.id})`;
 
-      return res(200, { ...website, images });
+      return res(200, { ...website, images, activities });
     } catch (err) {
       throw new HttpException('No se encontro la pagina', 404);
     }
@@ -52,22 +55,6 @@ export class WebsitesService {
         await sql`select title, img, description from posts where "churchId" = ${website.churchId} order by publication desc, id desc`;
 
       return res(200, { ...website, posts });
-    } catch (err) {
-      throw new HttpException('No se encontro la pagina', 404);
-    }
-  }
-
-  async getWebsiteServices(query: z.infer<typeof getWebsiteSchema>) {
-    try {
-      const [website] =
-        await sql`select (select plan from churches where id = "churchId"), (select count(*) from posts where "churchId" = websites."churchId") as blog, "churchId","title","color","structure","style","logo", "language","facebookLink","youtubeLink","donationLink","preachLink","whatsappLink","mapsLink","instagramLink","animations", "servicesDates" from "websites" where ${parseTitle('title', true)} = ${parseTitle(query.title)}`;
-      if (!website || website?.plan === 0)
-        throw new HttpException('No se encontro la pagina', 404);
-
-      const activities =
-        await sql`select "title","text","img" from "activities" where "churchId" = ${website.churchId}`;
-
-      return res(200, { ...website, activities });
     } catch (err) {
       throw new HttpException('No se encontro la pagina', 404);
     }

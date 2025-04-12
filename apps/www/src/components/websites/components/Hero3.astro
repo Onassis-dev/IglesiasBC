@@ -2,26 +2,47 @@
 import type { Website } from "@/components/pages/Website/website.types";
 import AButton from "../basics/AButton.astro";
 interface Props {
-    webpage: Website;
+  webpage: Website;
 }
 
 const { webpage } = Astro.props;
 ---
 
-<div class="flex flex-col md:flex-row h-screen min-h-screen">
-    <div class={"flex-1 md:w-0 h-full px-3 sm:px-12 flex flex-col item-center justify-center w-full pt-20 md:pt-0 items-start animatedscroll" + webpage.animations}>
-        <h1 class="text-5xl md:text-6xl leading-tight mb-12 font-header">{webpage.title}</h1>
-        <p class="text-md md:text-lg mb-12 max-w-2xl">{webpage.description}</p>
-        <div class="flex flex-wrap gap-2 xs:gap-5 justify-center mb-5">
-            <AButton href="#about">{webpage.language === "es" ? "Sobre nosotros" : "About us"}</AButton>
-            {
-                webpage.preachLink && (
-                    <AButton href={webpage.preachLink} variant="outside">
-                        {webpage.language === "es" ? "Predica" : "Preach"}
-                    </AButton>
-                )
-            }
-        </div>
+<div
+  class={"grid grid-cols-1 gap-12 md:grid-cols-2 max-w-6xl mx-auto py-16 md:py-24 lg:py-32 px-4 animatedscroll" +
+    webpage.animations}
+>
+  <div
+    class="gap-6 flex flex-col item-center justify-center w-full animatedscroll"
+  >
+    <h1
+      class="text-5xl md:text-6xl leading-tight font-header text-center sm:text-left"
+    >
+      {webpage.title}
+    </h1>
+    <p
+      class="text-md md:text-xl text-muted-foreground text-center sm:text-left"
+    >
+      {webpage.description}
+    </p>
+    <div
+      class="flex flex-wrap gap-2 xs:gap-4 justify-center sm:justify-start mb-5"
+    >
+      <AButton href="#about"
+        >{webpage.language === "es" ? "Sobre nosotros" : "About us"}</AButton
+      >
+      {
+        webpage.preachLink && (
+          <AButton href={webpage.preachLink} variant="outside">
+            {webpage.language === "es" ? "Predica" : "Preach"}
+          </AButton>
+        )
+      }
     </div>
-    <img src={webpage.coverImg} alt="" class="object-cover flex-1 md:w-0 h-full w-full" />
+  </div>
+  <img
+    src={webpage.coverImg}
+    alt="Foto de portada"
+    class="object-cover aspect-video rounded-xl shadow-lg"
+  />
 </div>
