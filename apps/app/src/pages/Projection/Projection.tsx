@@ -8,6 +8,8 @@ const Projection = () => {
     const [slide, setSlide] = useState<string>('');
     const [presentation, setPresentation] = useState<any>(null);
     const [fullscreen, setFullscreen] = useState<boolean>(false);
+    const [subtitle, setSubtitle] = useState<string>('');
+
     window.addEventListener('storage', (e) => {
         if (e.key === 'presentation') {
             setPresentation(JSON.parse(e.newValue || '{}'));
@@ -15,11 +17,15 @@ const Projection = () => {
         if (e.key === 'slide') {
             setSlide(e.newValue || '');
         }
+        if (e.key === 'subtitle') {
+            setSubtitle(e.newValue || '');
+        }
     });
 
     useEffect(() => {
         setPresentation(JSON.parse(localStorage.getItem('presentation') || '{}'));
         setSlide(localStorage.getItem('slide') || '');
+        setSubtitle(localStorage.getItem('subtitle') || '');
     }, []);
 
     useEffect(() => {
@@ -33,7 +39,7 @@ const Projection = () => {
     return (
         <div
             id="slide"
-            className="flex items-center justify-center p-4 h-screen w-full transition-all duration-700"
+            className="flex flex-col items-center justify-center p-4 h-screen w-full transition-all duration-700"
             style={{
                 background: `${presentation?.background}`,
                 backgroundSize: 'cover',
@@ -59,6 +65,7 @@ const Projection = () => {
                 className="text-center h-fit min-h-0 min-w-full py-2.5 bg-transparent resize-none outline-none text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl"
                 value={slide}
             />
+            <p className="text-center text-2xl">{subtitle}</p>
         </div>
     );
 };

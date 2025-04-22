@@ -2,7 +2,7 @@ import { z } from "zod";
 import { initContract } from "@ts-rest/core";
 
 export const ChurchSchema = z.object({
-  name: z.string().min(6).max(100),
+  name: z.string().min(4).max(100),
 });
 
 const c = initContract();

@@ -32,7 +32,7 @@ const SheetOverlay = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Ove
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetClass =
-    'fixed z-50 bg-background flex flex-col shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 sm:inset-y-3 right-0 sm:right-3 sm:h-[calc(100vh-1.5rem)] h-full w-full sm:rounded-xl border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-lg';
+    'fixed z-50 bg-background flex flex-col shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 inset-y-0 right-0 h-full w-full border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-lg';
 
 interface SheetContentProps extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content> {
     className?: string;
@@ -56,9 +56,11 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Con
                     <Button asChild variant="outline" className="hidden sm:flex h-8" size="sm">
                         <SheetPrimitive.Close>Cerrar</SheetPrimitive.Close>
                     </Button>
-                    <Button className="w-full sm:w-auto h-8" size="sm" onClick={props.submit}>
-                        Guardar
-                    </Button>
+                    {props.submit && (
+                        <Button className="w-full sm:w-auto h-8" size="sm" onClick={props.submit}>
+                            Guardar
+                        </Button>
+                    )}
                 </SheetFooter>
             </SheetPrimitive.Content>
         </SheetPortal>

@@ -3,10 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 export const ChurchSchema = z.object({
-    name: z
-        .string()
-        .min(6, 'El nombre de tu iglesia debe contener mínimo 6 caracteres')
-        .max(100, 'El nombre de tu iglesia debe contener máximo 100 caracteres'),
+    name: z.string().min(4).max(100),
 });
 
 export const useChurchSchema = () =>

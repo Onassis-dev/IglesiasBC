@@ -23,6 +23,12 @@ export const EditPresentationSchema = PostPresentationSchema.extend({
   id: z.number(),
 });
 
+export const bibleVerseSchema = z.object({
+  book: z.string(),
+  chapter: z.coerce.number(),
+  verse: z.coerce.number(),
+});
+
 // Contract
 const c = initContract();
 
@@ -70,6 +76,14 @@ export const presentationsContract = c.router(
         200: z.any(),
       },
       pathParams: IdSchema,
+    },
+    getVerses: {
+      path: "/verses",
+      method: "GET",
+      responses: {
+        200: z.string(),
+      },
+      query: bibleVerseSchema,
     },
     getStats: {
       path: "/stats",

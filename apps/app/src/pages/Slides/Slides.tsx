@@ -49,10 +49,12 @@ export const Slides = () => {
         if (presentation?.name) setPath(presentation.name);
         if (presentation?.slides) setSlides(presentation.slides.map((slide: any) => ({ id: crypto.randomUUID(), text: slide })));
         localStorage.setItem('presentation', JSON.stringify(presentation));
+        localStorage.setItem('subtitle', '');
     }, [presentation, setPath]);
 
     useEffect(() => {
         localStorage.setItem('slide', slides[selectedId]?.text);
+        localStorage.setItem('subtitle', '');
     }, [slides, selectedId]);
 
     function handleDragEnd(event: any) {

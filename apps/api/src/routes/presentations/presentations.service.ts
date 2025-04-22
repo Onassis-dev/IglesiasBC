@@ -5,10 +5,12 @@ import {
   EditPresentationSchema,
   PostPresentationSchema,
   getPresentationSchema,
+  bibleVerseSchema,
 } from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { res } from 'src/utils/response';
+import bible from '../../../resources/bibles/RV1909.json';
 
 @Injectable()
 export class PresentationsService {
@@ -49,6 +51,19 @@ export class PresentationsService {
   async delete(body: z.infer<typeof IdSchema>) {
     await sql`delete from presentations where id = ${body.id} and "churchId" = ${this.req.getChurchId()}`;
     return res(200, null);
+  }
+
+  async getVerse(query: z.infer<typeof bibleVerseSchema>) {
+    let verse = null;
+    try {
+      verse = (bible as Record<string, string>)[query.book][query.chapter - 1][
+        query.verse - 1
+      ];
+    } catch (error) {
+      throw new HttpException('', 404);
+    }
+    if (!verse) throw new HttpException('', 404);
+    return res(200, verse);
   }
 
   // async getStats() {

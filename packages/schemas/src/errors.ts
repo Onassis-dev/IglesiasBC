@@ -10,6 +10,15 @@ export const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
     };
   }
 
+  if (issue.code === z.ZodIssueCode.too_big) {
+    return {
+      message:
+        issue.maximum === 1
+          ? `Requerido`
+          : `El texto no puede exceder los ${issue.maximum} caracteres`,
+    };
+  }
+
   if (
     issue.code === z.ZodIssueCode.invalid_type &&
     (issue.received === "undefined" || issue.received === "null")

@@ -10,7 +10,7 @@ import {
 import { res } from 'src/utils/response';
 import { auth } from 'src/utils/firebase';
 
-const permissionsLimits = [2, 10, 20];
+const permissionsLimits = [2, 15, 30];
 @Injectable()
 export class PermissionsService {
   constructor(private readonly req: ContextProvider) {}

@@ -158,10 +158,10 @@ const Dashboard = () => {
                     <CardTitle className="text-xl">Estadísticas</CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-6">
-                    <InfoCard2 href="/members" color="purple" title="Miembros activos" data={body?.stats.members} perm="perm_members">
+                    <InfoCard2 href="/members" color="purple" title="Miembros activos" data={body?.stats?.members} perm="perm_members">
                         <Users2 />
                     </InfoCard2>
-                    <InfoCard2 href="/certificates" color="cyan" title="Certificados" data={body?.stats.certificates} perm="perm_certificates">
+                    <InfoCard2 href="/certificates" color="cyan" title="Certificados" data={body?.stats?.certificates} perm="perm_certificates">
                         <FileBadge />
                     </InfoCard2>
 
@@ -169,23 +169,23 @@ const Dashboard = () => {
                         <GraduationCap />
                     </InfoCard2> */}
 
-                    <InfoCard2 href="/finances" color="green" title="Balance general" data={body?.stats.balance} perm="perm_finances">
+                    <InfoCard2 href="/finances" color="green" title="Balance general" data={body?.stats?.balance} perm="perm_finances">
                         <DollarSign />
                     </InfoCard2>
 
-                    <InfoCard2 href="/inventory" color="yellow" title="Total en inventario" data={body?.stats.inventory} perm="perm_inventory">
+                    <InfoCard2 href="/inventory" color="yellow" title="Total en inventario" data={body?.stats?.inventory} perm="perm_inventory">
                         <Box />
                     </InfoCard2>
 
-                    <InfoCard2 href="/presentations" color="pink" title="Presentaciones" data={body?.stats.presentations} perm="perm_presentations">
+                    <InfoCard2 href="/presentations" color="pink" title="Presentaciones" data={body?.stats?.presentations} perm="perm_presentations">
                         <Presentation />
                     </InfoCard2>
 
-                    <InfoCard2 href="/blog" color="orange" title="Visitas al blog" data={body?.stats.blog} perm="perm_blog">
+                    <InfoCard2 href="/blog" color="orange" title="Visitas al blog" data={body?.stats?.blog} perm="perm_blog">
                         <MessageSquareQuote />
                     </InfoCard2>
 
-                    <InfoCard2 href="/website" color="gray" title="Visitas a la pagina" data={body?.stats.website} perm="perm_website">
+                    <InfoCard2 href="/website" color="gray" title="Visitas a la pagina" data={body?.stats?.website} perm="perm_website">
                         <AppWindow />
                     </InfoCard2>
                 </CardContent>

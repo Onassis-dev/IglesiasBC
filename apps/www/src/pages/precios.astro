@@ -6,15 +6,24 @@ import Pricing from "@/components/pages/Pricing/Pricing";
 ---
 
 <Layout title="Precios">
-    <section>
-        <H1 className="mb-10">Elige tu plan y únete a esta comunidad!</H1>
-    </section>
-    <Pricing client:load />
+  <section>
+    <H1 className="mb-10">Elige tu plan y únete a esta comunidad!</H1>
+  </section>
+  <Pricing client:load />
 
-    <section class="mx-auto px-5 rounded-lg mt-12">
-        <div class="flex flex-col justify-center max-w-6xl w-full px-5 mx-auto gap-10 py-10 items-center">
-            <h2 class="text-5xl md:text-6xl font-medium text-center">¿Tienes más dudas?</h2>
-            <a href="https://wa.me/526642956883"><Button className="hover:-translate-y-0.5 transition-transform text-md font-bold shadow-md">Contáctanos</Button></a>            
-        </div>
-    </section>
+  <section class="mx-auto px-5 rounded-lg mt-12">
+    <div
+      class="flex flex-col justify-center max-w-6xl w-full px-5 mx-auto gap-10 py-10 items-center"
+    >
+      <h2 class="text-5xl md:text-6xl font-medium text-center">
+        ¿Tienes más dudas?
+      </h2>
+      <a href="https://wa.me/526642956883"
+        ><Button
+          className="hover:-translate-y-0.5 transition-transform text-md font-bold shadow-md"
+          >Contáctanos</Button
+        ></a
+      >
+    </div>
+  </section>
 </Layout>

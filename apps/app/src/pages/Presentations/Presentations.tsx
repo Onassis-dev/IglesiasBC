@@ -7,10 +7,12 @@ import PaginationMenu from '@/components/common/PaginationMenu';
 import { OptionsGrid } from '@/components/ui/grids';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import PresentationsForm from './PresentationsForm';
+import BibleForm from './BibleForm';
 
 export const Presentations = () => {
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
+    const [open2, setOpen2] = useState(false);
     const [selectedTreasury, setSelectedTreasury] = useState<any>({});
     const [filters, setFilters] = useState<any>({ title: '' });
     const [page, setPage] = useState(1);
@@ -44,7 +46,10 @@ export const Presentations = () => {
                     setOpen={setOpen1}
                     id={selectedTreasury.id}
                 />
-                <PresentationsForm open={open} setOpen={setOpen} id={selectedTreasury.id} />
+                <div className="flex gap-2">
+                    <BibleForm open={open2} setOpen={setOpen2} />
+                    <PresentationsForm open={open} setOpen={setOpen} id={selectedTreasury.id} />
+                </div>
             </OptionsGrid>
 
             <CrudTable

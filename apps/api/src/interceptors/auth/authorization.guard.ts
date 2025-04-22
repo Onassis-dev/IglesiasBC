@@ -22,10 +22,10 @@ const planAccess = {
   website: 1,
   blog: 1,
   certificates: 1,
-  finances: 2,
+  finances: 1,
   inventory: 2,
   classes: 2,
-  presentations: 2,
+  presentations: 0,
 };
 
 type permission = keyof typeof planAccess;

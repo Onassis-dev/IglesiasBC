@@ -1,13 +1,15 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
 import { api, tsr } from '@/lib/boilerplate';
 import { useNavigate } from 'react-router';
 import { useUserStore } from '@/lib/store';
-const Line = (text: string) => (
-    <li className="flex space-x-3 items-center">
-        <Check className="h-4 w-5 text-primary " />
-        <span className="text-base text-muted-foreground">{text}</span>
+import { cloneElement, type ReactElement } from 'react';
+import { AppWindow, Archive, DollarSign, FileBadge, MessageSquareQuote, Presentation, UserRoundCog, Users2 } from 'lucide-react';
+
+const Line = (icon: ReactElement, text: string) => (
+    <li className="flex space-x-2 items-center">
+        {cloneElement(icon, { className: 'size-4 text-muted-foreground' })}
+        <span className="text-muted-foreground text-base">{text}</span>
     </li>
 );
 
@@ -26,108 +28,111 @@ const PricingCards = (plan: string, products: string[], prices: number[], period
     };
 
     return (
-        <div className="flex gap-5 px-4 md:px-8 justify-center flex-wrap">
-            <Card className="w-full min-w-xs max-w-sm">
+        <div className="gap-10 justify-center max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 w-[90%]">
+            <Card className="min-w-xs w-full">
                 <CardContent className="p-6 relative">
                     <div>
                         {savings[0] && (
-                            <div className="absolute -top-2 right-6 bg-cyan px-2 rounded-sm font-medium text-background fadein1">
+                            <div className="absolute -top-2 right-6 bg-blue px-2 rounded-sm font-medium text-background fadein1">
                                 Ahorra ${savings[0]}
                             </div>
                         )}
-                        <h2 className="text-2xl font-medium ">Plan Gratuito</h2>
-                        <p className="mt-2 text-base text-muted-foreground leading-tight">Disfruta de funciones básicas</p>
+                        <h2 className="text-2xl font-medium">Plan Gratuito</h2>
+                        <p className="mt-2 text-base text-muted-foreground leading-tight">Ideal para iglesias iniciando su gestión digital</p>
 
                         <p className="mt-5 mb-5">
-                            <span className=" text-5xl font-medium ">${prices[0]}</span>
-
+                            <span className="text-5xl font-medium">${prices[0]}</span>
                             <span className="text-base font-medium text-muted-foreground">/{period}</span>
                         </p>
+
                         <Button
                             onClick={() => handleCheckout(products[0])}
-                            className=" w-full text-lg py-1 mb-4 font-medium"
+                            size="sm"
+                            className="w-full mb-4 text-base"
                             disabled={parseInt(plan) >= 0}
                         >
                             {getText(parseInt(plan), 0)}
                         </Button>
                     </div>
-                    <h3 className=" mt-4 text-sm font-medium tracking-wide uppercase">Incluye</h3>
-                    <ul role="list" className="mt-4 space-y-2.5">
-                        {Line('Registro de 30 personas')}
-                        {Line('2 usuarios')}
-                        {Line('Miembros')}
+                    <h3 className="text-sm font-medium tracking-wide uppercase">Incluye</h3>
+                    <ul role="list" className="mt-4 space-y-3">
+                        {Line(<Users2 />, 'Registro de 50 miembros')}
+                        {Line(<UserRoundCog />, '2 usuarios')}
+                        {Line(<Presentation />, 'Presentaciones')}
                     </ul>
                 </CardContent>
             </Card>
-            <Card className="w-full min-w-xs max-w-96">
+            <Card className="w-full min-w-xs">
                 <CardContent className="p-6 relative">
                     <div>
                         {savings[1] && (
-                            <div className="absolute -top-2 right-6 bg-cyan px-2 rounded-sm font-medium text-background fadein1">
+                            <div className="absolute -top-2 right-6 bg-blue px-2 rounded-sm font-medium text-background fadein1">
                                 Ahorra ${savings[1]}
                             </div>
                         )}
-                        <h2 className="text-2xl font-medium ">Plan Base</h2>
-                        <p className="mt-2 text-base text-muted-foreground leading-tight">¡Crea tu página web hoy mismo!</p>
+                        <h2 className="text-2xl font-medium">Plan Base</h2>
+                        <p className="mt-2 text-base text-muted-foreground leading-tight">Ideal para iglesias listas para modernizarse</p>
                         <p className="mt-5 mb-5">
-                            <span className=" text-5xl font-medium">${prices[1]}</span>
-
+                            <span className="text-5xl font-medium">${prices[1]}</span>
                             <span className="text-base font-medium text-muted-foreground">/{period}</span>
                         </p>
+
                         <Button
                             onClick={() => handleCheckout(products[1])}
-                            className=" w-full text-lg py-1 mb-4 font-medium"
+                            size="sm"
+                            className="w-full text-base py-1 mb-4 font-medium"
                             disabled={parseInt(plan) >= 1}
                         >
                             {getText(parseInt(plan), 1)}
                         </Button>
                     </div>
-                    <h3 className=" mt-4 text-sm font-medium tracking-wide uppercase">Incluye</h3>
-                    <ul role="list" className="mt-4 space-y-2.5">
-                        {Line('Registro de 100 personas')}
-                        {Line('10 usuarios')}
-                        {Line('Miembros')}
-                        {Line('Certificados')}
-                        {Line('Página web')}
-                        {Line('Blog')}
+                    <h3 className="text-sm font-medium tracking-wide uppercase">Incluye</h3>
+                    <ul role="list" className="mt-4 space-y-3">
+                        {Line(<Users2 />, 'Registro de 150 miembros')}
+                        {Line(<UserRoundCog />, '15 usuarios')}
+                        {Line(<Presentation />, 'Presentaciones')}
+                        {Line(<FileBadge />, 'Certificados')}
+                        {Line(<AppWindow />, 'Pagina web')}
+                        {Line(<MessageSquareQuote />, 'Blog')}
+                        {Line(<DollarSign />, 'Finanzas')}
                     </ul>
                 </CardContent>
             </Card>
-            <Card className="w-full min-w-xs max-w-sm">
+            <Card className="w-full min-w-xs">
                 <CardContent className="p-6 relative">
                     <div>
                         {savings[2] && (
-                            <div className="absolute -top-2 right-6 bg-cyan px-2 rounded-sm font-medium text-background fadein1">
+                            <div className="absolute -top-2 right-6 bg-blue px-2 rounded-sm font-medium text-background fadein1">
                                 Ahorra ${savings[2]}
                             </div>
                         )}
-                        <h2 className="text-2xl font-medium ">Plan Avanzado</h2>
-                        <p className="mt-2 text-base text-muted-foreground leading-tight">Obtén beneficios y servicios extra</p>
+                        <h2 className="text-2xl font-medium">Plan Avanzado</h2>
+                        <p className="mt-2 text-base text-muted-foreground leading-tight">Ideal para iglesias que requieren gestión profesional</p>
 
                         <p className="mt-5 mb-5">
-                            <span className=" text-5xl font-medium ">${prices[2]}</span>
-
+                            <span className="text-5xl font-medium">${prices[2]}</span>
                             <span className="text-base font-medium text-muted-foreground">/{period}</span>
                         </p>
+
                         <Button
                             onClick={() => handleCheckout(products[2])}
-                            className=" w-full text-lg py-1 mb-4 font-medium"
+                            size="sm"
+                            className="w-full text-base py-1 mb-4 font-medium"
                             disabled={parseInt(plan) >= 2}
                         >
                             {getText(parseInt(plan), 2)}
                         </Button>
                     </div>
-                    <h3 className=" mt-4 text-sm font-medium tracking-wide uppercase">Incluye</h3>
-                    <ul role="list" className="mt-4 space-y-2.5">
-                        {Line('Registro de 300 personas')}
-                        {Line('20 usuarios')}
-                        {Line('Miembros')}
-                        {Line('Certificados')}
-                        {Line('Página web')}
-                        {Line('Blog')}
-                        {Line('Finanzas')}
-                        {Line('Inventario')}
-                        {Line('Presentaciones')}
+                    <h3 className="text-sm font-medium tracking-wide uppercase">Incluye</h3>
+                    <ul role="list" className="mt-4 space-y-3">
+                        {Line(<Users2 />, 'Registro de 300 miembros')}
+                        {Line(<UserRoundCog />, '30 usuarios')}
+                        {Line(<Presentation />, 'Presentaciones')}
+                        {Line(<FileBadge />, 'Certificados')}
+                        {Line(<AppWindow />, 'Pagina web')}
+                        {Line(<MessageSquareQuote />, 'Blog')}
+                        {Line(<DollarSign />, 'Finanzas')}
+                        {Line(<Archive />, 'Inventario')}
                     </ul>
                 </CardContent>
             </Card>

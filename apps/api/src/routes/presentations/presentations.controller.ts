@@ -44,6 +44,13 @@ export class PresentationsController {
     );
   }
 
+  @TsRestHandler(presentationsContract.getVerses)
+  getVerse() {
+    return tsRestHandler(presentationsContract.getVerses, async ({ query }) =>
+      this.presentationsService.getVerse(query),
+    );
+  }
+
   // @TsRestHandler(presentationsContract.getStats)
   // getPresentationStats() {
   //   return tsRestHandler(presentationsContract.getStats, async () =>

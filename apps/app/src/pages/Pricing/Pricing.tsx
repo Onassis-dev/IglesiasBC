@@ -10,19 +10,19 @@ const Pricing = () => {
     }, []);
 
     return (
-        <Tabs defaultValue="anual">
-            <TabsList className="w-72 grid grid-cols-2 mx-auto mb-10 border">
+        <Tabs defaultValue="mensual">
+            <TabsList className="w-72 grid grid-cols-2 mx-auto mb-10">
                 <TabsTrigger className="trigger" value="mensual">
                     Mensual
                 </TabsTrigger>
                 <TabsTrigger className="trigger" value="anual">
-                    Anual <span className="ml-2 text-cyan">-16%</span>
+                    Anual <span className="ml-2 text-blue">-16%</span>
                 </TabsTrigger>
             </TabsList>
             <TabsContent value="mensual">
-                {PricingCards(plan, ['', 'base-monthly', 'pro-monthly'], [0, 199, 399], 'mes', [null, null, null])}
+                {PricingCards(plan, ['', 'base-monthly', 'pro-monthly'], [0, 15, 30], 'mes', [null, null, null])}
             </TabsContent>
-            <TabsContent value="anual">{PricingCards(plan, ['', 'base-yearly', 'pro-yearly'], [0, 1990, 3990], 'año', [null, 390, 790])}</TabsContent>
+            <TabsContent value="anual">{PricingCards(plan, ['', 'base-yearly', 'pro-yearly'], [0, 150, 300], 'año', [null, 30, 60])}</TabsContent>
         </Tabs>
     );
 };

@@ -12,7 +12,7 @@ import { File } from '@nest-lab/fastify-multer';
 import * as excelJS from 'exceljs';
 import { res } from 'src/utils/response';
 
-const memberLimits = [30, 100, 300];
+const memberLimits = [50, 150, 300];
 
 @Injectable()
 export class MembersService {
