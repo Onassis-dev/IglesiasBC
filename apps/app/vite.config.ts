@@ -10,7 +10,7 @@ export default defineConfig({
             registerType: 'autoUpdate',
             manifest: {
                 name: 'IglesiasBC',
-                short_name: 'La app todo en uno para tu iglesia.',
+                short_name: 'IglesiasBC',
                 start_url: '/',
                 display: 'standalone',
                 background_color: '#FFFFFF',
