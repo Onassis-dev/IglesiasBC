@@ -1,323 +1,84 @@
 ---
 import Layout from "../layouts/IndexLayout.astro";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  AppWindow,
-  Archive,
-  CheckCircle,
-  CircleCheckBig,
-  DollarSign,
-  FileBadge,
-  FileBarChartIcon,
-  FileCheck,
-  Gauge,
-  GraduationCap,
-  HeartHandshake,
-  MessageSquareQuote,
-  Presentation,
-  Users2,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import H1 from "@/components/pages/Landing/H1.astro";
-import Icon from "@/components/pages/Landing/Icon.astro";
-import H2 from "@/components/pages/Landing/H2.astro";
-import Graph1 from "@/components/pages/Landing/Graph1";
-import Graph2 from "@/components/pages/Landing/Graph2";
-import Section from "@/components/pages/Landing/Section.astro";
-import Testimonials from "@/components/pages/Landing/Testimonials";
-import InfoCard from "@/components/pages/General/InfoCard";
+import { FAQs } from "@/components/pages/Landing/FAQs";
+import { Features } from "@/components/pages/Landing/Features";
+import { Cta } from "@/components/pages/Landing/CTA";
+import { Problem } from "@/components/pages/Landing/Problem";
 ---
 
 <Layout title="IglesiasBC">
   <section
-    class="flex flex-col items-center gap-5 mt-10 min-h-screen mb-64 mx-auto"
+    class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-1 py-24 pt-10 sm:pt-24 sm:min-h-[70lvh] items-center"
   >
-    <H1 variant="big" className="max-w-4xl fadein delay-200"
-      >Administra toda tu iglesia en un solo lugar</H1
-    >
-    <p
-      class="text-[18px] sm:text-md text-muted-foreground max-w-xl text-center px-2 fadein delay-300"
-    >
-      IglesiasBC es una herramienta todo en uno que te permite manejar la
-      gestión de toda tu iglesia fácil y rápidamente.
-    </p>
-    <div class="space-x-2 xs:space-x-4 fadein delay-300 mt-2 mb-16">
-      <a href={import.meta.env.PUBLIC_APP_BASE + "/signup?redirect=/"}
-        ><Button className="hover:opacity-90 transition-transform" size="sm"
-          >Pruébalo gratis</Button
-        ></a
+    <div class="space-y-4">
+      <H1
+        variant="big"
+        className=" text-5xl md:text-6xl font-medium text-center sm:text-left"
+        >Moderniza tu iglesia con una sola plataforma</H1
       >
-      <a href="#a1"
-        ><Button className="transition-transform" variant="outline" size="sm"
-          >Conocer más</Button
-        ></a
+      <p
+        class="text-lg text-muted-foreground max-w-lg text-center sm:text-left"
       >
+        Te ayudamos a mejorar la administración y comunicación de tu iglesia con
+        nuestras herramientas sin gastar una fortuna.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-2 mt-2 mb-16">
+        <a href={import.meta.env.PUBLIC_APP_BASE + "/signup?redirect=/"}
+          ><Button
+            className="hover:opacity-90 transition-transform w-full sm:w-auto"
+            size="sm">Pruebalo gratis</Button
+          ></a
+        >
+        <a href="#a1"
+          ><Button
+            className="transition-transform w-full sm:w-auto"
+            variant="outline"
+            size="sm">Agenda una demostración</Button
+          ></a
+        >
+      </div>
+      <p
+        class="text-muted-foreground text-sm ml-0.5 !mt-1 text-center sm:text-left"
+      >
+        No se necesita tarjeta de crédito.
+      </p>
     </div>
-
-    <div
-      class="w-[94%] grid-cols-4 md:grid-cols-7 justify-between px-1 max-w-6xl fadein delay-1000 flex-wrap gap-4 hidden lg:grid"
-    >
-      <Icon text="Miembros" color="purple"
-        ><Users2 className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Certificados" color="cyan"
-        ><FileBadge className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <!-- <Icon text="Clases" color="blue"><GraduationCap className="size-3 xs:size-4 sm:size-5" /></Icon> -->
-      <Icon text="Finanzas" color="green"
-        ><DollarSign className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Página web" color="gray"
-        ><AppWindow className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Blog" color="orange"
-        ><MessageSquareQuote className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Inventario" color="yellow"
-        ><Archive className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Presentaciones" color="pink"
-        ><Presentation className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-    </div>
-
     <img
       src="/hero.webp"
       alt="Preview of the dashboard"
-      class="w-[94%] aspect-video object-cover overflow-hidden justify-center items-center flex fadein delay-700 max-w-6xl border shadow-xl rounded-sm sm:rounded-xl"
+      class="aspect-square w-full object-cover overflow-hidden justify-center items-center flex max-w-6xl rounded-md"
     />
+  </section>
 
-    <div
-      class="w-[94%] flex justify-center px-1 max-w-6xl fadein delay-1000 flex-wrap gap-4 lg:hidden"
-    >
-      <Icon text="Miembros" color="purple"
-        ><Users2 className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Certificados" color="cyan"
-        ><FileBadge className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <!-- <Icon text="Clases" color="blue"><GraduationCap className="size-3 xs:size-4 sm:size-5" /></Icon> -->
-      <Icon text="Finanzas" color="green"
-        ><DollarSign className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Página web" color="gray"
-        ><AppWindow className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Blog" color="orange"
-        ><MessageSquareQuote className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
-      <Icon text="Inventario" color="yellow"
-        ><Archive className="size-3 xs:size-4 sm:size-5" /></Icon
-      >
+  <section class="w-full bg-muted py-24">
+    <div class="max-w-6xl mx-auto bg-muted w-[95%]">
+      <Problem client:idle />
     </div>
   </section>
 
-  <section class="max-w-6xl mx-auto mb-64" id="a1">
-    <H2>Toda tu administración mejorada</H2>
-    <div class="space-y-6">
-      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div class="space-y-4 p-6 border rounded-md">
-          <div class="flex items-center gap-8 justify-between">
-            <h3 class="text-2xl font-semibold flex-1">
-              Centraliza toda tu información
-            </h3>
-            <FileCheck
-              className="size-9 p-1.5 rounded-lg bg-purple-background"
-            />
-          </div>
-          <p class="text-muted-foreground">
-            Nuestro software busca centralizar toda la información y
-            administración de tu iglesia en una sola plataforma con nuestros
-            múltiples módulos.
-          </p>
-        </div>
-        <div class="space-y-4 p-6 border rounded-md">
-          <div class="flex items-center gap-8 justify-between">
-            <h3 class="text-2xl font-semibold flex-1">Moderniza tu iglesia</h3>
-            <Users2 className="size-9 p-1.5 rounded-lg bg-blue-background" />
-          </div>
-          <p class="text-muted-foreground">
-            Implementa herramientas tecnológicas para optimizar la gestión,
-            mejorar la comunicación y facilitar las tareas administrativas de tu
-            iglesia.
-          </p>
-        </div>
-        <div class="space-y-4 p-6 border rounded-md">
-          <div class="flex items-center gap-8 justify-between">
-            <h3 class="text-2xl font-semibold flex-1">Colabora</h3>
-            <Users2 className="size-9 p-1.5 rounded-lg bg-blue-background" />
-          </div>
-          <p class="text-muted-foreground">
-            Fomenta el trabajo en equipo con un sistema que permite asignar
-            roles y permisos personalizados para cada miembro del equipo.
-          </p>
-        </div>
-
-        <div class="space-y-4 p-6 border rounded-md">
-          <div class="flex items-center gap-8 justify-between">
-            <h3 class="text-2xl font-semibold flex-1">
-              Interactúa con tu comunidad
-            </h3>
-            <HeartHandshake
-              className="size-9 p-1.5 rounded-lg bg-destructive-background"
-            />
-          </div>
-          <p class="text-muted-foreground">
-            Lleva tu iglesia al futuro con una página web, un blog y un
-            calendario de eventos que mantendrán siempre informados a tu
-            comunidad.
-          </p>
-        </div>
-        <div class="space-y-4 p-6 border rounded-md">
-          <div class="flex items-center gap-8 justify-between">
-            <h3 class="text-2xl font-semibold flex-1">Fácil de usar</h3>
-            <CircleCheckBig
-              className="size-9 p-1.5 rounded-lg bg-green-background"
-            />
-          </div>
-          <p class="text-muted-foreground">
-            Nuestro diseño está pensado para que cualquier persona sea capaz de
-            utilizarlo rápidamente, así como ser práctico y eficiente en su uso.
-          </p>
-        </div>
-        <div class="space-y-4 p-6 border rounded-md">
-          <div class="flex items-center gap-8 justify-between">
-            <h3 class="text-2xl font-semibold flex-1">Optimiza tu trabajo</h3>
-            <Gauge className="size-9 p-1.5 rounded-lg bg-cyan-background" />
-          </div>
-          <p class="text-muted-foreground">
-            Con nuestras herramientas muchas actividades que tomarían varios
-            minutos o hasta horas se reducen a un simple click.
-          </p>
-        </div>
-        <div class="space-y-4 p-6 border">
-          <div class="flex items-center gap-8 justify-between">
-            <h3 class="text-2xl font-semibold flex-1">Mejora tus documentos</h3>
-            <FileBarChartIcon
-              className="size-9 p-1.5 rounded-lg bg-yellow-background"
-            />
-          </div>
-          <p class="text-muted-foreground">
-            Genera certificados, reportes de ingresos, tablas de información y
-            otros muchos documentos de alta calidad con un solo click.
-          </p>
-        </div>
-      </div>
+  <section class="pt-24 w-full">
+    <div class="max-w-6xl mx-auto w-[95%]">
+      <h2 class="text-5xl font-medium text-center mb-8">
+        Todas nuestras funciones
+      </h2>
+      <Features client:idle />
     </div>
   </section>
 
-  <section class="max-w-6xl mx-auto mb-64" id="a2">
-    <H2>Visualiza el estado de tu iglesia</H2>
-    <div class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <InfoCard color="green" title="Balance total" data={40000}>
-          <DollarSign />
-        </InfoCard>
-        <InfoCard color="gray" title="Total de visitas a la página" data={2000}>
-          <AppWindow />
-        </InfoCard>
-        <InfoCard color="purple" title="Nuevos miembros" data={16}>
-          <GraduationCap />
-        </InfoCard>
-      </div>
-      <div class="grid sm:grid-cols-2 gap-6">
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle className="text-md"
-              >Miembros nuevos registrados</CardTitle
-            >
-          </CardHeader>
-          <CardContent>
-            <Graph1 client:visible />
-          </CardContent>
-        </Card>
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle className="text-md">Movimientos económicos</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Graph2 client:visible />
-          </CardContent>
-        </Card>
-      </div>
+  <section class="py-24 w-full">
+    <div class="max-w-6xl mx-auto w-[95%]">
+      <h2 class="text-5xl font-medium text-center mb-8">
+        Preguntas frecuentes
+      </h2>
+      <FAQs client:idle />
     </div>
   </section>
 
-  <section class="max-w-6xl mx-auto mb-64" id="a3">
-    <H2>Prueba todas nuestras funciones</H2>
-
-    <div class="grid sm:grid-cols-2 gap-6 w-full">
-      <Section
-        title="Colabora con tus compañeros"
-        text="Facilita el trabajo en equipo en tu iglesia. Mejora la cooperación y fortalece la comunidad con liderazgo compartido."
-        color="gray"
-        accentWord="compañeros"><CheckCircle /></Section
-      >
-
-      <Section
-        title="Administra a todos tus miembros"
-        text="Lleva un registro actualizado de los miembros de tu iglesia. Asegúrate de que todos se sientan valorados e integrados."
-        color="purple"
-        accentWord="miembros"><Users2 /></Section
-      >
-      <Section
-        title="Genera bellos certificados"
-        text="Crea certificados únicos para eventos de la iglesia, desde bautismos hasta bodas. Personaliza cada reconocimiento."
-        color="cyan"
-        accentWord="certificados"><FileBadge /></Section
-      >
-      <!-- <Section title="Registra clases y alumnos" text="Organiza clases y registra alumnos eficientemente. Mejora la planificación educativa y la comunicación entre maestros y estudiantes." color="blue" accentWord="clases"><GraduationCap /></Section> -->
-      <Section
-        title="Administra tus finanzas"
-        text="Controla las finanzas de tu iglesia de forma clara y efectiva. Registra ingresos y gastos para una administración responsable."
-        color="green"
-        accentWord="finanzas"><DollarSign /></Section
-      >
-      <Section
-        title="Administra tu inventario"
-        text="Mantén el inventario de tu iglesia organizado y accesible. Asegúrate de tener suministros y equipos disponibles cuando los necesites."
-        color="yellow"
-        accentWord="inventario"><Archive /></Section
-      >
-      <Section
-        title="Publica posts en tu blog"
-        text="Comparte noticias y reflexiones a través del blog. Mantén a la comunidad informada e inspirada con contenido relevante."
-        color="orange"
-        accentWord="blog"><MessageSquareQuote /></Section
-      >
-      <Section
-        title="Genera una hermosa página web"
-        text="Diseña un sitio web atractivo para tu iglesia. Muestra eventos y actividades con una presencia en línea que refleje tus valores."
-        color="gray"
-        accentWord="web"><AppWindow /></Section
-      >
-    </div>
-  </section>
-
-  <section class="max-w-6xl mx-auto mb-64" id="a4">
-    <H2>Qué dicen nuestros clientes</H2>
-    <div class="w-full overflow-hidden">
-      <Testimonials client:idle />
-    </div>
-  </section>
-
-  <section
-    id="a5"
-    class="py-16 rounded-lg max-w-6xl mb-64 flex flex-col justify-center items-center mx-auto gap-10"
-  >
-    <h2
-      class="text-4xl font-medium xs:text-5xl sm:text-6xl text-center max-w-2xl"
-    >
-      ¡Lleva tu iglesia al siguiente nivel!
-    </h2>
-    <div class="flex gap-1 xs:gap-4 flex-wrap justify-center">
-      <a href="/precios"><Button className="shadow-sm">Ver precios</Button></a>
-      <a
-        class={buttonVariants({ variant: "outline" })}
-        href={import.meta.env.PUBLIC_APP_BASE + "/signup?redirect=/"}
-      >
-        Regístrate gratis
-      </a>
+  <section class="w-full bg-muted py-24">
+    <div class="max-w-6xl mx-auto w-[95%]">
+      <Cta client:idle />
     </div>
   </section>
 </Layout>

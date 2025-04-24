@@ -79,12 +79,11 @@ export class PostsService {
 
     let values: Record<string, any> = body;
 
+    console.log(file);
     if (file) {
       const [{ img }] =
         await sql`select "img" from "posts" where "id" =  ${body.id}`;
-      if (img) {
-        await deleteImage(img);
-      }
+      if (img) await deleteImage(img);
 
       const url = await uploadImage(file);
 

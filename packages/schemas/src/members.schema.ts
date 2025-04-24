@@ -9,7 +9,11 @@ export const getMembersSchema = z.object({
 
 export const PostMemberSchema = z.object({
   name: z.string().min(1),
-  cellphone: z.string().nullish(),
+  cellphone: z
+    .string()
+    .regex(/^[\d\s]*$/, "Número invalido")
+    .transform((str) => str.replace(/\s/g, ""))
+    .nullish(),
   baptized: z.string().min(1),
   email: z
     .string()
@@ -30,6 +34,7 @@ export const PostMemberSchema = z.object({
   genre: z.string().min(1),
   civilStatus: z.string().min(1),
   positionId: z.string().min(1),
+  countryCode: z.string().min(1).nullish(),
 });
 
 export const PutMemberSchema = PostMemberSchema.extend({

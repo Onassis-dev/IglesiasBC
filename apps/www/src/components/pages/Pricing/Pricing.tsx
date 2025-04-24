@@ -150,7 +150,7 @@ const pricingCards = (
 const Pricing = () => {
   return (
     <Tabs defaultValue="mensual">
-      <TabsList className="w-72 grid grid-cols-2 mx-auto mb-10">
+      <TabsList className="w-72 grid grid-cols-2 mx-auto mb-10 h-auto">
         <TabsTrigger className="trigger" value="mensual">
           Mensual
         </TabsTrigger>

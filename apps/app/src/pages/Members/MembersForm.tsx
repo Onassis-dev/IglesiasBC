@@ -13,6 +13,7 @@ import { PostMemberSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useFormQuery } from '@/lib/hooks/useFormQuery';
+import PhoneInput from '@/components/ui/phone-input';
 
 interface props {
     id: string | number;
@@ -30,6 +31,7 @@ const defaultValues: z.infer<typeof PostMemberSchema> = {
     positionId: '',
     birthday: '',
     joinDate: '',
+    countryCode: '+52',
 };
 
 const MembersForm = ({ id, open, setOpen }: props) => {
@@ -81,9 +83,10 @@ const MembersForm = ({ id, open, setOpen }: props) => {
         queryKey: ['positionsObj'],
     });
 
-    const submit = membersForm.handleSubmit((values: z.infer<typeof PostMemberSchema>) =>
-        showPromise(sendData(values), id ? 'Información actualizada' : 'Miembro registrado')
-    );
+    const submit = membersForm.handleSubmit((values: z.infer<typeof PostMemberSchema>) => {
+        if (!values.cellphone) values.countryCode = null;
+        showPromise(sendData(values), id ? 'Información actualizada' : 'Miembro registrado');
+    });
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -110,19 +113,42 @@ const MembersForm = ({ id, open, setOpen }: props) => {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={membersForm.control}
-                                name="cellphone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Teléfono</FormLabel>
-                                        <FormControl>
-                                            <Input value={field.value || ''} onChange={field.onChange} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            <FormLabel>Teléfono</FormLabel>
+                            <div className="flex w-full">
+                                <FormField
+                                    control={membersForm.control}
+                                    name="countryCode"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <PhoneInput
+                                                    value={field.value || '+52'}
+                                                    onChange={field.onChange}
+                                                    className="pl-2 pr-1 w-[4rem] justify-end rounded-r-none"
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={membersForm.control}
+                                    name="cellphone"
+                                    render={({ field }) => (
+                                        <>
+                                            <FormItem className="w-full">
+                                                <FormControl>
+                                                    <Input
+                                                        value={field.value || ''}
+                                                        onChange={field.onChange}
+                                                        className="rounded-l-none border-l-0"
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        </>
+                                    )}
+                                />
+                            </div>
                             <FormField
                                 control={membersForm.control}
                                 name="email"

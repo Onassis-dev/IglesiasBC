@@ -1,7 +1,7 @@
 import { tsr } from '@/lib/boilerplate';
 import { Modal, ModalContent, ModalTitle } from '@/components/ui/auto-modal';
 import { ModalHeader } from '@/components/ui/auto-modal';
-import { BadgeCheck, BriefcaseBusiness, Cake, DoorOpen, Edit, Heart, MailIcon, Phone, Trash, UsersRound } from 'lucide-react';
+import { BadgeCheck, BriefcaseBusiness, Cake, DoorOpen, Edit, Heart, MailIcon, MessageCircle, Phone, Trash, UsersRound } from 'lucide-react';
 import { displayDate } from '@/lib/timeFunctions';
 import { calculateAge } from './members.lib';
 import { Button } from '@/components/ui/button';
@@ -65,7 +65,9 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                         </div>
                         <div className="min-h-10">
                             <p className="text-sm font-medium">Teléfono</p>
-                            <p className="text-muted-foreground text-sm">{member?.cellphone}</p>
+                            <p className="text-muted-foreground text-sm">
+                                {member?.countryCode} {member?.cellphone}
+                            </p>
                         </div>
                     </div>
 
@@ -140,7 +142,7 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                     </div>
                 </div>
 
-                <div className="mt-4 gap-2 grid grid-cols-3 border-t pt-2">
+                <div className="mt-4 gap-2 grid grid-cols-4 border-t pt-2">
                     <Button
                         variant="outline"
                         onClick={() => {
@@ -159,7 +161,18 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                     >
                         <Edit className="size-4" />
                     </Button>
-                    <Button variant="outline" onClick={() => window.open(`tel:${member?.cellphone}`)}>
+                    <Button
+                        disabled={!member?.cellphone}
+                        variant="outline"
+                        onClick={() => window.open(`https://wa.me/${member?.countryCode}${member?.cellphone}`.replace('+', ''), '_blank')}
+                    >
+                        <MessageCircle className="size-4" />
+                    </Button>
+                    <Button
+                        disabled={!member?.cellphone}
+                        variant="outline"
+                        onClick={() => window.open(`tel:${member?.countryCode}${member?.cellphone}`)}
+                    >
                         <Phone className="size-4" />
                     </Button>
                 </div>

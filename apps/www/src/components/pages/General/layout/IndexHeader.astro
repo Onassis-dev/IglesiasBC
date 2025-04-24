@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
   <div></div>
   <a class="text-xl font-medium" href="/">Inicio</a>
   <a class="text-xl font-medium" href="/precios">Precios</a>
-  <!-- <a class="text-xl font-medium" href="/ejemplos">Ejemplos</a> -->
 
   <div class="flex flex-col gap-4 w-full">
     <a class="redirectButton w-full" href="/login">
@@ -35,12 +34,11 @@ import { Button } from "@/components/ui/button";
   <div
     class="max-w-6xl h-16 p-3 flex items-center justify-between bg-background w-full transition-all duration-400"
   >
-    <a href="/" class="text-2xl font-normal flex items-center gap-1"
-      ><img src="/logo.png" alt="logo" class="size-7" /> IglesiasBC</a
+    <a href="/" class="text-2xl font-medium flex items-center gap-1.5"
+      ><img src="/logo.svg" alt="logo" class="size-6" /> IglesiasBC</a
     >
 
     <div class="gap-6 items-center font-medium hidden sm:flex">
-      <!-- <a class="text-sm" href="/ejemplos">Ejemplos</a> -->
       <a class="text-sm" href="/precios">Precios</a>
       <div class="space-x-2">
         <a class="redirectButton text-sm" href="/login">
@@ -81,7 +79,7 @@ import { Button } from "@/components/ui/button";
   };
 
   init();
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("astro:page-load", () => {
     handleScroll();
     init();
   });

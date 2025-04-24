@@ -10,21 +10,52 @@ export default defineConfig({
             registerType: 'autoUpdate',
             manifest: {
                 name: 'IglesiasBC',
-                short_name: 'IglesiasBC',
+                short_name: 'La app todo en uno para tu iglesia.',
                 start_url: '/',
                 display: 'standalone',
-                background_color: '#f6f6f6',
+                background_color: '#FFFFFF',
                 theme_color: '#000000',
                 icons: [
-                    { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-                    { src: '/icon-256x256.png', sizes: '256x256', type: 'image/png' },
-                    { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+                    {
+                        src: 'pwa-192x192.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                    },
+                    {
+                        src: 'pwa-512x512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                    },
+                    {
+                        src: 'pwa-512x512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any',
+                    },
+                    {
+                        src: 'maskable-icon-512x512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'maskable',
+                    },
                 ],
                 screenshots: [
                     {
-                        src: '/screenshots/phone.png',
-                        sizes: '406x885',
-                        type: 'image/png',
+                        src: '/screenshots/1.jpg',
+                        sizes: '1080x1920',
+                        type: 'image/jpg',
+                        form_factor: 'narrow',
+                    },
+                    {
+                        src: '/screenshots/2.jpg',
+                        sizes: '1080x1920',
+                        type: 'image/jpg',
+                        form_factor: 'narrow',
+                    },
+                    {
+                        src: '/screenshots/3.jpg',
+                        sizes: '1080x1920',
+                        type: 'image/jpg',
                         form_factor: 'narrow',
                     },
                     {

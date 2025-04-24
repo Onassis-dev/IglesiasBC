@@ -1,14 +1,15 @@
 ---
-import H1 from "@/components/pages/Landing/H1.astro";
 import Layout from "../layouts/IndexLayout.astro";
 import { Button } from "@/components/ui/button";
 import Pricing from "@/components/pages/Pricing/Pricing";
 ---
 
 <Layout title="Precios">
-  <section>
-    <H1 className="mb-10">Elige tu plan y únete a esta comunidad!</H1>
-  </section>
+  <h1
+    class="mb-10 text-center w-[95%] mx-auto text-5xl font-medium mt-8 max-w-3xl"
+  >
+    Elige tu plan y únete a esta comunidad!
+  </h1>
   <Pricing client:load />
 
   <section class="mx-auto px-5 rounded-lg mt-12">

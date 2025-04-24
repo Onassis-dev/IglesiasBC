@@ -78,9 +78,9 @@ const SideBar = () => {
             <div id="asidebg" className="absolute cursor-pointer "></div>
             <div id="asidespan" className="w-0 xl:w-56 bg-dashboardbg"></div>
             <aside id="aside" className="fixed top-0 bottom-0 border-r border-[#d7d7d7] -left-56 xl:left-0 z-20 w-56 flex flex-col bg-background">
-                <div className="h-14 flex  items-center gap-1 border-b border-[#d7d7d7]">
+                <div className="h-14 flex  items-center gap-1.5 border-b border-[#d7d7d7]">
                     <div className="ml-4">
-                        <img src="/logo.png" alt="logo" className="size-6" />
+                        <img src="/logo.svg" alt="logo" className="size-6" />
                     </div>
 
                     <h2 className="text-lg font-medium">IglesiasBC</h2>
