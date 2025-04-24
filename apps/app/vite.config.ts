@@ -58,12 +58,6 @@ export default defineConfig({
                         type: 'image/jpg',
                         form_factor: 'narrow',
                     },
-                    {
-                        src: '/screenshots/desktop.png',
-                        sizes: '1863x1026',
-                        type: 'image/png',
-                        form_factor: 'wide',
-                    },
                 ],
                 lang: 'es',
             },
