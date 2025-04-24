@@ -13,6 +13,7 @@ import { displayDate } from '@/lib/timeFunctions';
 import BlogAlert from './BlogAlert';
 import InfoCard from '@/components/common/InfoCard';
 import Share from '@/components/common/Share';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 
 export function Blog() {
     const [open, setOpen] = useState(false);
@@ -21,9 +22,10 @@ export function Blog() {
     const [selectedPost, setSelectedPost] = useState<any>({});
     const [filters, setFilters] = useState<any>({ title: '' });
     const [page, setPage] = useState(1);
+    const debouncedFilters = useDebounce(filters, 500);
 
     const { data: { body: posts } = {} } = tsr.posts.get.useQuery({
-        queryKey: ['posts', page, filters],
+        queryKey: ['posts', page, debouncedFilters],
         queryData: {
             query: {
                 page,

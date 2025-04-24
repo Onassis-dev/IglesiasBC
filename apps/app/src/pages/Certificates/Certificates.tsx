@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import DeleteDialog from '@/components/common/DeleteDialog';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 
 const Certificates = () => {
     const [open, setOpen] = useState(false);
@@ -20,9 +21,10 @@ const Certificates = () => {
     const [selectedCertificate, setSelectedCertificate] = useState<any>({});
     const [filters, setFilters] = useState<any>({ name: '' });
     const [page, setPage] = useState(1);
+    const debouncedFilters = useDebounce(filters, 500);
 
     const { data: { body: certificates } = {}, status } = tsr.certificates.get.useQuery({
-        queryKey: ['certificates', page, filters],
+        queryKey: ['certificates', page, debouncedFilters],
         queryData: {
             query: {
                 page,

@@ -137,7 +137,7 @@ const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
                         </div>
                         <div className="overflow-hidden h-10">
                             <p className="text-sm font-medium">Correo electrónico</p>
-                            <p className="text-muted-foreground text-sm w-full overflow-ellipsis">{member?.email}</p>
+                            <p className="text-muted-foreground text-sm w-full text-ellipsis">{member?.email}</p>
                         </div>
                     </div>
                 </div>

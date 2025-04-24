@@ -9,6 +9,7 @@ import InfoCard from '@/components/common/InfoCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import TreasuriesForm from './TreasuriesForm';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 
 export const Finances = () => {
     const [open, setOpen] = useState(false);
@@ -16,9 +17,10 @@ export const Finances = () => {
     const [selectedTreasury, setSelectedTreasury] = useState<any>({});
     const [filters, setFilters] = useState<any>({ name: '' });
     const [page, setPage] = useState(1);
+    const debouncedFilters = useDebounce(filters, 500);
 
     const { data: { body: treasuries } = {}, status } = tsr.treasuries.get.useQuery({
-        queryKey: ['treasuries', page, filters],
+        queryKey: ['treasuries', page, debouncedFilters],
         queryData: {
             query: {
                 ...filters,

@@ -8,6 +8,7 @@ import { OptionsGrid } from '@/components/ui/grids';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import PresentationsForm from './PresentationsForm';
 import BibleForm from './BibleForm';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 
 export const Presentations = () => {
     const [open, setOpen] = useState(false);
@@ -16,9 +17,10 @@ export const Presentations = () => {
     const [selectedTreasury, setSelectedTreasury] = useState<any>({});
     const [filters, setFilters] = useState<any>({ title: '' });
     const [page, setPage] = useState(1);
+    const debouncedFilters = useDebounce(filters, 500);
 
     const { data: { body: presentations } = {}, status } = tsr.presentations.get.useQuery({
-        queryKey: ['presentations', page, filters],
+        queryKey: ['presentations', page, debouncedFilters],
         queryData: {
             query: {
                 ...filters,

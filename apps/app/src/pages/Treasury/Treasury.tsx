@@ -11,7 +11,7 @@ import { displayDate } from '@/lib/timeFunctions';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import TransactionsForm from './TransactionsForm';
 import { usePathStore } from '@/lib/store';
-
+import { useDebounce } from '@/lib/hooks/useDebounce';
 export const Treasury = () => {
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
@@ -20,6 +20,7 @@ export const Treasury = () => {
     const [page, setPage] = useState(1);
     const [id, setId] = useState('');
     const { setPath } = usePathStore((state) => state);
+    const debouncedFilters = useDebounce(filters, 500);
 
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
@@ -27,7 +28,7 @@ export const Treasury = () => {
     }, []);
 
     const { data: { body: treasury } = {}, status } = tsr.transactions.get.useQuery({
-        queryKey: ['transactions', page, filters],
+        queryKey: ['transactions', page, debouncedFilters],
         enabled: !!id,
         queryData: {
             query: {

@@ -15,6 +15,7 @@ import { CrudTable, type Column } from '@/components/common/CrudTable';
 import { calculateAge, setCurrentYear } from './members.lib';
 import MembersForm from './MembersForm';
 import ImportMembers from './ImportMembers';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 
 export function Members() {
     const [open, setOpen] = useState(false);
@@ -23,9 +24,10 @@ export function Members() {
     const [selectedMember, setSelectedMember] = useState<any>({});
     const [filters, setFilters] = useState<any>({ name: '' });
     const [page, setPage] = useState(1);
+    const debouncedFilters = useDebounce(filters, 500);
 
     const { data: { body: members } = {}, status } = tsr.members.get.useQuery({
-        queryKey: ['members', page, filters],
+        queryKey: ['members', page, debouncedFilters],
         queryData: {
             query: {
                 page,

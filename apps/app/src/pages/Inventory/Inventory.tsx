@@ -13,6 +13,7 @@ import InventoryCard from './InventoryCard';
 import { OptionsGrid, StatsGrid } from '@/components/ui/grids';
 import { downloadFile } from '@/lib/downloadFile';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
+import { useDebounce } from '@/lib/hooks/useDebounce';
 
 export function Inventory() {
     const [open, setOpen] = useState(false);
@@ -21,9 +22,10 @@ export function Inventory() {
     const [selectedItem, setSelectedItem] = useState<any>({});
     const [filters, setFilters] = useState<any>({ name: '' });
     const [page, setPage] = useState(1);
+    const debouncedFilters = useDebounce(filters, 500);
 
     const { data: { body: inventory } = {}, status } = tsr.inventory.get.useQuery({
-        queryKey: ['inventory', page, filters],
+        queryKey: ['inventory', page, debouncedFilters],
         queryData: {
             query: {
                 page,
