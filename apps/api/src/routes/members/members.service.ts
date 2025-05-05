@@ -20,7 +20,7 @@ export class MembersService {
 
   async get(dto: z.infer<typeof getMembersSchema>) {
     const rows = await sql`
-    SELECT id, name, COUNT(*) OVER () AS count, cellphone, email, (select name from positions where id = "positionId") as "positionId"
+    SELECT id, name, cellphone, email, baptized, email, birthday, "joinDate", "countryCode", "positionId", genre, "civilStatus"
     FROM members
     WHERE "churchId" = ${this.req.getChurchId()}
     AND (${dto.name ? sql`LOWER(name) LIKE LOWER('%' || ${dto.name} || '%')` : sql`TRUE`})

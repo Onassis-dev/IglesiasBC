@@ -42,11 +42,9 @@ export class CertificatesService {
   }
 
   async get(query: z.infer<typeof getCertificateSchema>) {
-    //Ambos filtros deben de ser iguales
     const rows = await sql`
-    SELECT certificates.*, certificatetypes.name as type, COUNT(*) OVER () AS count
+    SELECT id
     FROM certificates
-    JOIN certificatetypes ON certificates."certificateTypeId" = certificatetypes.id
     WHERE "churchId" = ${this.req.getChurchId()}
     AND (${query.name ? sql`LOWER("member") LIKE LOWER('%' || ${query.name} || '%')` : sql`TRUE`})
     ORDER BY certificates.id DESC

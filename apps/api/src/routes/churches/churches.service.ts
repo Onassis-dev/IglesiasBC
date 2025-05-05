@@ -61,21 +61,22 @@ export class ChurchesService {
       return error('Ya tienes registrada una iglesia', 400);
     }
 
-    const insertedId = await sql.begin(async (sql) => {
+    await sql.begin(async (sql) => {
       const [{ id }] =
         await sql`insert into "churches" (name, "ownerId") values (${body.name}, ${this.req.getUserId()}) returning id`;
+
       await sql`update permissions set selected = false where "userId" = ${this.req.getUserId()}`;
+
       await sql`insert into permissions ("churchId", "userId", selected, perm_website, perm_inventory, perm_finances, perm_members, perm_classes, perm_blog, perm_certificates, perm_presentations)
        values (${id}, ${this.req.getUserId()}, true, true,true,true,true, true, true, true, true)`;
-      return id;
-    });
 
-    await sql`insert into presentations ${sql(
-      defaultSongs.map((song) => ({
-        ...song,
-        churchId: insertedId,
-      })),
-    )}`;
+      await sql`insert into presentations ${sql(
+        defaultSongs.map((song) => ({
+          ...song,
+          churchId: id,
+        })),
+      )}`;
+    });
 
     const data = await getUserData(this.req.getUserId());
     return res(200, data);

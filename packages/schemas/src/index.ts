@@ -14,6 +14,7 @@ import { permissionsContract } from "./permissions.schema.js";
 import { paymentsContract } from "./payments.schema.js";
 import { certificatesContract } from "./certificates.schema.js";
 import { presentationsContract } from "./presentations.schema.js";
+import { formsContract } from "./forms.schema.js";
 
 export * from "./members.schema.js";
 export * from "./transactions.schema.js";
@@ -32,6 +33,7 @@ export * from "./general.schema.js";
 export * from "./options.schema.js";
 export * from "./dashboard.schema.js";
 export * from "./presentations.schema.js";
+export * from "./forms.schema.js";
 export * from "./errors.js";
 
 const c = initContract();
@@ -52,4 +54,5 @@ export const contract = c.router({
   permissions: permissionsContract,
   payments: paymentsContract,
   presentations: presentationsContract,
+  forms: formsContract,
 });

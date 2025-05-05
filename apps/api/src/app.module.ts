@@ -15,6 +15,8 @@ import { TreasuriesModule } from './routes/treasuries/treasuries.module';
 import { TransactionsModule } from './routes/transactions/transactions.module';
 import { DashboardModule } from './routes/dashboard/dashboard.module';
 import { PresentationsModule } from './routes/presentations/presentations.module';
+import { FormsModule } from './routes/forms/forms.module';
+
 @Module({
   imports: [
     WebsitesModule,
@@ -33,6 +35,7 @@ import { PresentationsModule } from './routes/presentations/presentations.module
     DashboardModule,
     CertificatesModule,
     PresentationsModule,
+    FormsModule,
   ],
 })
 export class AppModule {}

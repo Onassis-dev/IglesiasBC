@@ -17,12 +17,8 @@ export class TransactionsService {
 
   async read(query: z.infer<typeof getTransactionsSchema>) {
     const rows = await sql`
-    SELECT transactions.*, 
-           financescategories.name as category, 
-           financescategories."isIncome", 
-           COUNT(*) OVER () AS count
+    SELECT transactions.id, date, concept, amount, "categoryId", notes, "treasuryId"
     FROM transactions
-    JOIN financescategories on financescategories.id = transactions."categoryId"
     JOIN treasuries on treasuries.id = transactions."treasuryId"
     WHERE treasuries."churchId" = ${this.req.getChurchId()}
     AND (${query.name ? sql`LOWER(transactions.concept) LIKE LOWER('%' || ${query.name} || '%')` : sql`TRUE`})

@@ -10,7 +10,7 @@ export const showSuccess = (message: string) => {
 };
 
 export const showPromise = (promise: Promise<any>, success: string, loading: string = 'Cargando...') => {
-    toast.promise(
+    return toast.promise(
         promise,
         {
             success: success,

@@ -16,11 +16,11 @@ export class TreasuriesService {
 
   async read(query: z.infer<typeof getTreasurySchema>) {
     const rows = await sql`
-    SELECT *, COUNT(*) OVER () AS count
+    SELECT id, name
     FROM treasuries
     WHERE "churchId" = ${this.req.getChurchId()}
     AND (${query.name ? sql`LOWER(name) LIKE LOWER('%' || ${query.name} || '%')` : sql`TRUE`})
-    ORDER BY id
+    ORDER BY id desc
     LIMIT 10 OFFSET ${10 * (parseInt(query.page) - 1)}
   `;
 

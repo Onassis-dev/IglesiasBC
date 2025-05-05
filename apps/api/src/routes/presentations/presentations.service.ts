@@ -18,7 +18,7 @@ export class PresentationsService {
 
   async read(query: z.infer<typeof getPresentationSchema>) {
     const rows = await sql`
-    SELECT id, title, background, text, COUNT(*) OVER () AS count
+    SELECT id, title, background, text
     FROM presentations
     WHERE "churchId" = ${this.req.getChurchId()}
     AND (${query.title ? sql`LOWER(title) LIKE LOWER('%' || ${query.title} || '%')` : sql`TRUE`})
