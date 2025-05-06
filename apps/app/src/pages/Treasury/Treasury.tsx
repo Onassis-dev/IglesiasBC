@@ -57,10 +57,15 @@ export const Treasury = () => {
         if (!open && !open1) setTimeout(() => setSelectedTransaction({}), 200);
     }, [open, open1]);
 
+    const { data: { body: categoriesList } = {} } = tsr.options.getCategories.useQuery({
+        queryKey: ['categoriesObj'],
+    });
+    const categories = categoriesList ? Object.fromEntries(categoriesList.map(({ id, value }: { id: any; value: any }) => [id, value])) : {};
+
     const columns: Column[] = [
         { title: 'Concepto', data: 'concept' },
         { title: 'Fecha', data: 'date', transform: (e) => displayDate(e), hide: true },
-        { title: 'Categoría', data: 'category', badge: true, hide: true },
+        { title: 'Categoría', data: 'categoryId', badge: true, hide: true, transform: (e: any) => categories[e] },
         { title: 'Cantidad', data: 'amount' },
     ];
 

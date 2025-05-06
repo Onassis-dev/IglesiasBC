@@ -7,29 +7,18 @@ import { calculateAge } from './members.lib';
 import { Button } from '@/components/ui/button';
 
 interface props {
-    id?: number | string;
+    member?: Record<string, any>;
     open: boolean;
     setOpen: (open: boolean) => void;
     setDelete: (open: boolean) => void;
     setEdit: (open: boolean) => void;
 }
 
-const MembersCard = ({ id, open, setOpen, setDelete, setEdit }: props) => {
+const MembersCard = ({ member, open, setOpen, setDelete, setEdit }: props) => {
     const { data: { body: positionsList } = {} } = tsr.options.getPositions.useQuery({
         queryKey: ['positionsObj'],
     });
-
     const positions = positionsList ? Object.fromEntries(positionsList.map(({ id, value }: { id: any; value: any }) => [id, value])) : {};
-
-    const { data: { body: member } = {} } = tsr.members.getOne.useQuery({
-        queryKey: ['member', id],
-        enabled: !!id && open,
-        queryData: {
-            params: {
-                id: String(id),
-            },
-        },
-    });
 
     return (
         <Modal open={open} onOpenChange={setOpen}>

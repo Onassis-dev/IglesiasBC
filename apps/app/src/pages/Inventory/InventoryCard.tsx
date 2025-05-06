@@ -1,25 +1,14 @@
-import { tsr } from '@/lib/boilerplate';
 import { Modal, ModalContent, ModalTitle } from '@/components/ui/auto-modal';
 import { ModalHeader } from '@/components/ui/auto-modal';
 import { Badge } from 'lucide-react';
 
 interface props {
-    id?: string | number;
+    item?: Record<string, any>;
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
-const InventoryCard = ({ id, open, setOpen }: props) => {
-    const { data: { body: item } = {} } = tsr.inventory.getOne.useQuery({
-        queryKey: ['item', id],
-        enabled: !!id && open,
-        queryData: {
-            params: {
-                id: String(id),
-            },
-        },
-    });
-
+const InventoryCard = ({ item, open, setOpen }: props) => {
     return (
         <Modal open={open} onOpenChange={setOpen}>
             <ModalContent className="w-xl">

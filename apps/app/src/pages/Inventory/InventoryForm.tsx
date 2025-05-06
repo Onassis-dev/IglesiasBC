@@ -9,12 +9,12 @@ import { RegisterButton } from '@/components/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PostInventorySchema } from '@iglesiasbc/schemas';
 import { useForm } from 'react-hook-form';
-import { useFormQuery } from '@/lib/hooks/useFormQuery';
 
 interface props {
-    id: string | number;
+    item?: Record<string, any>;
     open: boolean;
     setOpen: (open: boolean) => void;
+    setSelectedItem: (item: Record<string, any>) => void;
 }
 
 const defaultValues: z.infer<typeof PostInventorySchema> = {
@@ -28,23 +28,15 @@ const defaultValues: z.infer<typeof PostInventorySchema> = {
     observations: '',
 };
 
-const InventoryForm = ({ id, open, setOpen }: props) => {
+const InventoryForm = ({ item, open, setOpen, setSelectedItem }: props) => {
     const client = tsr.useQueryClient();
     const itemForm = useForm<z.infer<typeof PostInventorySchema>>({
         resolver: zodResolver(PostInventorySchema),
         defaultValues: defaultValues,
     });
 
-    const item = useFormQuery(tsr.inventory.getOne.useQuery, {
-        queryKey: ['item', id],
-        enabled: !!id && open,
-        queryData: {
-            params: { id: String(id) },
-        },
-    });
-
     const handleSubmit = async (values: z.infer<typeof PostInventorySchema>) => {
-        if (id) await api(tsr.inventory.put, { ...values, id: Number(id) });
+        if (item?.id) await api(tsr.inventory.put, { ...values, id: Number(item.id) });
         else await api(tsr.inventory.post, values);
 
         client.invalidateQueries({ queryKey: ['inventory'] });
@@ -60,17 +52,23 @@ const InventoryForm = ({ id, open, setOpen }: props) => {
     }, [item, itemForm]);
 
     const submit = itemForm.handleSubmit((values: z.infer<typeof PostInventorySchema>) =>
-        showPromise(handleSubmit(values), id ? 'Información actualizada' : 'Artículo registrado')
+        showPromise(handleSubmit(values), item?.id ? 'Información actualizada' : 'Artículo registrado')
     );
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <RegisterButton>Registrar articulo</RegisterButton>
+                <RegisterButton
+                    onClick={() => {
+                        setSelectedItem({});
+                    }}
+                >
+                    Registrar articulo
+                </RegisterButton>
             </SheetTrigger>
             <SheetContent submit={submit}>
                 <SheetHeader>
-                    <SheetTitle>{id ? 'Editar articulo' : 'Registrar articulo'}</SheetTitle>
+                    <SheetTitle>{item?.id ? 'Editar articulo' : 'Registrar articulo'}</SheetTitle>
                 </SheetHeader>
                 <SheetBody>
                     <Form {...itemForm}>

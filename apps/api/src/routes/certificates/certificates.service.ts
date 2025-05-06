@@ -43,7 +43,7 @@ export class CertificatesService {
 
   async get(query: z.infer<typeof getCertificateSchema>) {
     const rows = await sql`
-    SELECT id
+    SELECT id, pastor, pastor2, member, member2, "certificateTypeId", "expeditionDate", url, count(*) OVER() as count
     FROM certificates
     WHERE "churchId" = ${this.req.getChurchId()}
     AND (${query.name ? sql`LOWER("member") LIKE LOWER('%' || ${query.name} || '%')` : sql`TRUE`})

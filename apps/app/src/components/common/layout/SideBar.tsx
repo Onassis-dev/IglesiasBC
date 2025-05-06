@@ -105,9 +105,6 @@ const SideBar = () => {
                     <SideBarButton permRequired={userData.perm_presentations} href="presentations">
                         <Presentation className="size-4" />
                     </SideBarButton>
-                    {/* <SideBarButton permRequired={userData.perm_classes} href="classes">
-            <GraduationCap className="size-4" />
-          </SideBarButton> */}
                     <SideBarButton permRequired={userData.perm_website} href="website">
                         <AppWindow className="size-4" />
                     </SideBarButton>

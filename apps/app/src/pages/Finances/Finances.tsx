@@ -1,5 +1,5 @@
 import '@/lib/boilerplate';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
 import { CircleDollarSign, MinusCircle, PlusCircle } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
@@ -32,10 +32,6 @@ export const Finances = () => {
         queryKey: ['treasuries', 'stats'],
     });
 
-    useEffect(() => {
-        if (!open && !open1) setTimeout(() => setSelectedTreasury({}), 200);
-    }, [open, open1]);
-
     const columns: Column[] = [{ title: 'Tesorería', data: 'name' }];
 
     return (
@@ -62,7 +58,7 @@ export const Finances = () => {
                     setOpen={setOpen1}
                     id={selectedTreasury.id}
                 />
-                <TreasuriesForm open={open} setOpen={setOpen} id={selectedTreasury.id} />
+                <TreasuriesForm open={open} setOpen={setOpen} treasury={selectedTreasury} setSelectedTreasury={setSelectedTreasury} />
             </OptionsGrid>
 
             <CrudTable

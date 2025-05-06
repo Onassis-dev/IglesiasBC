@@ -47,10 +47,18 @@ export class FormsController {
   }
 
   @UseGuards(new AuthGuard('members'))
-  @TsRestHandler(formsContract.importResults)
-  importResults() {
-    return tsRestHandler(formsContract.importResults, async ({ body }) =>
-      this.formsService.importResults(body),
+  @TsRestHandler(formsContract.acceptResults)
+  acceptResults() {
+    return tsRestHandler(formsContract.acceptResults, async ({ body }) =>
+      this.formsService.acceptResults(body),
+    );
+  }
+
+  @UseGuards(new AuthGuard('members'))
+  @TsRestHandler(formsContract.rejectResults)
+  rejectResults() {
+    return tsRestHandler(formsContract.rejectResults, async ({ body }) =>
+      this.formsService.rejectResults(body),
     );
   }
 }

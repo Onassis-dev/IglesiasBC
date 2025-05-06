@@ -5,10 +5,9 @@ const requiredPlans = {
   perm_website: 1,
   perm_blog: 1,
   perm_certificates: 1,
-  perm_presentations: 2,
-  perm_finances: 2,
+  perm_presentations: 0,
+  perm_finances: 1,
   perm_inventory: 2,
-  perm_classes: 2,
 };
 
 export const getUserData = async (userId: string) => {

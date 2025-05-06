@@ -4,16 +4,19 @@ import { api, tsr } from '@/lib/boilerplate';
 import { Modal, ModalContent, ModalDescription, ModalTitle, ModalTrigger } from '@/components/ui/auto-modal';
 import { ModalHeader } from '@/components/ui/auto-modal';
 import { ActionButton, Button } from '@/components/ui/button';
-import { Copy, Download, FileUp, ExternalLink, FileSpreadsheet, LinkIcon } from 'lucide-react';
+import { Download, FileUp, ExternalLink, FileSpreadsheet, LinkIcon, Share2Icon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
-import { showPromise, showSuccess } from '@/lib/showFunctions';
+import { showPromise } from '@/lib/showFunctions';
 import { useQueryStore } from '@/lib/store';
 import UpdateUrl from './UpdateUrl';
+import FormResults from './FormResults';
+import Share from '@/components/common/Share';
 
 const ImportMembers = () => {
     const [selectedFile, setSelectedFile] = useState<any>([]);
     const [open, setOpen] = useState(false);
+    const [openResults, setOpenResults] = useState(false);
     const [openUpdateUrl, setOpenUpdateUrl] = useState(false);
     const client = useQueryStore((queryClient) => queryClient.queryClient);
 
@@ -38,11 +41,6 @@ const ImportMembers = () => {
 
         client.refetchQueries({ queryKey: ['members'] });
         setOpen(false);
-    };
-
-    const copyLink = async () => {
-        await navigator.clipboard.writeText(getFormUrl(formUrl));
-        showSuccess('Enlace copiado');
     };
 
     const getFormUrl = (id?: string) => {
@@ -94,16 +92,27 @@ const ImportMembers = () => {
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <Input value={getFormUrl(formUrl)} readOnly className="font-mono text-sm" />
-                                    <Button variant="outline" size="icon" className="shrink-0" onClick={copyLink}>
-                                        <Copy className="size-4" />
-                                    </Button>
+
+                                    <Share url={getFormUrl(formUrl)} title="Formulario de registro">
+                                        <Button variant="outline" size="icon" className="shrink-0">
+                                            <Share2Icon className="size-4 cursor-pointer" />
+                                        </Button>
+                                    </Share>
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-end gap-2 flex-wrap px-0 sm:px-6">
                                 <Button variant="outline" className="w-full sm:w-auto" onClick={() => setOpenUpdateUrl(true)}>
                                     Actualizar url
                                 </Button>
-                                <Button className="w-full sm:w-auto">Ver respuestas</Button>
+                                <Button
+                                    className="w-full sm:w-auto"
+                                    onClick={() => {
+                                        setOpenResults(true);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    Ver respuestas
+                                </Button>
                             </CardFooter>
                         </Card>
                     </TabsContent>
@@ -149,6 +158,7 @@ const ImportMembers = () => {
                 </Tabs>
             </ModalContent>
             <UpdateUrl open={openUpdateUrl} onOpenChange={setOpenUpdateUrl} />
+            <FormResults open={openResults} setOpen={setOpenResults} />
         </Modal>
     );
 };

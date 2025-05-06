@@ -25,7 +25,7 @@ export class InventoryService {
   async read(query: z.infer<typeof getInventorySchema>) {
     //Ambos filtros deben de ser iguales
     const rows = await sql`
-    SELECT id, name, amount, price, brand, model, serie, bill, observations
+    SELECT id, name, amount, price, brand, model, serie, bill, observations, count(*) OVER() as count
     FROM inventory
     WHERE "churchId" = ${this.req.getChurchId()} 
     AND (${query.name ? sql`LOWER(name) LIKE LOWER('%' || ${query.name} || '%')` : sql`TRUE`})

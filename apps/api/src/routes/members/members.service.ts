@@ -20,11 +20,11 @@ export class MembersService {
 
   async get(dto: z.infer<typeof getMembersSchema>) {
     const rows = await sql`
-    SELECT id, name, cellphone, email, baptized, email, birthday, "joinDate", "countryCode", "positionId", genre, "civilStatus"
+    SELECT id, name, cellphone, email, baptized, email, birthday, "joinDate", "countryCode", "positionId", genre, "civilStatus", count(*) OVER() as count
     FROM members
     WHERE "churchId" = ${this.req.getChurchId()}
     AND (${dto.name ? sql`LOWER(name) LIKE LOWER('%' || ${dto.name} || '%')` : sql`TRUE`})
-    ORDER BY id
+    ORDER BY id desc
     LIMIT 10 OFFSET ${10 * (parseInt(dto.page) - 1)}
   `;
 
@@ -189,17 +189,22 @@ export class MembersService {
 
       member.cellphone = member.cellphone?.toString() || null;
       member.email = member.email?.toString() || null;
+      member.birthday = new Date(member.birthday);
+      member.joinDate = new Date(member.joinDate);
+
       PostMemberSchema.parse(member);
     });
 
     await sql.begin(async (sql) => {
-      const membersCount = (
-        await sql`select count(*) from members where "churchId" = ${this.req.getChurchId()}`
-      )[0].count;
+      const membersCount = Number(
+        (
+          await sql`select count(*) from members where "churchId" = ${this.req.getChurchId()}`
+        )[0].count,
+      );
 
       if (membersCount + members.length > memberLimits[this.req.getPlan()])
         throw new HttpException(
-          'Haz alcanzado el limite de miembros, elimina miembros inactivos o cambia a un plan superior',
+          'Haz alcanzado el limite de miembros, elimina miembros o cambia a un plan superior',
           400,
         );
 

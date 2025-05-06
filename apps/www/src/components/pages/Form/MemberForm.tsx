@@ -20,11 +20,13 @@ import {
 } from "@/components/ui/select";
 import PhoneInput from "@/components/ui/phone-input";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 import DatePicker from "@/components/ui/DatePicker";
 import { formatToUTC } from "@/lib/timeFunctions";
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { customErrorMap } from "@iglesiasbc/schemas";
+import { z } from "zod";
+z.setErrorMap(customErrorMap);
 
 const defaultValues: z.infer<typeof PostMemberSchema> = {
   name: "",
@@ -90,7 +92,8 @@ export default function MemberForm() {
     );
 
     if (!response.ok) {
-      console.error("Failed to submit form");
+      setLoading(false);
+      alert("Error al enviar el formulario");
     }
 
     setSubmitted(true);
@@ -246,7 +249,7 @@ export default function MemberForm() {
             Teléfono
             <span className="text-xs text-muted-foreground"> (opcional)</span>
           </FormLabel>
-          <div className="flex w-full">
+          <div className="flex w-full flex-wrap">
             <FormField
               control={membersForm.control}
               name="countryCode"
@@ -269,10 +272,10 @@ export default function MemberForm() {
                     <Input
                       value={field.value || ""}
                       onChange={field.onChange}
-                      className="rounded-l-none border-l-0"
+                      className="rounded-l-none border-l-0 flex-1"
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="w-full" />
                 </>
               )}
             />

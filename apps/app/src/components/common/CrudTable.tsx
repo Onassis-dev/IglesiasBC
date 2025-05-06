@@ -53,12 +53,11 @@ export const CrudTable = ({
                             data?.map((row: any) => (
                                 <TableRow className="w-full" key={row.id}>
                                     {columns?.map((column) => {
-                                        const cellContent =
-                                            Array.isArray(column.data) && column.transform
-                                                ? column.transform(column.data.map((data) => row[data]))
-                                                : column.transform
-                                                  ? column.transform(row[column.data as string])
-                                                  : row[column.data as string];
+                                        const cellContent = Array.isArray(column.data)
+                                            ? column.data.map((data) => row[data])
+                                            : column.transform
+                                              ? column.transform(row[column.data as string])
+                                              : row[column.data as string];
 
                                         return (
                                             <TableCell

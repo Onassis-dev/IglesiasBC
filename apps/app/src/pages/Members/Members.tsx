@@ -1,6 +1,6 @@
 import '@/lib/boilerplate';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
 import { BadgeCheck, User, UserCheck2 } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
@@ -41,14 +41,14 @@ export function Members() {
     const { data: { body: birthdays } = {} } = tsr.members.getBirthdays.useQuery({
         queryKey: ['members', 'birthdays'],
     });
-
-    useEffect(() => {
-        if (!open && !open1 && !open2) setSelectedMember({});
-    }, [open, open1, open2]);
+    const { data: { body: positionsList } = {} } = tsr.options.getPositions.useQuery({
+        queryKey: ['positionsObj'],
+    });
+    const positions = positionsList ? Object.fromEntries(positionsList.map(({ id, value }: { id: any; value: any }) => [id, value])) : {};
 
     const columns: Column[] = [
         { title: 'Nombre', data: 'name' },
-        { title: 'Tipo', data: 'positionId', badge: true },
+        { title: 'Tipo', data: 'positionId', badge: true, transform: (e: any) => positions[e] },
         { title: 'Teléfono', data: 'cellphone', hide: true },
         { title: 'Correo', data: 'email', hide: true },
     ];
@@ -80,9 +80,9 @@ export function Members() {
                 />
                 <div className="flex gap-2">
                     <ImportMembers />
-                    <MembersForm open={open} setOpen={setOpen} id={selectedMember.id} />
+                    <MembersForm open={open} setOpen={setOpen} member={selectedMember} setSelectedMember={setSelectedMember} />
                 </div>
-                <MembersCard open={open1} setOpen={setOpen1} id={selectedMember.id} setDelete={setOpen2} setEdit={setOpen} />
+                <MembersCard open={open1} setOpen={setOpen1} member={selectedMember} setDelete={setOpen2} setEdit={setOpen} />
             </OptionsGrid>
 
             <CrudTable

@@ -9,63 +9,61 @@ import { RegisterButton } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PostTreasurySchema } from '@iglesiasbc/schemas';
-import { useFormQuery } from '@/lib/hooks/useFormQuery';
 
 interface props {
-    id: string | number;
+    treasury?: Record<string, any>;
     open: boolean;
     setOpen: (open: boolean) => void;
+    setSelectedTreasury: (treasury: Record<string, any>) => void;
 }
 
 const defaultValues: z.infer<typeof PostTreasurySchema> = {
     name: '',
 };
 
-const TreasuriesForm = ({ open, setOpen, id }: props) => {
+const TreasuriesForm = ({ treasury, open, setOpen, setSelectedTreasury }: props) => {
     const client = tsr.useQueryClient();
     const treasuryForm = useForm<z.infer<typeof PostTreasurySchema>>({
         resolver: zodResolver(PostTreasurySchema),
         defaultValues: defaultValues,
     });
 
-    const item = useFormQuery(tsr.treasuries.getOne.useQuery, {
-        queryKey: ['treasuryData', id],
-        enabled: !!id && open,
-        queryData: {
-            params: { id: String(id) },
-        },
-    });
-
     useEffect(() => {
-        if (item) {
+        if (treasury?.id) {
             treasuryForm.reset({
-                ...item,
+                ...treasury,
             });
         } else {
             treasuryForm.reset(defaultValues);
         }
-    }, [item, treasuryForm]);
+    }, [treasury, treasuryForm]);
 
     const handleSubmit = async (values: z.infer<typeof PostTreasurySchema>) => {
-        if (id) await api(tsr.treasuries.put, { ...values, id: Number(id) });
-        if (!id) await api(tsr.treasuries.post, values);
+        if (treasury?.id) await api(tsr.treasuries.put, { ...values, id: Number(treasury.id) });
+        if (!treasury?.id) await api(tsr.treasuries.post, values);
 
         client.invalidateQueries({ queryKey: ['treasuries'] });
         setOpen(false);
     };
 
     const submit = treasuryForm.handleSubmit((values: z.infer<typeof PostTreasurySchema>) =>
-        showPromise(handleSubmit(values), id ? 'Información actualizada' : 'Tesorería registrada')
+        showPromise(handleSubmit(values), treasury?.id ? 'Información actualizada' : 'Tesorería registrada')
     );
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <RegisterButton>Registrar tesorería</RegisterButton>
+                <RegisterButton
+                    onClick={() => {
+                        setSelectedTreasury({});
+                    }}
+                >
+                    Registrar tesorería
+                </RegisterButton>
             </SheetTrigger>
             <SheetContent submit={submit}>
                 <SheetHeader>
-                    <SheetTitle>{id ? 'Editar tesorería' : 'Registrar  tesorería'}</SheetTitle>
+                    <SheetTitle>{treasury?.id ? 'Editar tesorería' : 'Registrar tesorería'}</SheetTitle>
                 </SheetHeader>
                 <SheetBody>
                     <Form {...treasuryForm}>

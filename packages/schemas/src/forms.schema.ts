@@ -2,7 +2,7 @@ import { z } from "zod";
 import { initContract } from "@ts-rest/core";
 import { PostMemberSchema } from "./members.schema";
 
-export const importResultsSchema = z.array(z.any());
+export const ResultsSchema = z.array(z.number());
 export const submitFormSchema = PostMemberSchema.extend({
   id: z.string().uuid(),
 });
@@ -56,13 +56,22 @@ export const formsContract = c.router(
       },
     },
 
-    importResults: {
+    acceptResults: {
       method: "POST",
-      path: "/import",
+      path: "/accept",
       responses: {
         200: z.any(),
       },
-      body: importResultsSchema,
+      body: ResultsSchema,
+    },
+
+    rejectResults: {
+      method: "POST",
+      path: "/reject",
+      responses: {
+        200: z.any(),
+      },
+      body: ResultsSchema,
     },
   },
   { pathPrefix: "/forms" }

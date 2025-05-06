@@ -12,13 +12,13 @@ import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle, SheetTrigger }
 import { PostMemberSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useFormQuery } from '@/lib/hooks/useFormQuery';
 import PhoneInput from '@/components/ui/phone-input';
 
 interface props {
-    id: string | number;
+    member?: Record<string, any>;
     open: boolean;
     setOpen: (open: boolean) => void;
+    setSelectedMember: (member: Record<string, any>) => void;
 }
 
 const defaultValues: z.infer<typeof PostMemberSchema> = {
@@ -34,21 +34,11 @@ const defaultValues: z.infer<typeof PostMemberSchema> = {
     countryCode: '+52',
 };
 
-const MembersForm = ({ id, open, setOpen }: props) => {
+const MembersForm = ({ member, open, setOpen, setSelectedMember }: props) => {
     const client = tsr.useQueryClient();
     const membersForm = useForm<z.infer<typeof PostMemberSchema>>({
         resolver: zodResolver(PostMemberSchema),
         defaultValues: defaultValues,
-    });
-
-    const member = useFormQuery(tsr.members.getOne.useQuery, {
-        queryKey: ['member', id],
-        enabled: !!id && open,
-        queryData: {
-            params: {
-                id: String(id),
-            },
-        },
     });
 
     async function sendData(values: z.infer<typeof PostMemberSchema>) {
@@ -58,15 +48,15 @@ const MembersForm = ({ id, open, setOpen }: props) => {
             joinDate: formatToUTC(values.joinDate) || values.joinDate,
         };
 
-        if (id) await api(tsr.members.put, { ...body, id: Number(id) });
-        if (!id) await api(tsr.members.post, body);
+        if (member?.id) await api(tsr.members.put, { ...body, id: Number(member.id) });
+        if (!member?.id) await api(tsr.members.post, body);
 
         client.invalidateQueries({ queryKey: ['members'] });
         setOpen(false);
     }
 
     useEffect(() => {
-        if (member) {
+        if (member?.id) {
             membersForm.reset({
                 ...member,
                 birthday: member.birthday ? formatToTZ(member.birthday) || '' : '',
@@ -85,17 +75,23 @@ const MembersForm = ({ id, open, setOpen }: props) => {
 
     const submit = membersForm.handleSubmit((values: z.infer<typeof PostMemberSchema>) => {
         if (!values.cellphone) values.countryCode = null;
-        showPromise(sendData(values), id ? 'Información actualizada' : 'Miembro registrado');
+        showPromise(sendData(values), member?.id ? 'Información actualizada' : 'Miembro registrado');
     });
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <RegisterButton>Registrar miembro</RegisterButton>
+                <RegisterButton
+                    onClick={() => {
+                        setSelectedMember({});
+                    }}
+                >
+                    Registrar miembro
+                </RegisterButton>
             </SheetTrigger>
             <SheetContent submit={submit}>
                 <SheetHeader>
-                    <SheetTitle>{id ? 'Editar miembro' : 'Registrar miembro'}</SheetTitle>
+                    <SheetTitle>{member?.id ? 'Editar miembro' : 'Registrar miembro'}</SheetTitle>
                 </SheetHeader>
                 <SheetBody>
                     <Form {...membersForm}>

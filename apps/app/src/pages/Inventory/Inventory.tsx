@@ -1,6 +1,6 @@
 import '@/lib/boilerplate';
 import { ActionButton } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { tsr } from '@/lib/boilerplate';
 import { Boxes, DollarSign, FileDown, Package } from 'lucide-react';
 import DeleteDialog from '@/components/common/DeleteDialog';
@@ -43,10 +43,6 @@ export function Inventory() {
         downloadFile(buffer, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Inventario.xlsx');
     };
 
-    useEffect(() => {
-        if (!open && !open1 && !open2) setTimeout(() => setSelectedItem({}), 200);
-    }, [open, open1, open2]);
-
     const columns: Column[] = [
         { title: 'Nombre', data: 'name' },
         { title: 'Marca', data: 'brand', hide: true },
@@ -77,7 +73,7 @@ export function Inventory() {
                         <FileDown className="size-3.5" />
                     </ActionButton>
 
-                    <InventoryForm open={open} setOpen={setOpen} id={selectedItem.id} />
+                    <InventoryForm open={open} setOpen={setOpen} item={selectedItem} setSelectedItem={setSelectedItem} />
                 </div>
                 <DeleteDialog
                     text="¿Estás seguro de eliminar este artículo?"
@@ -87,7 +83,7 @@ export function Inventory() {
                     successMessage="Artículo eliminado"
                     id={selectedItem.id}
                 />
-                <InventoryCard open={open1} setOpen={setOpen1} id={selectedItem.id} />
+                <InventoryCard open={open1} setOpen={setOpen1} item={selectedItem} />
             </OptionsGrid>
 
             <CrudTable

@@ -16,7 +16,7 @@ export class TreasuriesService {
 
   async read(query: z.infer<typeof getTreasurySchema>) {
     const rows = await sql`
-    SELECT id, name
+    SELECT id, name, count(*) OVER() as count
     FROM treasuries
     WHERE "churchId" = ${this.req.getChurchId()}
     AND (${query.name ? sql`LOWER(name) LIKE LOWER('%' || ${query.name} || '%')` : sql`TRUE`})

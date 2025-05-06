@@ -17,7 +17,7 @@ export class TransactionsService {
 
   async read(query: z.infer<typeof getTransactionsSchema>) {
     const rows = await sql`
-    SELECT transactions.id, date, concept, amount, "categoryId", notes, "treasuryId"
+    SELECT transactions.id, date, concept, amount, "categoryId", notes, "treasuryId", count(*) OVER() as count
     FROM transactions
     JOIN treasuries on treasuries.id = transactions."treasuryId"
     WHERE treasuries."churchId" = ${this.req.getChurchId()}

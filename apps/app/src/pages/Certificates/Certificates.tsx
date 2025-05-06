@@ -40,10 +40,15 @@ const Certificates = () => {
         window.open(row.url, '_blank');
     };
 
+    const { data: { body: typesList } = {} } = tsr.options.getCertificateTypes.useQuery({
+        queryKey: ['certificateTypesObj'],
+    });
+    const types = typesList ? Object.fromEntries(typesList.map(({ id, value }: { id: any; value: any }) => [id, value])) : {};
+
     const columns: Column[] = [
         { title: 'Miembros', data: ['member', 'member2'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || '') },
         { title: 'Pastores', data: ['pastor', 'pastor2'], transform: (e) => e[0] + ((e[1] && `, ${e[1]}`) || ''), hide: true },
-        { title: 'Tipo', data: 'type', badge: true },
+        { title: 'Tipo', data: 'certificateTypeId', badge: true, transform: (e: any) => types[e] },
         {
             title: 'Fecha de expedición',
             data: 'expeditionDate',

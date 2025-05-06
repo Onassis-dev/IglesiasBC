@@ -3,7 +3,7 @@ import { z } from 'zod';
 import sql from 'src/utils/db';
 import { ContextProvider } from 'src/interceptors/contextProvider';
 import { res } from 'src/utils/response';
-import { importResultsSchema, submitFormSchema } from '@iglesiasbc/schemas';
+import { ResultsSchema, submitFormSchema } from '@iglesiasbc/schemas';
 
 @Injectable()
 export class FormsService {
@@ -26,8 +26,8 @@ export class FormsService {
   }
 
   async getResults() {
-    const [results] =
-      await sql`select * from formresults where churchId = ${this.req.getChurchId()}`;
+    const results =
+      await sql`select * from formresults where "churchId" = ${this.req.getChurchId()} order by id desc`;
 
     return res(200, results);
   }
@@ -44,7 +44,20 @@ export class FormsService {
     return res(200, form.form);
   }
 
-  async importResults(body: z.infer<typeof importResultsSchema>) {
+  async acceptResults(body: z.infer<typeof ResultsSchema>) {
+    await sql.begin(async (sql) => {
+      await sql`insert into members (name, "churchId", "positionId", "cellphone", "email", "birthday", "genre", "civilStatus" , "joinDate")
+        select name, "churchId", "positionId", "cellphone", "email", "birthday", "genre", "civilStatus" , "joinDate"
+        from formresults where id in ${sql(body)} and "churchId" = ${this.req.getChurchId()}`;
+    });
+
+    await sql`delete from formresults where id in ${sql(body)} and "churchId" = ${this.req.getChurchId()}`;
+
     return res(200, body);
+  }
+
+  async rejectResults(body: z.infer<typeof ResultsSchema>) {
+    await sql`delete from formresults where id in ${sql(body)} and "churchId" = ${this.req.getChurchId()}`;
+    return res(200, null);
   }
 }
