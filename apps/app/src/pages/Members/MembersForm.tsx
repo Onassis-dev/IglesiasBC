@@ -118,7 +118,7 @@ const MembersForm = ({ member, open, setOpen, setSelectedMember }: props) => {
                                         <FormItem>
                                             <FormControl>
                                                 <PhoneInput
-                                                    value={field.value || '+52'}
+                                                    value={field.value || ''}
                                                     onChange={field.onChange}
                                                     className="pl-2 pr-1 w-[4rem] justify-end rounded-r-none"
                                                 />

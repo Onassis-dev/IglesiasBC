@@ -46,8 +46,8 @@ export class FormsService {
 
   async acceptResults(body: z.infer<typeof ResultsSchema>) {
     await sql.begin(async (sql) => {
-      await sql`insert into members (name, "churchId", "positionId", "cellphone", "email", "birthday", "genre", "civilStatus" , "joinDate")
-        select name, "churchId", "positionId", "cellphone", "email", "birthday", "genre", "civilStatus" , "joinDate"
+      await sql`insert into members (name, "churchId", "positionId", "cellphone", "email", "birthday", "genre", "civilStatus" , "joinDate", "countryCode")
+        select name, "churchId", "positionId", "cellphone", "email", "birthday", "genre", "civilStatus" , "joinDate", "countryCode"
         from formresults where id in ${sql(body)} and "churchId" = ${this.req.getChurchId()}`;
     });
 

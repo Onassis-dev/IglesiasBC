@@ -67,6 +67,7 @@ export default function MemberForm() {
   const submit = membersForm.handleSubmit(
     (values: z.infer<typeof PostMemberSchema>) => {
       if (!values.cellphone) values.countryCode = null;
+
       setLoading(true);
       handleSubmit(values);
     }
@@ -97,6 +98,7 @@ export default function MemberForm() {
     }
 
     setSubmitted(true);
+    window.scrollTo(0, 0);
   };
 
   if (submitted) {
@@ -256,7 +258,7 @@ export default function MemberForm() {
               render={({ field }) => (
                 <FormControl>
                   <PhoneInput
-                    value={field.value || "+52"}
+                    value={field.value || ""}
                     onChange={field.onChange}
                     className="pl-2 pr-1 w-[4rem] justify-end rounded-r-none"
                   />
