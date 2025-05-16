@@ -21,12 +21,12 @@ interface props {
 }
 
 const defaultValues: z.infer<typeof PostCertificateSchema> = {
-    certificateTypeId: '3',
-    expeditionDate: new Date(),
-    member: 'John Doe',
+    certificateTypeId: '',
+    expeditionDate: '',
+    member: '',
     member2: '',
-    pastor: 'Pastor Doe',
-    pastor2: 'Pastor Doe',
+    pastor: '',
+    pastor2: '',
     design: '',
     validate: false,
 };
