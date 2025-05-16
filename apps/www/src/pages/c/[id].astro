@@ -7,10 +7,25 @@ const { id } = Astro.params;
 let website: Record<string, any> | null;
 let certificate: Record<string, any> | null;
 
+function base64UrlToHexUUID(base64url?: string) {
+  if (!base64url) return "";
+
+  const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
+
+  const padLength = 4 - (base64.length % 4);
+  const padded = base64 + "=".repeat(padLength % 4);
+
+  const binary = atob(padded);
+  const hex = Array.from(binary)
+    .map((c) => c.charCodeAt(0).toString(16).padStart(2, "0"))
+    .join("");
+
+  // Aplica el formato UUID
+  return hex.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+}
+
 try {
-  const code = Buffer.from(id || "", "base64url")
-    ?.toString("hex")
-    ?.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+  const code = base64UrlToHexUUID(id);
 
   const response = await fetch(
     `${import.meta.env.PUBLIC_API_BASE}/websites/certificate?code=${code}`
