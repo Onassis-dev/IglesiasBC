@@ -1,0 +1,33 @@
+---
+export const prerender = false;
+
+import BaseLayout from "../../layouts/IndexLayout.astro";
+import CertficateCheck from "@/components/pages/certificates/CertficateCheck.astro";
+const { id } = Astro.params;
+let website: Record<string, any> | null;
+let certificate: Record<string, any> | null;
+
+try {
+  const code = Buffer.from(id || "", "base64url")
+    .toString("hex")
+    .replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+
+  const response = await fetch(
+    `${import.meta.env.PUBLIC_API_BASE}/websites/certificate?code=${code}`
+  );
+
+  ({ website, certificate } = await response.json());
+  console.log(certificate);
+} catch (error) {
+  return new Response(null, {
+    status: 500,
+  });
+}
+---
+
+<BaseLayout title={`Certificado`}>
+  <CertficateCheck
+    certificate={certificate || null}
+    website={website || null}
+  />
+</BaseLayout>

@@ -75,7 +75,7 @@ const Certificates = () => {
                 <SearchInput placeholder="Buscar..." value={filters.name} onChange={(e) => setFilters({ ...filters, name: e.target.value })} />
 
                 <DeleteDialog
-                    text="Desea eliminar este certificado?"
+                    text="¿Estas seguro que deseas eliminar este certificado? Si borras este certificado, dejaras de poder verificar su autenticidad mediante el codigo QR."
                     path="certificates"
                     open={open1}
                     setOpen={setOpen1}

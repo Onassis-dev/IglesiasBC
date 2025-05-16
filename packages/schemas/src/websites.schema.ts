@@ -10,6 +10,10 @@ export const getWebsitePostSchema = z.object({
   post: z.string(),
 });
 
+export const getCertificateDataSchema = z.object({
+  code: z.string(),
+});
+
 // Contract
 const c = initContract();
 
@@ -59,6 +63,15 @@ export const websitesContract = c.router(
         404: z.object({ message: z.string() }),
       },
       query: getWebsitePostSchema,
+    },
+    getCertificate: {
+      path: "/certificate",
+      method: "GET",
+      responses: {
+        200: z.any(),
+        404: z.object({ message: z.string() }),
+      },
+      query: getCertificateDataSchema,
     },
   },
   {

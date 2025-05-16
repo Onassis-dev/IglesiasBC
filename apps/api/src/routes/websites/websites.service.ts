@@ -1,5 +1,9 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { getWebsitePostSchema, getWebsiteSchema } from '@iglesiasbc/schemas';
+import {
+  getCertificateDataSchema,
+  getWebsitePostSchema,
+  getWebsiteSchema,
+} from '@iglesiasbc/schemas';
 import { z } from 'zod';
 import sql from 'src/utils/db';
 import { parseTitle } from 'src/utils/commonUtils';
@@ -76,6 +80,23 @@ export class WebsitesService {
       return res(200, { website, post });
     } catch (err) {
       throw new HttpException('No se encontro la pagina', 404);
+    }
+  }
+
+  async getCertificate(query: z.infer<typeof getCertificateDataSchema>) {
+    try {
+      const [certificate] =
+        await sql`select * from certificates where code = ${query.code}`;
+      if (!certificate)
+        throw new HttpException('No se encontro el certificado', 400);
+
+      let [website] =
+        await sql`select (select plan from churches where id = "churchId"), "title" from "websites" where "churchId" = ${certificate.churchId}`;
+      if (website?.plan === 0) website = null;
+
+      return res(200, { website, certificate });
+    } catch (err) {
+      throw new HttpException('No se encontro el certificado', 400);
     }
   }
 }

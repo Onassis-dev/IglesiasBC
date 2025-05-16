@@ -9,24 +9,24 @@ export const getCertificateText = (
   date: Date,
   churchName: string,
 ) => {
-  const dateStr = format(date, 'PPPP', { locale: es });
+  const dateStr = format(date, 'PPP', { locale: es });
 
   if (type === 'Bautizo')
     return `Ha recibido el sacramento del bautismo, incorporándose así a la comunidad de la Iglesia y siendo acogido como miembro del cuerpo de Cristo el día ${dateStr} en la iglesia ${churchName}.`;
 
-  if (type === 'Confirmacion')
+  if (type === 'Confirmación')
     return `Ha recibido el sacramento de la confirmación, reafirmando su fe y compromiso con Cristo el día ${dateStr} en la iglesia ${churchName}.`;
 
   if (type === 'Matrimonio')
     return `Han celebrado el sacramento del matrimonio, uniéndose en sagrado vínculo de amor y compromiso el día ${dateStr} en la iglesia ${churchName}.`;
 
-  if (type === 'Membresia')
+  if (type === 'Membresía')
     return `Ha sido aceptado como miembro de pleno derecho de nuestra comunidad, comprometiéndose a vivir y promover los valores y principios que nos guían el día ${dateStr} en la iglesia ${churchName}.`;
 
   if (type === 'Quince años')
     return `Ha celebrado su quinceañera, marcando su transición de niña a mujer bajo la bendición de Dios el día ${dateStr} en la iglesia ${churchName}.`;
 
-  if (type === 'Recomendacion')
+  if (type === 'Recomendación')
     return `Ha recibido esta recomendación por su testimonio de fe y buen comportamiento cristiano, otorgada el día ${dateStr} en la iglesia ${churchName}.`;
 
   return '';
@@ -62,7 +62,7 @@ export const drawCenteredText = (props: {
 
   lines.push(currentLine);
 
-  const lineHeight = props.size * 1.2;
+  const lineHeight = props.size;
   let currentY = props.y;
 
   lines.forEach((line) => {
@@ -137,7 +137,78 @@ export const drawAlignedLine = (props: {
   });
 };
 
-export type Font = 'playfair' | 'Allura-Regular';
+export type Font =
+  | 'playfair'
+  | 'Allura-Regular'
+  | 'GildaDisplay-Regular'
+  | 'Lato-Bold'
+  | 'Lato-Regular'
+  | 'Lato-Thin'
+  | 'LibreBaskerville-Bold'
+  | 'LibreBaskerville-Italic'
+  | 'LibreBaskerville-Regular'
+  | 'playfair'
+  | 'Poppins-Bold'
+  | 'Poppins-Regular'
+  | 'Poppins-Thin'
+  | 'Radley-Italic'
+  | 'Radley-Regular'
+  | 'Montserrat-Bold'
+  | 'Montserrat-Regular'
+  | 'Montserrat-Thin'
+  | 'Montserrat-Medium'
+  | 'SendFlowers-Regular'
+  | 'MsMadi-Regular';
+
+export type CertificateParams = {
+  image: {
+    y: number;
+    height: number;
+  };
+  title: {
+    y: number;
+    size: number;
+    color: RGB;
+    font: Font;
+    text: (type: string) => string;
+  };
+  subtitle?: {
+    y: number;
+    size: number;
+    color: RGB;
+    font: Font;
+    text: (type: string) => string;
+  };
+  members: {
+    y: number;
+    size: number;
+    color: RGB;
+    font: Font;
+    maxWidth: number;
+    offset?: number;
+  };
+  text: {
+    y: number;
+    size: number;
+    color: RGB;
+    font: Font;
+    maxWidth: number;
+  };
+  signs: {
+    y: number;
+    font: Font;
+    size: number;
+    color: RGB;
+    offset: number;
+    centerX: number;
+  };
+  qr: {
+    y: number;
+    x: number | 'center';
+    size: number;
+    color: string;
+  };
+};
 
 export const loadFont = (font: Font) => {
   return fs.readFileSync(

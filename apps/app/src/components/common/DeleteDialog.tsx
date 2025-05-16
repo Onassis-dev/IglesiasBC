@@ -39,7 +39,7 @@ const DeleteDialog = ({ text, setOpen, open, id, successMessage, path }: props) 
             <AlertDialogContent>
                 <div className="w-full flex-none flex flex-col  items-center gap-6 mb-2">
                     <AlertTriangle className="text-destructive bg-destructive-background p-3 size-20 rounded-xl" />
-                    <AlertDialogDescription className="text-md text-foreground">{text}</AlertDialogDescription>
+                    <AlertDialogDescription className="text-md text-foreground text-center">{text}</AlertDialogDescription>
                 </div>
                 <AlertDialogFooter className="sm:justify-center sm:gap-4 sm:space-x-0">
                     <AlertDialogCancel>Cancelar</AlertDialogCancel>

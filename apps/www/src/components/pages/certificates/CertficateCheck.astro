@@ -1,0 +1,56 @@
+---
+import { displayDate } from "@/lib/timeFunctions";
+import { AlertCircle, Check, CheckCircle, CheckCircle2 } from "lucide-react";
+
+interface Props {
+  certificate: Record<string, any> | null;
+  website: Record<string, any> | null;
+}
+const { certificate, website }: Props = Astro.props;
+---
+
+<section class="mt-10">
+  <div class="flex flex-col items-center border rounded-xl max-w-xl mx-auto p-6 text-center">
+    {
+      certificate && (
+        <CheckCircle2
+          className="size-20 text-green bg-green-background rounded-full"
+          strokeWidth={1.5}
+        />
+        <p class="mt-4">Este certificado fue emitido por la iglesia:</p>
+        <p class="text-lg font-bold">{certificate.church}</p>
+
+        <p class="mt-4">Para:</p>
+        <p class="text-lg font-bold">{certificate.member} {certificate.member2 && `, ${certificate.member2}`}</p>
+
+        <p class="mt-4" >El dia:</p>
+        <p class="text-lg font-bold">{displayDate(certificate.expeditionDate)}</p>
+
+        <>
+        {!website && (
+          <div class="text-sm text-muted-foreground p-2 text-orange-500 rounded-md bg-orange-50 border border-orange-500 flex gap-2 items-center mt-6">
+            <AlertCircle className="size-4" />
+            La iglesia no tiene una pagina web.
+          </div>
+        )}
+
+        {website && (
+          <a 
+          class="bg-foreground text-background px-4 py-2 rounded-md mt-6 text-sm font-medium"
+          href={'/' + website.title}>Ver pagina</a>
+        )}
+      </>
+    )}
+    {
+      !certificate && (
+      <AlertCircle
+          className="size-20 text-yellow bg-yellow-background rounded-full"
+          strokeWidth={1.5}
+        />
+        <p class="text-lg font-semibold">Certificado no encontrado</p>
+        <p>No se ah podido verificar la autenticidad del certificado, es posible que el certificado no exista o ha sido revocado.        </p>
+      
+      )
+    }
+  </div>
+</section>

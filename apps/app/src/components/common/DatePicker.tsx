@@ -66,9 +66,13 @@ const DatePicker = ({ field }: any) => {
                     if (!isNaN(date.getTime())) {
                         field.onChange(date);
                     } else {
-                        showError('Fecha inválida');
-                        field.onChange(field.value);
-                        setDate('');
+                        if (!field.value) {
+                            field.onChange('');
+                        } else {
+                            showError('Fecha inválida');
+                            field.onChange(field.value);
+                            setDate('');
+                        }
                     }
                 }}
                 onChange={updateDate}

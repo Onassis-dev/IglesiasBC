@@ -18,7 +18,7 @@ export class CertificatesService {
 
   async getMembers() {
     const members =
-      await sql`select id, name from members where "churchId" = ${this.req.getChurchId()} order by name`;
+      await sql`select id, name as value from members where "churchId" = ${this.req.getChurchId()} order by name`;
     return res(200, members);
   }
 
@@ -67,14 +67,16 @@ export class CertificatesService {
     if (!data.member2) delete data.member2;
     if (!data.pastor2) delete data.pastor2;
     delete data.design;
+    delete data.validate;
 
-    await sql.begin(async () => {
+    const buffer = await sql.begin(async () => {
       const [certificate] =
-        await sql`insert into certificates ${sql(data)} returning id`;
+        await sql`insert into certificates ${sql(data)} returning id, code`;
 
       const buffer = await createCertificate({
         ...body,
         churchId: this.req.getChurchId(),
+        code: certificate.code,
       });
 
       const url = await uploadImage({
@@ -86,9 +88,11 @@ export class CertificatesService {
       });
 
       await sql`update certificates set url = ${url} where id = ${certificate.id}`;
+
+      return buffer;
     });
 
-    return res(200, null);
+    return res(200, buffer);
   }
 
   async delete(body: z.infer<typeof IdSchema>) {

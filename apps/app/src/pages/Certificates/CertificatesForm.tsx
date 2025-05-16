@@ -6,16 +6,14 @@ import type { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useState, useEffect } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
-import { Button, RegisterButton } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
-import { Command, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { RegisterButton } from '@/components/ui/button';
 import { PostCertificateSchema } from '@iglesiasbc/schemas';
 import DatePicker from '@/components/common/DatePicker';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formatToUTC } from '@/lib/timeFunctions';
-import { cn } from '@/lib/utils';
+import Autocomplete from '@/components/ui/autocomplete';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface props {
     open: boolean;
@@ -23,18 +21,19 @@ interface props {
 }
 
 const defaultValues: z.infer<typeof PostCertificateSchema> = {
-    certificateTypeId: '',
-    expeditionDate: '',
-    member: '',
+    certificateTypeId: '3',
+    expeditionDate: new Date(),
+    member: 'John Doe',
     member2: '',
-    pastor: '',
-    pastor2: '',
+    pastor: 'Pastor Doe',
+    pastor2: 'Pastor Doe',
     design: '',
+    validate: false,
 };
 
 const CertificatesForm = ({ open, setOpen }: props) => {
     const client = tsr.useQueryClient();
-    const membersForm = useForm<z.infer<typeof PostCertificateSchema>>({
+    const certificatesForm = useForm<z.infer<typeof PostCertificateSchema>>({
         resolver: zodResolver(PostCertificateSchema),
         defaultValues: defaultValues,
     });
@@ -48,18 +47,23 @@ const CertificatesForm = ({ open, setOpen }: props) => {
 
     useEffect(() => {
         if (!open) {
-            membersForm.reset(defaultValues);
+            certificatesForm.reset(defaultValues);
             setCertificateId('');
         }
-    }, [open, membersForm]);
+    }, [open, certificatesForm]);
 
     const handleSubmit = async (values: z.infer<typeof PostCertificateSchema>) => {
-        await api(tsr.certificates.create, {
+        const result = await api(tsr.certificates.create, {
             ...values,
             expeditionDate: formatToUTC(values.expeditionDate) || values.expeditionDate,
         });
         client.invalidateQueries({ queryKey: ['certificates'] });
         setOpen(false);
+
+        const pdfBlob = new Blob([result as any], { type: 'application/pdf' });
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
+        URL.revokeObjectURL(url);
     };
 
     const { data: { body: certificates } = {} } = tsr.options.getCertificateTypes.useQuery({
@@ -70,7 +74,7 @@ const CertificatesForm = ({ open, setOpen }: props) => {
         queryKey: ['membersOptions'],
     });
 
-    const submit = membersForm.handleSubmit((values: z.infer<typeof PostCertificateSchema>) =>
+    const submit = certificatesForm.handleSubmit((values: z.infer<typeof PostCertificateSchema>) =>
         showPromise(handleSubmit(values), 'Certificado creado')
     );
 
@@ -84,10 +88,10 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                     <SheetTitle>Crear certificado</SheetTitle>
                 </SheetHeader>
                 <SheetBody>
-                    <Form {...membersForm}>
+                    <Form {...certificatesForm}>
                         <form onSubmit={submit}>
                             <FormField
-                                control={membersForm.control}
+                                control={certificatesForm.control}
                                 name="certificateTypeId"
                                 render={({ field }) => (
                                     <FormItem>
@@ -117,7 +121,7 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                 )}
                             />
                             <FormField
-                                control={membersForm.control}
+                                control={certificatesForm.control}
                                 name="expeditionDate"
                                 render={({ field }) => (
                                     <FormItem>
@@ -131,52 +135,21 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                             />
 
                             <FormField
-                                control={membersForm.control}
+                                control={certificatesForm.control}
                                 name="member"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Miembro</FormLabel>
                                         <FormControl>
-                                            <Popover open={open1} onOpenChange={setOpen1}>
-                                                <PopoverTrigger asChild>
-                                                    <Button
-                                                        variant="outline"
-                                                        role="combobox"
-                                                        aria-expanded={open}
-                                                        className={cn('justify-between w-full', !field.value && 'text-muted-foreground')}
-                                                    >
-                                                        {field.value
-                                                            ? members.find((member: any) => member.name === field.value)?.name
-                                                            : 'Elige un miembro'}
-                                                        <ChevronDown className="h-4 w-4 opacity-50" />
-                                                    </Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-full p-0">
-                                                    <Command>
-                                                        <CommandInput placeholder="Elige un miembro" />
-                                                        <CommandList>
-                                                            <CommandGroup>
-                                                                {members?.map((member: any) => (
-                                                                    <CommandItem
-                                                                        key={member.id.toString()}
-                                                                        value={member.name}
-                                                                        onSelect={(currentValue) => {
-                                                                            setOpen1(false);
-                                                                            membersForm.setValue(
-                                                                                'member',
-                                                                                members.find((member: any) => member.name === currentValue)?.name,
-                                                                                { shouldValidate: true }
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        {member.name}
-                                                                    </CommandItem>
-                                                                ))}
-                                                            </CommandGroup>
-                                                        </CommandList>
-                                                    </Command>
-                                                </PopoverContent>
-                                            </Popover>
+                                            <Autocomplete
+                                                open={open1}
+                                                setOpen={setOpen1}
+                                                rows={members || []}
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                placeholder="Elige un miembro"
+                                                identifier="member"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -185,53 +158,21 @@ const CertificatesForm = ({ open, setOpen }: props) => {
 
                             {certificateId === '4' && (
                                 <FormField
-                                    control={membersForm.control}
+                                    control={certificatesForm.control}
                                     name="member2"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Segundo miembro</FormLabel>
-
                                             <FormControl>
-                                                <Popover open={open2} onOpenChange={setOpen2}>
-                                                    <PopoverTrigger asChild>
-                                                        <Button
-                                                            variant="outline"
-                                                            role="combobox"
-                                                            aria-expanded={open}
-                                                            className={cn('justify-between w-full', !field.value && 'text-muted-foreground')}
-                                                        >
-                                                            {field.value
-                                                                ? members.find((member: any) => member.name === field.value)?.name
-                                                                : 'Elige un miembro'}
-                                                            <ChevronDown className="h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-full p-0">
-                                                        <Command>
-                                                            <CommandInput placeholder="Elige un miembro" />
-                                                            <CommandList>
-                                                                <CommandGroup>
-                                                                    {members?.map((member: any) => (
-                                                                        <CommandItem
-                                                                            key={member.id.toString()}
-                                                                            value={member.name}
-                                                                            onSelect={(currentValue) => {
-                                                                                setOpen2(false);
-                                                                                membersForm.setValue(
-                                                                                    'member2',
-                                                                                    members.find((member: any) => member.name === currentValue)?.name,
-                                                                                    { shouldValidate: true }
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            {member.name}
-                                                                        </CommandItem>
-                                                                    ))}
-                                                                </CommandGroup>
-                                                            </CommandList>
-                                                        </Command>
-                                                    </PopoverContent>
-                                                </Popover>
+                                                <Autocomplete
+                                                    open={open2}
+                                                    setOpen={setOpen2}
+                                                    rows={members || []}
+                                                    value={field.value || ''}
+                                                    onChange={field.onChange}
+                                                    placeholder="Elige un miembro"
+                                                    identifier="member2"
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -240,52 +181,21 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                             )}
 
                             <FormField
-                                control={membersForm.control}
+                                control={certificatesForm.control}
                                 name="pastor"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Oficiante</FormLabel>
                                         <FormControl>
-                                            <Popover open={open3} onOpenChange={setOpen3}>
-                                                <PopoverTrigger asChild>
-                                                    <Button
-                                                        variant="outline"
-                                                        role="combobox"
-                                                        aria-expanded={open}
-                                                        className={cn('justify-between w-full', !field.value && 'text-muted-foreground')}
-                                                    >
-                                                        {field.value
-                                                            ? members.find((member: any) => member.name === field.value)?.name
-                                                            : 'Elige un miembro'}
-                                                        <ChevronDown className="h-4 w-4 opacity-50" />
-                                                    </Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-full p-0">
-                                                    <Command>
-                                                        <CommandInput placeholder="Elige un miembro" />
-                                                        <CommandList>
-                                                            <CommandGroup>
-                                                                {members?.map((member: any) => (
-                                                                    <CommandItem
-                                                                        key={member.id.toString()}
-                                                                        value={member.name}
-                                                                        onSelect={(currentValue) => {
-                                                                            setOpen3(false);
-                                                                            membersForm.setValue(
-                                                                                'pastor',
-                                                                                members.find((member: any) => member.name === currentValue)?.name,
-                                                                                { shouldValidate: true }
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        {member.name}
-                                                                    </CommandItem>
-                                                                ))}
-                                                            </CommandGroup>
-                                                        </CommandList>
-                                                    </Command>
-                                                </PopoverContent>
-                                            </Popover>
+                                            <Autocomplete
+                                                open={open3}
+                                                setOpen={setOpen3}
+                                                rows={members || []}
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                placeholder="Elige un oficiante"
+                                                identifier="pastor"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -293,52 +203,21 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                             />
 
                             <FormField
-                                control={membersForm.control}
+                                control={certificatesForm.control}
                                 name="pastor2"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Segundo oficiante</FormLabel>
                                         <FormControl>
-                                            <Popover open={open4} onOpenChange={setOpen4}>
-                                                <PopoverTrigger asChild>
-                                                    <Button
-                                                        variant="outline"
-                                                        role="combobox"
-                                                        aria-expanded={open}
-                                                        className={cn('justify-between w-full', !field.value && 'text-muted-foreground')}
-                                                    >
-                                                        {field.value
-                                                            ? members.find((member: any) => member.name === field.value)?.name
-                                                            : 'Elige un miembro'}
-                                                        <ChevronDown className="h-4 w-4 opacity-50" />
-                                                    </Button>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-full p-0">
-                                                    <Command>
-                                                        <CommandInput placeholder="Elige un miembro" />
-                                                        <CommandList>
-                                                            <CommandGroup>
-                                                                {members?.map((member: any) => (
-                                                                    <CommandItem
-                                                                        key={member.id.toString()}
-                                                                        value={member.name}
-                                                                        onSelect={(currentValue) => {
-                                                                            setOpen4(false);
-                                                                            membersForm.setValue(
-                                                                                'pastor2',
-                                                                                members.find((member: any) => member.name === currentValue)?.name,
-                                                                                { shouldValidate: true }
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        {member.name}
-                                                                    </CommandItem>
-                                                                ))}
-                                                            </CommandGroup>
-                                                        </CommandList>
-                                                    </Command>
-                                                </PopoverContent>
-                                            </Popover>
+                                            <Autocomplete
+                                                open={open4}
+                                                setOpen={setOpen4}
+                                                rows={members || []}
+                                                value={field.value || ''}
+                                                onChange={field.onChange}
+                                                placeholder="Elige un oficiante"
+                                                identifier="pastor2"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -346,18 +225,46 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                             />
 
                             <FormField
-                                control={membersForm.control}
+                                control={certificatesForm.control}
+                                name="validate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className="flex gap-2">
+                                            <FormControl>
+                                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                            </FormControl>
+                                            <div className="flex flex-col">
+                                                <FormLabel>Validar certificado</FormLabel>
+                                                <p className="text-sm text-muted-foreground">Añade un código QR de verificación</p>
+                                            </div>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={certificatesForm.control}
                                 name="design"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Diseño</FormLabel>
                                         <FormControl {...field} className="grid grid-cols-2 gap-2">
                                             <RadioGroup onValueChange={field.onChange} defaultValue={'1'}>
-                                                <RadioGroupItem value="1" className="w-full aspect-[11/8] rounded-sm border">
-                                                    <img src="/certificates/1.webp" alt="Diseño 1" className="" />
+                                                <RadioGroupItem value="1" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                    <img src="/certificates/1.webp" alt="Diseño 1" loading="lazy" />
                                                 </RadioGroupItem>
-                                                <RadioGroupItem value="2" className="w-full aspect-[11/8] rounded-sm border">
-                                                    <img src="/certificates/2.webp" alt="Diseño 2" className="" />
+                                                <RadioGroupItem value="2" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                    <img src="/certificates/2.webp" alt="Diseño 2" loading="lazy" />
+                                                </RadioGroupItem>
+                                                <RadioGroupItem value="3" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                    <img src="/certificates/3.webp" alt="Diseño 3" loading="lazy" />
+                                                </RadioGroupItem>
+                                                <RadioGroupItem value="4" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                    <img src="/certificates/4.webp" alt="Diseño 4" loading="lazy" />
+                                                </RadioGroupItem>
+                                                <RadioGroupItem value="5" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                    <img src="/certificates/5.webp" alt="Diseño 5" loading="lazy" />
                                                 </RadioGroupItem>
                                             </RadioGroup>
                                         </FormControl>

@@ -15,6 +15,7 @@ export const PostCertificateSchema = z.object({
   pastor2: z.string().nullish(),
   expeditionDate: z.string().date().or(z.date()),
   certificateTypeId: z.string().min(1),
+  validate: z.boolean(),
 });
 
 export const UploadLogoSchema = z.object({

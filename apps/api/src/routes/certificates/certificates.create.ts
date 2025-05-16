@@ -1,61 +1,52 @@
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, PDFPage } from 'pdf-lib';
 import * as fontkit from '@pdf-lib/fontkit';
 import * as fs from 'fs';
 import * as path from 'path';
+import QRCode from 'qrcode';
 import {
+  CertificateParams,
   drawAlignedLine,
   drawAlignedText,
   drawCenteredText,
-  Font,
   getCertificateText,
   loadFont,
 } from './certificates.lib';
 import { PostCertificateSchema } from '@iglesiasbc/schemas';
 import sql from 'src/utils/db';
 import z from 'zod';
-
-type Parameters = {
-  imagePosition: number;
-  baseFont: Font;
-  customFont: Font;
-};
-
-const parameters: Parameters[] = [
-  {
-    imagePosition: 470,
-    baseFont: 'playfair',
-    customFont: 'Allura-Regular',
-  },
-  {
-    imagePosition: 470,
-    baseFont: 'playfair',
-    customFont: 'Allura-Regular',
-  },
-];
+import { designs } from './certificates.designs';
 
 const createCertificate = async (
-  body: z.infer<typeof PostCertificateSchema> & { churchId: number },
+  body: z.infer<typeof PostCertificateSchema> & {
+    churchId: number;
+    code: string;
+  },
 ) => {
-  console.log(body.design);
   const [type] =
     await sql`select name from certificatetypes where id = ${body.certificateTypeId}`;
   const [church] =
     await sql`select name from churches where id = ${body.churchId}`;
 
-  const certificateInfo = {
-    ...body,
-    type: type.name,
-    church: church.name,
-  };
   const img = (
     await sql`select logo from churches where id = ${body.churchId}`
   )[0]?.logo;
 
+  const members = body.member + ((body.member2 && ` y ${body.member2}`) || '');
+
   const text = getCertificateText(
-    certificateInfo.type,
-    new Date(certificateInfo.expeditionDate),
-    certificateInfo.church,
+    type.name,
+    new Date(body.expeditionDate),
+    church.name,
   );
+
+  const certificateInfo = {
+    ...body,
+    type: type.name,
+    church: church.name,
+    members,
+    text,
+    img,
+  };
 
   const existingPDF = fs.readFileSync(
     path.join(
@@ -67,12 +58,29 @@ const createCertificate = async (
   const pdfDoc = await PDFDocument.load(existingPDF);
   const pages = pdfDoc.getPages();
   const page = pages[0];
-  const certificateDesign = parameters[Number(certificateInfo.design) - 1];
 
-  if (img) {
+  await drawBaseCertificate(
+    pdfDoc,
+    page,
+    certificateInfo,
+    designs[certificateInfo.design],
+  );
+
+  return Buffer.from((await pdfDoc.save()).buffer);
+};
+
+export default createCertificate;
+
+async function drawBaseCertificate(
+  pdfDoc: PDFDocument,
+  page: PDFPage,
+  info: Record<string, any>,
+  params: CertificateParams,
+) {
+  if (info.img) {
     let imageBytes;
     try {
-      imageBytes = await fetch(img).then(async (res) => ({
+      imageBytes = await fetch(info.img).then(async (res) => ({
         buffer: await res.arrayBuffer(),
         url: res.headers.get('content-type'),
       }));
@@ -95,7 +103,7 @@ const createCertificate = async (
 
         page.drawImage(image, {
           x: page.getWidth() / 2 - width / 2,
-          y: certificateDesign.imagePosition,
+          y: params.image.y,
           width: width,
           height: height,
         });
@@ -103,106 +111,140 @@ const createCertificate = async (
     }
   }
 
-  const members =
-    certificateInfo.member +
-    ((certificateInfo.member2 && ` y ${certificateInfo.member2}`) || '');
+  if (info.validate) {
+    const code = Buffer.from(info.code.replace(/-/g, ''), 'hex').toString(
+      'base64url',
+    );
+    console.log(code);
+    const qrDataUrl = await QRCode.toDataURL(
+      'http://iglesiasbc.com/c/' + code,
+      {
+        errorCorrectionLevel: 'L',
+        margin: 0,
+        color: {
+          dark: params.qr.color,
+          light: '#00000000',
+        },
+      },
+    );
+    const base64 = qrDataUrl.replace(/^data:image\/png;base64,/, '');
+    const qr = await pdfDoc.embedPng(Buffer.from(base64, 'base64url'));
+
+    page.drawImage(qr, {
+      x:
+        params.qr.x === 'center'
+          ? page.getWidth() / 2 - params.qr.size / 2
+          : params.qr.x,
+      y: params.qr.y,
+      width: params.qr.size,
+      height: params.qr.size,
+    });
+  }
 
   pdfDoc.registerFontkit(fontkit);
 
-  const baseFont = await pdfDoc.embedFont(loadFont(certificateDesign.baseFont));
-  const customFont = await pdfDoc.embedFont(
-    loadFont(certificateDesign.customFont),
-  );
+  const titleFont = await pdfDoc.embedFont(loadFont(params.title.font));
+  const membersFont = await pdfDoc.embedFont(loadFont(params.members.font));
+  const textFont = await pdfDoc.embedFont(loadFont(params.text.font));
+  const signsFont = await pdfDoc.embedFont(loadFont(params.signs.font));
 
   drawCenteredText({
-    text: `Certificado de ${certificateInfo.type}`.toUpperCase(),
+    text: params.title.text(info.type),
     page: page,
-    y: 430,
-    size: 20,
-    font: baseFont,
-    color: rgb(0.3, 0.3, 0.3),
-    maxWidth: 0.9,
+    y: params.title.y,
+    size: params.title.size,
+    font: titleFont,
+    color: params.title.color,
+    maxWidth: 1000,
   });
 
+  if (params.subtitle) {
+    drawCenteredText({
+      text: params.subtitle.text(info.type),
+      page: page,
+      y: params.subtitle.y,
+      size: params.subtitle.size,
+      font: titleFont,
+      color: params.subtitle.color,
+      maxWidth: 1000,
+    });
+  }
+
   drawCenteredText({
-    text: members,
+    text: info.members,
     page: page,
-    y: 360,
-    size: 50,
-    font: customFont,
-    color: rgb(0, 0, 0),
+    y: params.members.y,
+    size: params.members.size,
+    font: membersFont,
+    color: params.members.color,
     maxWidth: 0.82,
-    optionalOffset: 40,
+    optionalOffset: params.members.offset || params.members.size,
   });
 
   drawCenteredText({
-    text: text,
+    text: info.text,
     page: page,
-    y: 230,
-    size: 15,
-    font: baseFont,
-    color: rgb(0.3, 0.3, 0.3),
-    maxWidth: 0.7,
+    y: params.text.y,
+    size: params.text.size,
+    font: textFont,
+    color: params.text.color,
+    maxWidth: params.text.maxWidth,
   });
 
-  if (certificateInfo.pastor && certificateInfo.pastor2) {
+  if (info.pastor && info.pastor2) {
     drawAlignedText({
-      text: certificateInfo.pastor,
+      text: info.pastor,
       page: page,
-      y: 80,
-      size: 15,
-      font: baseFont,
-      color: rgb(0.3, 0.3, 0.3),
-      centerX: 250,
+      y: params.signs.y,
+      size: params.signs.size,
+      font: signsFont,
+      color: params.signs.color,
+      centerX: params.signs.offset,
     });
     drawAlignedLine({
       page: page,
-      y: 100,
-      size: 220,
-      color: rgb(0.3, 0.3, 0.3),
-      centerX: 250,
-    });
-  }
-
-  if (certificateInfo.pastor2) {
-    drawAlignedText({
-      text: certificateInfo.pastor2,
-      page: page,
-      y: 80,
-      size: 15,
-      font: baseFont,
-      color: rgb(0.3, 0.3, 0.3),
-      centerX: -250,
-    });
-    drawAlignedLine({
-      page: page,
-      y: 100,
-      size: 220,
-      color: rgb(0.3, 0.3, 0.3),
-      centerX: -250,
-    });
-  }
-
-  if (certificateInfo.pastor && !certificateInfo.pastor2) {
-    drawAlignedText({
-      text: certificateInfo.pastor,
-      page: page,
-      y: 80,
-      size: 15,
-      font: baseFont,
-      color: rgb(0.3, 0.3, 0.3),
-      centerX: page.getWidth() / 2,
-    });
-    drawAlignedLine({
-      page: page,
-      y: 100,
+      y: params.signs.y + params.signs.size + 3,
       size: 200,
-      color: rgb(0.3, 0.3, 0.3),
-      centerX: page.getWidth() / 2,
+      color: params.signs.color,
+      centerX: params.signs.offset,
     });
   }
 
-  return Buffer.from((await pdfDoc.save()).buffer);
-};
+  if (info.pastor2) {
+    drawAlignedText({
+      text: info.pastor2,
+      page: page,
+      y: params.signs.y,
+      size: params.signs.size,
+      font: signsFont,
+      color: params.signs.color,
+      centerX: -params.signs.offset,
+    });
+    drawAlignedLine({
+      page: page,
+      y: params.signs.y + params.signs.size + 3,
+      size: 200,
+      color: params.signs.color,
+      centerX: -params.signs.offset,
+    });
+  }
 
-export default createCertificate;
+  if (info.pastor && !info.pastor2) {
+    drawAlignedText({
+      text: info.pastor,
+      page: page,
+      y: params.signs.y,
+      size: params.signs.size,
+      font: signsFont,
+      color: params.signs.color,
+      centerX: params.signs.offset,
+    });
+    drawAlignedLine({
+      page: page,
+      y: params.signs.y + params.signs.size + 3,
+      size: 200,
+      color: params.signs.color,
+      centerX: params.signs.offset,
+    });
+  }
+}

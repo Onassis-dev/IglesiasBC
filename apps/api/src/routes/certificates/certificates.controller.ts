@@ -22,13 +22,6 @@ export class CertificatesController {
     );
   }
 
-  @TsRestHandler(certificatesContract.download)
-  download() {
-    return tsRestHandler(certificatesContract.download, ({ params }) =>
-      this.certificatesService.download({ id: params.id }),
-    );
-  }
-
   @TsRestHandler(certificatesContract.create)
   create() {
     return tsRestHandler(certificatesContract.create, ({ body }) =>

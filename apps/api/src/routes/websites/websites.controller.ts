@@ -14,14 +14,6 @@ export class WebsitesController {
     );
   }
 
-  @TsRestHandler(websitesContract.getWebsiteServices)
-  getWebsiteServices() {
-    return tsRestHandler(
-      websitesContract.getWebsiteServices,
-      async ({ query }) => this.websitesService.getWebsiteServices(query),
-    );
-  }
-
   @TsRestHandler(websitesContract.getWebsiteEvents)
   getWebsiteEvents() {
     return tsRestHandler(websitesContract.getWebsiteEvents, async ({ query }) =>
@@ -40,6 +32,13 @@ export class WebsitesController {
   getPost() {
     return tsRestHandler(websitesContract.getPost, async ({ query }) =>
       this.websitesService.getPost(query),
+    );
+  }
+
+  @TsRestHandler(websitesContract.getCertificate)
+  getCertificate() {
+    return tsRestHandler(websitesContract.getCertificate, async ({ query }) =>
+      this.websitesService.getCertificate(query),
     );
   }
 }
