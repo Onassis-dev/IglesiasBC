@@ -10,6 +10,7 @@ import {
   Users2,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useEffect } from "react";
 
 type Feature = {
   id: string;
@@ -95,6 +96,13 @@ const features: Feature[] = [
 ];
 
 export function Features() {
+  useEffect(() => {
+    features.forEach((feature) => {
+      const img = new Image();
+      img.src = feature.img;
+    });
+  }, []);
+
   return (
     <Tabs defaultValue="miembros" className="w-full">
       <TabsList className="grid grid-cols-7 h-auto">
