@@ -67,7 +67,8 @@ const CertificatesForm = ({ open, setOpen }: props) => {
     };
 
     const { data: { body: certificates } = {} } = tsr.options.getCertificateTypes.useQuery({
-        queryKey: ['certificatesOptions'],
+        queryKey: ['certificateTypes'],
+        refetchOnMount: false,
     });
 
     const { data: { body: members } = {} } = tsr.certificates.getMembers.useQuery({

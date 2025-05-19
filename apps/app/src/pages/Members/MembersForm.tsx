@@ -71,6 +71,7 @@ const MembersForm = ({ member, open, setOpen, setSelectedMember }: props) => {
 
     const { data: { body: positions } = {} } = tsr.options.getPositions.useQuery({
         queryKey: ['positionsObj'],
+        refetchOnMount: false,
     });
 
     const submit = membersForm.handleSubmit((values: z.infer<typeof PostMemberSchema>) => {

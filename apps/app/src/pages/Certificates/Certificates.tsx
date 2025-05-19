@@ -14,10 +14,12 @@ import { es } from 'date-fns/locale';
 import { CrudTable, type Column } from '@/components/common/CrudTable';
 import DeleteDialog from '@/components/common/DeleteDialog';
 import { useDebounce } from '@/lib/hooks/useDebounce';
+import CertificatesCard from './CertificatesCard';
 
 const Certificates = () => {
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
+    const [open2, setOpen2] = useState(false);
     const [selectedCertificate, setSelectedCertificate] = useState<any>({});
     const [filters, setFilters] = useState<any>({ name: '' });
     const [page, setPage] = useState(1);
@@ -41,7 +43,8 @@ const Certificates = () => {
     };
 
     const { data: { body: typesList } = {} } = tsr.options.getCertificateTypes.useQuery({
-        queryKey: ['certificateTypesObj'],
+        queryKey: ['certificateTypes'],
+        refetchOnMount: false,
     });
     const types = typesList ? Object.fromEntries(typesList.map(({ id, value }: { id: any; value: any }) => [id, value])) : {};
 
@@ -86,6 +89,7 @@ const Certificates = () => {
                     <LogoUpload />
                     <CertificatesForm open={open} setOpen={setOpen} />
                 </div>
+                <CertificatesCard open={open2} setOpen={setOpen2} certificate={selectedCertificate} setDelete={setOpen1} />
             </OptionsGrid>
 
             <CrudTable
@@ -93,8 +97,10 @@ const Certificates = () => {
                 data={certificates?.rows}
                 status={status}
                 setSelectedRow={setSelectedCertificate}
+                setOpenView={setOpen2}
                 setOpenDelete={setOpen1}
                 downloadFunc={downloadCertificate}
+                onRowClick={setOpen2}
             ></CrudTable>
             <PaginationMenu page={page} setPage={setPage} count={certificates?.count} rowsDisplayed={10} />
         </div>

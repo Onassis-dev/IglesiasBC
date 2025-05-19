@@ -17,6 +17,7 @@ interface props {
 const MembersCard = ({ member, open, setOpen, setDelete, setEdit }: props) => {
     const { data: { body: positionsList } = {} } = tsr.options.getPositions.useQuery({
         queryKey: ['positionsObj'],
+        refetchOnMount: false,
     });
     const positions = positionsList ? Object.fromEntries(positionsList.map(({ id, value }: { id: any; value: any }) => [id, value])) : {};
 

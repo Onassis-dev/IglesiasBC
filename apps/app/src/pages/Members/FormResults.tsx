@@ -40,6 +40,7 @@ const MembersForm = ({ open, setOpen }: props) => {
 
     const { data: { body: positions } = {} } = tsr.options.getPositions.useQuery({
         queryKey: ['positionsObj'],
+        refetchOnMount: false,
     });
 
     const { data: { body: results } = {} } = tsr.forms.getResults.useQuery({

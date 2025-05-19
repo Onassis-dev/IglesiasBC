@@ -20,7 +20,6 @@ function base64UrlToHexUUID(base64url?: string) {
     .map((c) => c.charCodeAt(0).toString(16).padStart(2, "0"))
     .join("");
 
-  // Aplica el formato UUID
   return hex.replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
 }
 
