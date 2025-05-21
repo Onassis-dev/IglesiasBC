@@ -29,6 +29,7 @@ function isColorDark(hexColor?: string) {
 
 webpage.blog = webpage.blog !== "0";
 webpage.eventPage = webpage.eventPage !== "0";
+console.log(event);
 ---
 
 <html lang={webpage.language} transition:animate="none">
@@ -39,7 +40,11 @@ webpage.eventPage = webpage.eventPage !== "0";
     <link rel="icon" type="image/svg+xml" href={webpage.logo} />
     <meta name="generator" content={Astro.generator} />
     <title>{webpage.title}</title>
-    <!-- <ViewTransitions /> -->
+
+    {event && <meta name="og:title" content={event.title} />}
+    {event && <meta name="og:description" content={event.description} />}
+    {event && <meta name="og:image" content={event.img} />}
+    <meta name="og:type" content="website" />
   </head>
   <body
     class={`p${webpage.style} flex flex-col min-h-screen`}

@@ -6,6 +6,9 @@ import Layout from "../../layouts/WebsitesLayout.astro";
 import type { Website, Event } from "@/components/pages/Website/website.types";
 
 const { title } = Astro.params;
+const query = Astro.url.searchParams;
+const eventName = query.get("evento");
+
 let webpage: Website;
 let event: Event | undefined;
 
@@ -27,6 +30,8 @@ try {
   }
 
   webpage = await response.json();
+
+  if (eventName) event = webpage.events.find((e) => e.title === eventName);
 } catch (error) {
   return new Response(null, {
     status: 500,
