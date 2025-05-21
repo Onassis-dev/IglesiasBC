@@ -55,7 +55,7 @@ export class PostsService {
 
     const data = { ...body, churchId: this.req.getChurchId() };
 
-    if (!file) throw new HttpException('No se pudo procesar la imagen', 400);
+    if (!file) throw new HttpException('No se pudo procesar la portada', 400);
     const url = await uploadImage(file);
 
     const result = await sql`insert into posts ${sql({ ...data, img: url })}`;

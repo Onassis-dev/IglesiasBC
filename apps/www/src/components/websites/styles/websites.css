@@ -25,18 +25,27 @@
   font-weight: 400;
 }
 
-.scrollable {
-  scroll-margin-top: 7rem;
-}
-
 body {
   --foreground: hsl(249, 47%, 3%);
   --background: hsl(0, 0%, 100%);
+  --background2: hsl(0, 0%, 97%);
   --secondary: hsl(0, 0%, 90%);
   --borderwidth: 1px;
+}
+
+.scrollable {
+  scroll-margin-top: 7rem;
 }
 
 main {
   padding-top: 0;
   scroll-behavior: smooth;
+}
+
+.section-1:nth-child(even) {
+  background-color: var(--background2);
+}
+
+.section-1:nth-child(odd) {
+  background-color: var(--background);
 }

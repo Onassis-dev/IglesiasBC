@@ -1,24 +1,25 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { IconInput, Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { z } from 'zod';
 import { api, tsr } from '@/lib/boilerplate';
-import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import { Textarea } from '@/components/ui/textarea';
 import { WebsiteSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import ColorPicker from '@/components/common/ColorPicker';
+import ColorPicker2 from '@/components/common/ColorPicker2';
+import { useEffect } from 'react';
+import { FacebookIcon, InstagramIcon, YoutubeIcon, MapsIcon, PaypalIcon, WhatsappIcon } from '@/components/ui/icons';
+import { Video } from 'lucide-react';
 
 const WebSiteForm = () => {
     const websiteForm = useForm<z.infer<typeof WebsiteSchema>>({
         resolver: zodResolver(WebsiteSchema),
     });
     const client = tsr.useQueryClient();
-    const [color, setColor] = useState('#000000');
 
     const { data: { body: [websiteData] = [] } = {} } = tsr.builder.getWebsite.useQuery({
         queryKey: ['websiteData'],
@@ -26,17 +27,15 @@ const WebSiteForm = () => {
 
     useEffect(() => {
         if (websiteData) {
-            websiteForm.reset({ ...websiteData });
-
-            setColor(websiteData.color || '#000000');
+            websiteForm.reset({ ...websiteData, color: websiteData.color || '#000000' });
         }
     }, [websiteData, websiteForm]);
 
     const handleSubmit: any = async (values: z.infer<typeof WebsiteSchema>) => {
         if (websiteData) {
-            await api(tsr.builder.editWebsite, { ...values, color });
+            await api(tsr.builder.editWebsite, values);
         } else {
-            await api(tsr.builder.createWebsite, { ...values, color });
+            await api(tsr.builder.createWebsite, values);
         }
         client.refetchQueries({ queryKey: ['pageInfo'] });
         client.refetchQueries({ queryKey: ['websiteData'] });
@@ -163,13 +162,19 @@ const WebSiteForm = () => {
                                     </FormItem>
                                 )}
                             />
-                            <FormItem>
-                                <FormLabel>Color principal</FormLabel>
-                                <FormControl>
-                                    <ColorPicker color={color} setColor={setColor} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
+                            <FormField
+                                control={websiteForm.control}
+                                name="color"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Color principal</FormLabel>
+                                        <FormControl>
+                                            <ColorPicker2 value={field.value || ''} onChange={field.onChange} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                             <FormField
                                 control={websiteForm.control}
                                 name="description"
@@ -196,13 +201,7 @@ const WebSiteForm = () => {
                                     <FormItem>
                                         <FormLabel>Pastorado</FormLabel>
                                         <FormControl>
-                                            <Textarea
-                                                className="resize-none"
-                                                rows={2}
-                                                placeholder="Pastor y pastora..."
-                                                value={field.value || ''}
-                                                onChange={field.onChange}
-                                            />
+                                            <Input placeholder="Pastor y pastora..." value={field.value || ''} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -280,7 +279,9 @@ const WebSiteForm = () => {
                                     <FormItem>
                                         <FormLabel>Enlace a tu última predicación</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="https://facebook.com/watch" value={field.value || ''} onChange={field.onChange} />
+                                            <IconInput placeholder="https://facebook.com/watch" value={field.value || ''} onChange={field.onChange}>
+                                                <Video className="size-3.5" />
+                                            </IconInput>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -291,9 +292,15 @@ const WebSiteForm = () => {
                                 name="facebookLink"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Redes</FormLabel>
+                                        <FormLabel>Redes sociales</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="https://facebook.com/tuiglesia" value={field.value || ''} onChange={field.onChange} />
+                                            <IconInput
+                                                placeholder="https://facebook.com/tuiglesia"
+                                                value={field.value || ''}
+                                                onChange={field.onChange}
+                                            >
+                                                <FacebookIcon />
+                                            </IconInput>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -305,11 +312,13 @@ const WebSiteForm = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input
+                                            <IconInput
                                                 placeholder="https://instagram.com/tuiglesia"
                                                 value={field.value || ''}
                                                 onChange={field.onChange}
-                                            />
+                                            >
+                                                <InstagramIcon />
+                                            </IconInput>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -321,7 +330,9 @@ const WebSiteForm = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input placeholder="https://wa.me/tuiglesia" value={field.value || ''} onChange={field.onChange} />
+                                            <IconInput placeholder="https://wa.me/tuiglesia" value={field.value || ''} onChange={field.onChange}>
+                                                <WhatsappIcon />
+                                            </IconInput>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -333,11 +344,13 @@ const WebSiteForm = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input
+                                            <IconInput
                                                 placeholder="https://www.youtube.com/@tuiglesia"
                                                 value={field.value || ''}
                                                 onChange={field.onChange}
-                                            />
+                                            >
+                                                <YoutubeIcon />
+                                            </IconInput>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -349,11 +362,13 @@ const WebSiteForm = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input
+                                            <IconInput
                                                 placeholder="https://www.google.com/maps/tuiglesia"
                                                 value={field.value || ''}
                                                 onChange={field.onChange}
-                                            />
+                                            >
+                                                <MapsIcon />
+                                            </IconInput>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -365,11 +380,13 @@ const WebSiteForm = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Input
+                                            <IconInput
                                                 placeholder="https://www.paypal.me/tuiglesia"
                                                 value={field.value || ''}
                                                 onChange={field.onChange}
-                                            />
+                                            >
+                                                <PaypalIcon />
+                                            </IconInput>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

@@ -2,8 +2,6 @@
 import "@/global.css";
 import "@/components/websites/styles/websites.css";
 import "@/components/websites/styles/animations.css";
-
-// import { ViewTransitions } from "astro:transitions";
 import Footer from "@/components/websites/components/Footer.astro";
 import type { Event, Website } from "@/components/pages/Website/website.types";
 import Header from "@/components/websites/components/Header.astro";
@@ -30,6 +28,7 @@ function isColorDark(hexColor?: string) {
 }
 
 webpage.blog = webpage.blog !== "0";
+webpage.eventPage = webpage.eventPage !== "0";
 ---
 
 <html lang={webpage.language} transition:animate="none">
@@ -44,13 +43,16 @@ webpage.blog = webpage.blog !== "0";
   </head>
   <body
     class={`p${webpage.style} flex flex-col min-h-screen`}
-    style=`--primary:${'#111'}; --primarytext:${'#fff'}`
+    style={`--primary:${webpage.color}; --primarytext:${isColorDark(
+      webpage.color
+    )}`}
   >
     <Header
       language={webpage.language}
       title={webpage.title}
       logo={webpage.logo}
       blog={!!webpage.blog}
+      eventPage={!!webpage.eventPage}
     />
 
     <main>

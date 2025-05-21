@@ -20,6 +20,16 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, type,
 });
 Input.displayName = 'Input';
 
+const IconInput = React.forwardRef<HTMLInputElement, InputProps>(({ className, children, ...props }, ref) => {
+    return (
+        <div className="relative w-full h-full">
+            <div className="absolute left-2.5 top-[11px] size-3.5 text-muted-foreground">{children}</div>
+            <Input className={cn('pl-8', className)} ref={ref} {...props} />
+        </div>
+    );
+});
+IconInput.displayName = 'Input';
+
 const SearchInput = React.forwardRef<HTMLInputElement, InputProps>(({ className, ...props }, ref) => {
     return (
         <div className="relative w-full sm:max-w-56 h-full">
@@ -30,4 +40,4 @@ const SearchInput = React.forwardRef<HTMLInputElement, InputProps>(({ className,
 });
 SearchInput.displayName = 'Input';
 
-export { Input, SearchInput };
+export { Input, SearchInput, IconInput };

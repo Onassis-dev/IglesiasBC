@@ -5,7 +5,6 @@ import EventsGallery from "@/components/websites/components/EventsGallery.astro"
 import Layout from "../../layouts/WebsitesLayout.astro";
 import type { Website, Event } from "@/components/pages/Website/website.types";
 
-const eventName = Astro.url.searchParams.get("evento");
 const { title } = Astro.params;
 let webpage: Website;
 let event: Event | undefined;

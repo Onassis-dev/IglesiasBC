@@ -27,13 +27,16 @@ const Event = ({ event }: any) => {
     return (
         <Card className="flex flex-col rounded-lg w-full p-4">
             <div className="overflow-hidden rounded-lg">{event.img && <img src={event.img} alt="card-image" className="object-cover w-full" />}</div>
-            <b>{event.title}</b>
-            <p>{displayDate(event.date, 'PPP')}</p>
+            <b className="font-semibold">{event.title}</b>
+            <p className="text-sm text-muted-foreground">{displayDate(event.date, 'PPP')}</p>
+            <p className="text-sm text-ellipsis w-full">{event.description}</p>
 
-            <div className="mt-3 flex justify-between items-center">
+            <div className="flex justify-between items-center mt-auto">
                 <AlertDialog>
-                    <AlertDialogTrigger className="mx-0" asChild>
-                        <Button>Eliminar</Button>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="outline" className="mt-3">
+                            Eliminar
+                        </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>

@@ -101,13 +101,13 @@ export class BuilderService {
     return res(200, { success: true });
   }
 
-  async getLogo() {
+  async getImage(image: string) {
     const result =
-      await sql`select "logo" from "websites" where "churchId" = ${this.req.getChurchId()}`;
+      await sql`select ${sql(image)} from "websites" where "churchId" = ${this.req.getChurchId()}`;
     return res(200, result);
   }
 
-  async uploadLogo(file: File) {
+  async uploadImage(file: File, image: string) {
     if (!file) throw new HttpException('Falta la imagen', 400);
 
     const [webExists] =
@@ -115,70 +115,27 @@ export class BuilderService {
     if (!webExists)
       throw new HttpException('Aun no registraste una pagina web', 400);
 
-    const [{ logo }] =
-      await sql`select "logo" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    if (logo) {
-      const url = logo;
-      deleteImage(url);
+    const [{ oldImage }] =
+      await sql`select ${sql(image)} as "oldImage" from "websites" where "churchId" = ${this.req.getChurchId()}`;
+    if (oldImage) {
+      const url = oldImage;
+      await deleteImage(url);
     }
 
     const url = await uploadImage(file);
 
-    await sql`update "websites" set "logo" = ${url} where "churchId" = ${this.req.getChurchId()}`;
+    await sql`update "websites" set ${sql(image)} = ${url} where "churchId" = ${this.req.getChurchId()}`;
     return res(200, '');
   }
 
-  async getPastorsImg() {
-    const result =
-      await sql`select "pastorsImg" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    return res(200, result);
-  }
+  async deleteImage(image: string) {
+    const [{ oldImage }] =
+      await sql`select ${sql(image)} as "oldImage" from "websites" where "churchId" = ${this.req.getChurchId()}`;
 
-  async uploadPastorsImg(file: File) {
-    if (!file) throw new HttpException('Falta la imagen', 400);
+    if (!oldImage) throw new HttpException('No se encontro la imagen', 404);
 
-    const [webExists] =
-      await sql`select 1 from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    if (!webExists)
-      throw new HttpException('Aun no registraste una pagina web', 400);
-
-    const [{ pastorsImg }] =
-      await sql`select "pastorsImg" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    if (pastorsImg) {
-      const url = pastorsImg;
-      deleteImage(url);
-    }
-
-    const url = await uploadImage(file);
-
-    await sql`update "websites" set "pastorsImg" = ${url} where "churchId" = ${this.req.getChurchId()}`;
-    return res(200, '');
-  }
-
-  async getCoverImg() {
-    const result =
-      await sql`select "coverImg" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    return res(200, result);
-  }
-
-  async uploadCoverImg(file: File) {
-    if (!file) throw new HttpException('Falta la imagen', 400);
-
-    const [webExists] =
-      await sql`select 1 from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    if (!webExists)
-      throw new HttpException('Aun no registraste una pagina web', 400);
-
-    const [{ coverImg }] =
-      await sql`select "coverImg" from "websites" where "churchId" = ${this.req.getChurchId()}`;
-    if (coverImg) {
-      const url = coverImg;
-      deleteImage(url);
-    }
-
-    const url = await uploadImage(file);
-
-    await sql`update "websites" set "coverImg" = ${url} where "churchId" = ${this.req.getChurchId()}`;
+    await deleteImage(oldImage);
+    await sql`update "websites" set ${sql(image)} = null where "churchId" = ${this.req.getChurchId()}`;
     return res(200, '');
   }
 
@@ -211,7 +168,7 @@ export class BuilderService {
     let url = null;
     if (file) url = await uploadImage(file);
 
-    await sql`insert into "events" ("title", "img", "date", "churchId" ) values (${body.title}, ${url}, ${date}, ${this.req.getChurchId()})`;
+    await sql`insert into "events" ("title", "img", "date", "description", "churchId" ) values (${body.title}, ${url}, ${date}, ${body.description}, ${this.req.getChurchId()})`;
     return res(200, '');
   }
 
@@ -287,7 +244,7 @@ export class BuilderService {
     }
 
     const url = await uploadImage(file);
-    await sql`insert into "activities" ("title", "img", "text", "churchId" ) values (${body.title}, ${url}, ${body.text}, ${this.req.getChurchId()})`;
+    await sql`insert into "activities" ("title", "img", "text", "date", "churchId" ) values (${body.title}, ${url}, ${body.text}, ${body.date}, ${this.req.getChurchId()})`;
 
     return res(200, '');
   }

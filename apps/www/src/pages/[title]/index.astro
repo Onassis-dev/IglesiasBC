@@ -43,28 +43,44 @@ try {
   {webpage.structure === "1" && <Hero1 webpage={webpage} />}
   {webpage.structure === "2" && <Hero2 webpage={webpage} />}
   {webpage.structure === "3" && <Hero3 webpage={webpage} />}
-  <About
-    about={webpage.about}
-    pastors={webpage.pastors}
-    pastorsImg={webpage.pastorsImg}
-    animations={webpage.animations}
-    language={webpage.language}
-  />
-  <Mission mission={webpage.mission} animations={webpage.animations} />
-  <Services
-    language={webpage.language}
-    servicesDates={webpage.servicesDates}
-    animations={webpage.animations}
-  />
-  <ActivitiesGallery
-    language={webpage.language}
-    activities={webpage.activities}
-    animations={webpage.animations}
-  />
-  <Ubication
-    mapsLink={webpage.mapsLink}
-    ubication={webpage.ubication}
-    animations={webpage.animations}
-    language={webpage.language}
-  />
+  {
+    webpage.about && (
+      <About
+        about={webpage.about}
+        pastors={webpage.pastors}
+        pastorsImg={webpage.pastorsImg}
+        animations={webpage.animations}
+        language={webpage.language}
+      />
+    )
+  }
+  {
+    !!webpage.activities?.length && (
+      <ActivitiesGallery
+        language={webpage.language}
+        activities={webpage.activities}
+        animations={webpage.animations}
+      />
+    )
+  }
+  {
+    webpage.mission && (
+      <Mission
+        mission={webpage.mission}
+        language={webpage.language}
+        animations={webpage.animations}
+        language={webpage.language}
+      />
+    )
+  }
+  {
+    webpage.ubication && (
+      <Ubication
+        mapsLink={webpage.mapsLink}
+        ubication={webpage.ubication}
+        animations={webpage.animations}
+        language={webpage.language}
+      />
+    )
+  }
 </Layout>

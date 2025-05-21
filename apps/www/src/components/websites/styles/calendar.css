@@ -50,21 +50,34 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(6, 1fr);
-  gap: 0.2px;
-  border-radius: var(--radius);
+  overflow: hidden;
   background-color: var(--border);
 }
+
+.cld-days {
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
 .cld-day {
-  border: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
 }
 .cld-labels {
   background-color: var(--background);
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(1, 1fr);
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
 }
 .cld-day,
 .cld-label {
   background-color: var(--background);
+  color: var(--text);
+  font-weight: 400;
+}
+.cld-label {
+  border-right: 1px solid var(--border);
+  text-align: center;
 }
 .cld-day {
   min-height: 80px;
@@ -74,20 +87,19 @@
   margin: 0;
   padding: 5px;
   aspect-ratio: auto;
-  overflow-y: auto;
 }
 .cld-day.clickable:hover {
   cursor: pointer;
 }
 .cld-day.today {
-  border: 1px solid;
+  background-color: #f0f0f0;
 }
 .cld-day.disableDay {
   opacity: 1;
 }
 .cld-day.nextMonth,
 .cld-day.prevMonth {
-  background-color: var(--border);
+  color: var(--border);
 }
 .cld-number {
   margin: 0;
@@ -97,33 +109,28 @@
   flex-direction: column;
 }
 .cld-title {
-  font-size: 12px;
+  font-size: 11px;
   margin: 0;
-  font-weight: 400;
+  font-weight: 500;
   background-color: var(--primary);
   color: var(--primarytext) !important;
   margin-bottom: 1px;
-  border-radius: calc(var(--bradius) - 2px);
+  border-radius: 4px;
   padding-left: 4px;
   padding-right: 4px;
 }
-.cld-day:hover {
-  background: var(--border);
-}
 .cld-number.eventday {
-  font-weight: bold;
-}
-.cld-number.eventday:hover {
-  background: var(--border);
+  /* font-weight: bold; */
 }
 .cld-title a {
   white-space: nowrap;
 }
 @media (max-width: 640px) {
   .cld-day {
-    overflow-x: auto;
+    overflow-x: hidden;
   }
   .cld-title {
-    font-size: 9px;
+    font-size: 10px;
+    margin-left: -5px;
   }
 }

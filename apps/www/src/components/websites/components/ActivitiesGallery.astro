@@ -15,19 +15,14 @@ interface Props {
 const { activities, animations, language } = Astro.props;
 ---
 
-<h2
-  class={"text-3xl font-header text-center mt-10 mb-5 animatedscroll" +
-    animations}
->
-  {language === "es" ? "Nuestras actividades" : "Our activities"}
-</h2>
-
 <Section1 animations={animations}>
-  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
-    {
-      activities?.map((activity, i) => (
-        <Activity animations={animations} activity={activity} />
-      ))
-    }
+  <h2
+    class={"text-3xl font-header text-center mt-10 mb-6 animatedscroll" +
+      animations}
+  >
+    {language === "es" ? "Nuestras actividades" : "Our activities"}
+  </h2>
+  <div class="flex flex-wrap gap-4 justify-center">
+    {activities?.map((activity, i) => <Activity activity={activity} />)}
   </div>
 </Section1>

@@ -10,6 +10,7 @@ import { PlusIcon } from 'lucide-react';
 import { PostActivitySchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Textarea } from '@/components/ui/textarea';
 
 const UploadActivity = ({ activity }: any) => {
     const client = tsr.useQueryClient();
@@ -36,6 +37,7 @@ const UploadActivity = ({ activity }: any) => {
         if (activity) {
             await api(tsr.builder.editActivity, {
                 ...values,
+                date: values.date || '',
                 id: String(activity.id),
                 image: selectedFile,
             });
@@ -44,6 +46,7 @@ const UploadActivity = ({ activity }: any) => {
 
             await api(tsr.builder.uploadActivity, {
                 ...values,
+                date: values.date || '',
                 image: selectedFile,
             });
         }
@@ -63,8 +66,9 @@ const UploadActivity = ({ activity }: any) => {
                 {activity ? (
                     <Button>Editar</Button>
                 ) : (
-                    <button className="rounded-xl aspect-square max-w-60 max-h-max-w-60 border-input border flex justify-center items-center">
-                        <PlusIcon className="w-14 h-14"></PlusIcon>
+                    <button className="rounded-xl h-36 border-input border justify-center items-center text-muted-foreground shadow-sm flex flex-col">
+                        <PlusIcon className="size-10" strokeWidth={1.7} />
+                        <p>Nueva actividad</p>
                     </button>
                 )}
             </SheetTrigger>
@@ -95,7 +99,20 @@ const UploadActivity = ({ activity }: any) => {
                                     <FormItem>
                                         <FormLabel>Texto</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Texto" {...field} />
+                                            <Textarea placeholder="Texto" className="resize-none" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={activitiesForm.control}
+                                name="date"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Fecha y hora</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Domigos 11:00am" value={field.value || ''} onChange={field.onChange} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

@@ -9,20 +9,27 @@ import sql from 'src/utils/db';
 import { parseTitle } from 'src/utils/commonUtils';
 import { res } from 'src/utils/response';
 
+const getWebsite = async (title: string) => {
+  const [website] =
+    await sql`select *, (select plan from churches where id = "churchId"),
+     (select count(*) from posts where "churchId" = websites."churchId") as blog,
+     (select count(*) from events where "churchId" = websites."churchId") as "eventPage" from "websites" where ${parseTitle('title', true)} = ${parseTitle(title)}`;
+  if (!website || website?.plan === 0)
+    throw new HttpException('No se encontro la pagina', 404);
+  return website;
+};
+
 @Injectable()
 export class WebsitesService {
   async getWebsiteStart(query: z.infer<typeof getWebsiteSchema>) {
     try {
-      const [website] =
-        await sql`select *, (select plan from churches where id = "churchId"), (select count(*) from posts where "churchId" = websites."churchId") as blog from "websites" where ${parseTitle('title', true)} = ${parseTitle(query.title)}`;
-      if (!website || website?.plan === 0)
-        throw new HttpException('No se encontro la pagina', 404);
+      const website = await getWebsite(query.title);
 
       const images =
         await sql`select * from "churchimages" where "churchId" = ${website.churchId}`;
 
       const activities =
-        await sql`select "title","text","img" from "activities" where "churchId" = ${website.churchId}`;
+        await sql`select "title","text","img","date" from "activities" where "churchId" = ${website.churchId}`;
 
       await sql`insert into websiteviews ("websiteId") values (${website.id})`;
 
@@ -34,13 +41,10 @@ export class WebsitesService {
 
   async getWebsiteEvents(query: z.infer<typeof getWebsiteSchema>) {
     try {
-      const [website] =
-        await sql`select (select plan from churches where id = "churchId"), (select count(*) from posts where "churchId" = websites."churchId") as blog, "churchId","color","title","structure","style","logo", "language","facebookLink","youtubeLink","donationLink","preachLink","whatsappLink","mapsLink","instagramLink", "animations" from "websites" where ${parseTitle('title', true)} = ${parseTitle(query.title)}`;
-      if (!website || website?.plan === 0)
-        throw new HttpException('No se encontro la pagina', 404);
+      const website = await getWebsite(query.title);
 
       const events =
-        await sql`select "title","date","img" from "events" where "churchId" = ${website.churchId} order by date desc`;
+        await sql`select "title","date","img","description" from "events" where "churchId" = ${website.churchId} order by date desc`;
 
       return res(200, { ...website, events });
     } catch (err) {
@@ -50,10 +54,7 @@ export class WebsitesService {
 
   async getWebsitePosts(query: z.infer<typeof getWebsiteSchema>) {
     try {
-      const [website] =
-        await sql`select (select plan from churches where id = "churchId"), (select count(*) from posts where "churchId" = websites."churchId") as blog, "churchId","color","title","structure","style","logo", "language","facebookLink","youtubeLink","donationLink","preachLink","whatsappLink","mapsLink","instagramLink", "animations" from "websites" where ${parseTitle('title', true)} = ${parseTitle(query.title)}`;
-      if (!website || website?.plan === 0)
-        throw new HttpException('No se encontro la pagina', 404);
+      const website = await getWebsite(query.title);
 
       const posts =
         await sql`select title, img, description from posts where "churchId" = ${website.churchId} order by publication desc, id desc`;
@@ -66,10 +67,7 @@ export class WebsitesService {
 
   async getPost(query: z.infer<typeof getWebsitePostSchema>) {
     try {
-      const [website] =
-        await sql`select (select plan from churches where id = "churchId"), (select count(*) from posts where "churchId" = websites."churchId") as blog, "churchId","title", structure,"color","style","logo","language","facebookLink","youtubeLink","donationLink","preachLink","whatsappLink","mapsLink","instagramLink", "animations" from "websites" where ${parseTitle('title', true)} = ${parseTitle(query.title)}`;
-      if (!website || website?.plan === 0)
-        throw new HttpException('No se encontro la pagina', 404);
+      const website = await getWebsite(query.title);
 
       const [post] =
         await sql`select id, title, body, description, publication, img from posts where "churchId" = ${parseInt(website.churchId)} and ${parseTitle('title', true)} = ${parseTitle(query.post)}`;

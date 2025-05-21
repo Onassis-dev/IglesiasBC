@@ -61,7 +61,7 @@ export class BuilderController {
   @TsRestHandler(builderContract.getLogo)
   getLogo() {
     return tsRestHandler(builderContract.getLogo, async () =>
-      this.builderService.getLogo(),
+      this.builderService.getImage('logo'),
     );
   }
 
@@ -69,14 +69,21 @@ export class BuilderController {
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(300, 100, true))
   uploadLogo(@UploadedFile() file: File) {
     return tsRestHandler(builderContract.uploadLogo, async () =>
-      this.builderService.uploadLogo(file),
+      this.builderService.uploadImage(file, 'logo'),
+    );
+  }
+
+  @TsRestHandler(builderContract.deleteLogo)
+  deleteLogo() {
+    return tsRestHandler(builderContract.deleteLogo, async () =>
+      this.builderService.deleteImage('logo'),
     );
   }
 
   @TsRestHandler(builderContract.getPastorsImg)
   getPastorsImg() {
     return tsRestHandler(builderContract.getPastorsImg, async () =>
-      this.builderService.getPastorsImg(),
+      this.builderService.getImage('pastorsImg'),
     );
   }
 
@@ -84,14 +91,21 @@ export class BuilderController {
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(700))
   uploadPastorsImg(@UploadedFile() file: File) {
     return tsRestHandler(builderContract.uploadPastorsImg, async () =>
-      this.builderService.uploadPastorsImg(file),
+      this.builderService.uploadImage(file, 'pastorsImg'),
+    );
+  }
+
+  @TsRestHandler(builderContract.deletePastorsImg)
+  deletePastorsImg() {
+    return tsRestHandler(builderContract.deletePastorsImg, async () =>
+      this.builderService.deleteImage('pastorsImg'),
     );
   }
 
   @TsRestHandler(builderContract.getCoverImg)
   getCoverImg() {
     return tsRestHandler(builderContract.getCoverImg, async () =>
-      this.builderService.getCoverImg(),
+      this.builderService.getImage('coverImg'),
     );
   }
 
@@ -99,7 +113,14 @@ export class BuilderController {
   @UseInterceptors(FileInterceptor('image'), new ImageHandler(1400))
   uploadCoverImg(@UploadedFile() file: File) {
     return tsRestHandler(builderContract.uploadCoverImg, async () =>
-      this.builderService.uploadCoverImg(file),
+      this.builderService.uploadImage(file, 'coverImg'),
+    );
+  }
+
+  @TsRestHandler(builderContract.deleteCoverImg)
+  deleteCoverImg() {
+    return tsRestHandler(builderContract.deleteCoverImg, async () =>
+      this.builderService.deleteImage('coverImg'),
     );
   }
 

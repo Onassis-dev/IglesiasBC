@@ -28,47 +28,47 @@ const {
 } = Astro.props;
 ---
 
-<footer class="text-center bg-background text-foreground py-5 z-10 border-t">
-  <div class="flex justify-center gap-4 mb-3">
+<footer class="text-center bg-background text-foreground py-5 border-t">
+  <div class="flex justify-center gap-3.5 mb-3">
     {
       facebookLink && (
         <a href={facebookLink}>
-          <FacebookIcon className=" h-8 aspect-square  " />
+          <img src="/facebook.svg" alt="Facebook" class="size-4" />
         </a>
       )
     }
     {
       instagramLink && (
         <a href={instagramLink}>
-          <InstagramIcon className=" h-8 aspect-square  " />
+          <img src="/instagram.svg" alt="Instagram" class="size-4" />
         </a>
       )
     }
     {
       whatsappLink && (
         <a href={whatsappLink}>
-          <WhatsappIcon className=" h-8 aspect-square  " />
+          <img src="/whatsapp.svg" alt="Whatsapp" class="size-4" />
         </a>
       )
     }
     {
       youtubeLink && (
         <a href={youtubeLink}>
-          <YoutubeIcon className=" h-8 aspect-square  " />
+          <img src="/youtube.svg" alt="Youtube" class="size-4" />
         </a>
       )
     }
     {
       mapsLink && (
         <a href={mapsLink}>
-          <MapIcon className=" h-8 aspect-square  " />
+          <img src="/map.svg" alt="Map" class="size-4" />
         </a>
       )
     }
     {
       donationLink && (
         <a href={donationLink}>
-          <DonationIcon className=" h-8 aspect-square  " />
+          <img src="/donation.svg" alt="Donation" class="size-4" />
         </a>
       )
     }

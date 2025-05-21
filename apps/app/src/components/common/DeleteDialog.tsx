@@ -15,23 +15,29 @@ type DeleteMethodPaths = {
     [method in keyof typeof tsr]: (typeof tsr)[method] extends { delete: any } ? method : never;
 }[keyof typeof tsr];
 
-interface props {
+type props = {
     text: string;
-    onClick?: () => any;
     open: boolean;
     setOpen: any;
-    path: DeleteMethodPaths;
-    id: string | number;
+    path?: DeleteMethodPaths;
+    id?: string | number;
     successMessage: string;
-}
+    func?: () => Promise<any>;
+    queryKey?: string;
+};
 
-const DeleteDialog = ({ text, setOpen, open, id, successMessage, path }: props) => {
+const DeleteDialog = ({ text, setOpen, open, id, successMessage, path, func, queryKey }: props) => {
     const client = useQueryStore((queryClient) => queryClient.queryClient);
 
     const fetchDelete = async () => {
-        await tsr[path].delete.mutate({ params: { id: String(id) } });
-
-        client.refetchQueries({ queryKey: [path] });
+        if (func) {
+            await func();
+            client.refetchQueries({ queryKey: [queryKey] });
+        } else {
+            if (!path || !id) return;
+            await tsr[path].delete.mutate({ params: { id: String(id) } });
+            client.refetchQueries({ queryKey: [path] });
+        }
     };
 
     return (

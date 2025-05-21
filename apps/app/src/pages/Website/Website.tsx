@@ -29,11 +29,19 @@ const Website = () => {
         <>
             <div className="flex flex-wrap lg:flex-nowrap gap-6">
                 <Tabs defaultValue="general" className="w-full h-full lg:max-w-lg">
-                    <TabsList className="grid w-full grid-rows-2 sm:grid-rows-1 grid-cols-2 sm:grid-cols-4 h-20 sm:h-9">
-                        <TabsTrigger value="general">General</TabsTrigger>
-                        <TabsTrigger value="events">Eventos</TabsTrigger>
-                        <TabsTrigger value="activities">Actividades</TabsTrigger>
-                        <TabsTrigger value="gallery">Imágenes</TabsTrigger>
+                    <TabsList className="grid w-full grid-rows-2 sm:grid-rows-1 grid-cols-2 sm:grid-cols-4 h-24 sm:h-10 border bg-dashboardbg rounded-xl">
+                        <TabsTrigger className="rounded-lg shadow-none" value="general">
+                            General
+                        </TabsTrigger>
+                        <TabsTrigger className="rounded-lg shadow-none" value="events">
+                            Eventos
+                        </TabsTrigger>
+                        <TabsTrigger className="rounded-lg shadow-none" value="activities">
+                            Actividades
+                        </TabsTrigger>
+                        <TabsTrigger className="rounded-lg shadow-none" value="gallery">
+                            Imágenes
+                        </TabsTrigger>
                     </TabsList>
                     <TabsContent value="general">
                         <WebSiteForm />
@@ -50,7 +58,7 @@ const Website = () => {
                 </Tabs>
 
                 <div className="w-full h-[calc(100lvh-7rem)] sticky top-0 grid grid-rows-[auto_1fr]">
-                    <div className="w-full h-11 rounded-t-lg flex justify-between items-center px-3 border border-input bg-background ">
+                    <div className="w-full h-11 rounded-t-lg flex justify-between items-center px-3 border border-b-0 border-input bg-background ">
                         <div className="space-x-2">
                             <div className="inline-block w-3 h-3 rounded-full bg-red-400"></div>
                             <div className="inline-block w-3 h-3 rounded-full bg-yellow-400"></div>

@@ -17,7 +17,7 @@ const EventsForm = () => {
                     <CardTitle>Tus eventos</CardTitle>
                 </CardHeader>
                 <CardContent className="p-2 sm:p-6">
-                    <div className="grid sm:grid-cols-2 gap-1 sm:gap-4">
+                    <div className="grid grid-cols-2 gap-1 sm:gap-4">
                         {events.map((event: any, i: any) => (
                             <Event key={i} event={event} />
                         ))}

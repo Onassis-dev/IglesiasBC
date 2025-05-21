@@ -11,6 +11,7 @@ import DatePicker from '@/components/common/DatePicker';
 import { UploadEventSchema } from '@iglesiasbc/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Textarea } from '@/components/ui/textarea';
 
 const UploadEvent = () => {
     const client = tsr.useQueryClient();
@@ -32,6 +33,7 @@ const UploadEvent = () => {
         await api(tsr.builder.uploadEvent, {
             title: values.title,
             date: format(values.date, 'yyyy-MM-dd'),
+            description: values.description || '',
             image: selectedFile,
         });
 
@@ -45,8 +47,9 @@ const UploadEvent = () => {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <button className="rounded-xl aspect-square  border-input border flex justify-center items-center">
-                    <PlusIcon strokeWidth={1} className="w-14 h-14"></PlusIcon>
+                <button className="rounded-xl h-36 border-input border justify-center items-center text-muted-foreground shadow-sm flex flex-col col-span-2">
+                    <PlusIcon className="size-10" strokeWidth={1.7} />
+                    <p>Nuevo evento</p>
                 </button>
             </SheetTrigger>
             <SheetContent submit={submit} className="sm:max-w-[425px]">
@@ -64,6 +67,24 @@ const UploadEvent = () => {
                                         <FormLabel>Título</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Título" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={eventsForm.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Descripción</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                placeholder="Descripción"
+                                                value={field.value || ''}
+                                                onChange={(e) => field.onChange(e.target.value)}
+                                                className="resize-none"
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

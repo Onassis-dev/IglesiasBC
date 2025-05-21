@@ -68,7 +68,7 @@ const BlogForm = ({ id, open, setOpen }: props) => {
         if (id) {
             await api(tsr.posts.put, { ...values, id: Number(id), file: selectedFile });
         } else {
-            if (!selectedFile) throw new Error('No se seleccionó ninguna imagen');
+            if (!selectedFile) throw new Error('No se seleccionó una portada');
             await api(tsr.posts.post, { ...values, file: selectedFile });
         }
 

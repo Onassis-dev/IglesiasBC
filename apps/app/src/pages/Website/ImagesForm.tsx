@@ -3,8 +3,19 @@ import { api, tsr } from '@/lib/boilerplate';
 import { useEffect, useState } from 'react';
 import { showPromise } from '@/lib/showFunctions.tsx';
 import ImageUpload from './ImageUpload';
+import { Button } from '@/components/ui/button';
+import DeleteDialog from '@/components/common/DeleteDialog';
+import { cn } from '@/lib/utils';
 
 type ApiPath = 'uploadChurchImage' | 'uploadPastorsImg' | 'uploadCoverImg' | 'uploadLogo';
+
+const deleteFuncs = {
+    logo: tsr.builder.deleteLogo.mutate,
+    pastorsImg: tsr.builder.deletePastorsImg.mutate,
+    coverImg: tsr.builder.deleteCoverImg.mutate,
+};
+
+const placeholder = '/placeholder.svg';
 
 const ImagesForm = () => {
     const client = tsr.useQueryClient();
@@ -13,6 +24,9 @@ const ImagesForm = () => {
     const [open2, setOpen2] = useState(false);
     const [open3, setOpen3] = useState(false);
     const [open4, setOpen4] = useState(false);
+    const [open5, setOpen5] = useState(false);
+
+    const [selectedImage, setSelectedImage] = useState<keyof typeof deleteFuncs>('logo');
 
     const { data: pastorsImgData } = tsr.builder.getPastorsImg.useQuery({
         queryKey: ['pastorsImg'],
@@ -58,82 +72,133 @@ const ImagesForm = () => {
     }, [open, open2, open3, open4]);
 
     return (
-        <Card className="max-w-full">
-            <CardHeader>
-                <CardTitle>Tu logo</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="flex gap-1 w-full min-h-32 flex-col max-w-80">
-                    <img src={logo} alt="" />
-                    <ImageUpload
-                        text="Subir logo"
-                        apiPath="uploadLogo"
-                        edit={!!logo}
-                        setSelectedFile={setSelectedFile}
-                        uploadImage={sendPromise}
-                        open={open4}
-                        setOpen={setOpen4}
-                    ></ImageUpload>
-                </div>
-            </CardContent>
-            <CardHeader>
-                <CardTitle>Imagen de fondo</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="flex gap-1 w-full min-h-32 flex-col max-w-80">
-                    <img src={coverImg} alt="" />
-                    <ImageUpload
-                        text="Subir imagen de fondo"
-                        apiPath="uploadCoverImg"
-                        edit={!!coverImg}
-                        setSelectedFile={setSelectedFile}
-                        uploadImage={sendPromise}
-                        open={open3}
-                        setOpen={setOpen3}
-                    ></ImageUpload>
-                </div>
-            </CardContent>
-            <CardHeader>
-                <CardTitle>Imagen del pastorado</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="flex gap-1 w-full min-h-32 flex-col max-w-80">
-                    <img src={pastorsImg} alt="" className="aspect-square object-cover" />
-                    <ImageUpload
-                        text="Subir imagen del pastorado"
-                        apiPath="uploadPastorsImg"
-                        edit={!!pastorsImg}
-                        setSelectedFile={setSelectedFile}
-                        uploadImage={sendPromise}
-                        open={open2}
-                        setOpen={setOpen2}
-                    ></ImageUpload>
-                </div>
-            </CardContent>
-            {/* <CardHeader>
-                <CardTitle>Galería de tu página</CardTitle>
-            </CardHeader>
-            <CardContent className="p-2 sm:p-6">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2">
-                    {images.map((image: any) => (
-                        <ChurchImage key={image.img} url={image.img} fetchData={fetchData} />
-                    ))}
+        <>
+            <Card className="max-w-full p-4 space-y-4">
+                <Card className="max-w-full">
+                    <CardHeader>
+                        <CardTitle>Tu logo</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex flex-col">
+                            <img
+                                src={logo || placeholder}
+                                alt="logo"
+                                className={cn(
+                                    'object-contain object-center max-h-32 max-w-full mx-auto mb-4 rounded-lg border',
+                                    !logo && 'h-32 w-32'
+                                )}
+                            />
+                            <div className={cn('grid sm:grid-cols-2 gap-2', !logo && '!grid-cols-1')}>
+                                <ImageUpload
+                                    text="Subir logo"
+                                    apiPath="uploadLogo"
+                                    edit={true}
+                                    setSelectedFile={setSelectedFile}
+                                    uploadImage={sendPromise}
+                                    open={open4}
+                                    setOpen={setOpen4}
+                                    aspectRatio="max-h-64 object-contain"
+                                ></ImageUpload>
+                                {logo && (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            setSelectedImage('logo');
+                                            setOpen5(true);
+                                        }}
+                                    >
+                                        Eliminar
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Imagen del pastorado</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex flex-col">
+                            <img
+                                src={pastorsImg || placeholder}
+                                alt="pastors image"
+                                className={'aspect-square object-cover object-center max-w-64 w-full mx-auto mb-4 rounded-lg border'}
+                            />
+                            <div className={cn('grid sm:grid-cols-2 gap-2', !pastorsImg && '!grid-cols-1')}>
+                                <ImageUpload
+                                    text="Subir imagen del pastorado"
+                                    apiPath="uploadPastorsImg"
+                                    edit={true}
+                                    setSelectedFile={setSelectedFile}
+                                    uploadImage={sendPromise}
+                                    open={open2}
+                                    setOpen={setOpen2}
+                                    aspectRatio="aspect-square"
+                                ></ImageUpload>
+                                {pastorsImg && (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            setSelectedImage('pastorsImg');
+                                            setOpen5(true);
+                                        }}
+                                    >
+                                        Eliminar
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Imagen de fondo</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex flex-col">
+                            <img
+                                src={coverImg || placeholder}
+                                alt="cover image"
+                                className="aspect-video object-cover object-center max-w-full mx-auto mb-4 rounded-lg border w-full"
+                            />
+                            <div className={cn('grid sm:grid-cols-2 gap-2', !coverImg && '!grid-cols-1')}>
+                                <ImageUpload
+                                    text="Subir imagen de fondo"
+                                    apiPath="uploadCoverImg"
+                                    edit={true}
+                                    setSelectedFile={setSelectedFile}
+                                    uploadImage={sendPromise}
+                                    open={open3}
+                                    setOpen={setOpen3}
+                                    aspectRatio="aspect-video"
+                                ></ImageUpload>
+                                {coverImg && (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            setSelectedImage('coverImg');
+                                            setOpen5(true);
+                                        }}
+                                    >
+                                        Eliminar
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </Card>
 
-                    {images.length < limit ? (
-                        <ImageUpload
-                            text="Subir imagen"
-                            apiPath="uploadChurchImage"
-                            setSelectedFile={setSelectedFile}
-                            uploadImage={sendPromise}
-                            open={open}
-                            setOpen={setOpen}
-                        ></ImageUpload>
-                    ) : (
-                        <p>Has alcanzado el límite de imágenes</p>
-                    )}
-                </div>
-            </CardContent> */}
-        </Card>
+            <DeleteDialog
+                text="¿Estás seguro de querer eliminar esta imagen?"
+                open={open5}
+                setOpen={setOpen5}
+                successMessage="Imagen eliminada"
+                func={deleteFuncs[selectedImage]}
+                queryKey={selectedImage}
+            />
+        </>
     );
 };
 

@@ -32,33 +32,37 @@ if (!events) events;
   }
 </style>
 
-<Section1 animations={animations}>
+<Section1 animations={animations} className="!pb-0">
   <div class="flex flex-col">
     <h1 class="font-header text-5xl mb-16 w-full">
       {language === "es" ? "Nuestros eventos" : "Our events"}
     </h1>
-    <div class="flex justify-center mb-16">
-      <div id="caleandar"></div>
+  </div>
+</Section1>
+<Section1 animations={animations} className="mb-16 px-0 !py-0">
+  <div class="flex justify-center">
+    <div id="caleandar"></div>
+  </div>
+</Section1>
+<Section1 animations={animations} className="!pt-0">
+  <div class="space-y-5">
+    <div id="next">
+      <h3 class="text-3xl font-header ml-2 mb-2">
+        {language === "es" ? "Proximos" : "Upcoming"}
+      </h3>
+      <div class="gallery1">
+        {
+          events.map((event: EventType) => (
+            <Event pageTitle={pageTitle} event={event} language={language} />
+          ))
+        }
+      </div>
     </div>
-    <div class="space-y-5">
-      <div id="next">
-        <h3 class="text-3xl font-header ml-2 mb-2">
-          {language === "es" ? "Proximos" : "Upcoming"}
-        </h3>
-        <div class="gallery1">
-          {
-            events.map((event: EventType) => (
-              <Event pageTitle={pageTitle} event={event} />
-            ))
-          }
-        </div>
-      </div>
-      <div id="previous">
-        <h3 class="text-3xl font-header ml-2 mb-2">
-          {language === "es" ? "Pasados" : "Past"}
-        </h3>
-        <div class="gallery1"></div>
-      </div>
+    <div id="previous">
+      <h3 class="text-3xl font-header ml-2 mb-2">
+        {language === "es" ? "Pasados" : "Past"}
+      </h3>
+      <div class="gallery1"></div>
     </div>
   </div>
 </Section1>
@@ -122,3 +126,11 @@ if (!events) events;
     caleandar(element, events, settings);
   });
 </script>
+
+<script src="../general/events.js"></script>
+
+<style is:global>
+  .section-1 {
+    background-color: var(--background) !important;
+  }
+</style>

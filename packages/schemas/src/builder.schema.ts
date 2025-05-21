@@ -3,87 +3,25 @@ import { initContract } from "@ts-rest/core";
 import { parsedString } from "./general.schema";
 
 export const WebsiteSchema = z.object({
-  title: z
-    .string({ required_error: "Requerido." })
-    .min(6, "El título debe tener al menos 6 caracteres.")
-    .max(40, "El título no puede exceder los 40 caracteres."),
-  style: z
-    .string({ required_error: "Elige un estilo." })
-    .max(20, "El estilo debe tener máximo 20 caracteres."),
-  structure: z
-    .string({ required_error: "Elige una estructura." })
-    .max(20, "La estructura debe tener máximo 20 caracteres."),
-  pastors: z
-    .string()
-    .max(70, "El campo de pastores debe tener máximo 70 caracteres.")
-    .optional()
-    .nullable(),
-  servicesDates: z
-    .string()
-    .max(100, "El campo de servicios debe tener máximo 100 caracteres.")
-    .optional()
-    .nullable(),
-  mission: z
-    .string()
-    .min(6, "La misión debe tener al menos 6 caracteres.")
-    .max(200, "La misión no puede exceder los 200 caracteres.")
-    .optional()
-    .nullable(),
-  facebookLink: z
-    .string()
-    .max(255, "El enlace de Facebook no puede exceder los 255 caracteres.")
-    .optional()
-    .nullable(),
-  instagramLink: z
-    .string()
-    .max(255, "El enlace de Instagram no puede exceder los 255 caracteres.")
-    .optional()
-    .nullable(),
-  whatsappLink: z
-    .string()
-    .max(255, "El enlace de WhatsApp no puede exceder los 255 caracteres.")
-    .optional()
-    .nullable(),
-  mapsLink: z
-    .string()
-    .max(
-      255,
-      "El enlace a la ubicación en el mapa no puede exceder los 255 caracteres."
-    )
-    .optional()
-    .nullable(),
-  youtubeLink: z
-    .string()
-    .max(255, "El enlace de YouTube no puede exceder los 255 caracteres.")
-    .optional()
-    .nullable(),
-  preachLink: z
-    .string()
-    .max(255, "El enlace de la prédica no puede exceder los 255 caracteres.")
-    .optional()
-    .nullable(),
-  donationLink: z
-    .string()
-    .max(255, "El enlace de la donación no puede exceder los 255 caracteres.")
-    .optional()
-    .nullable(),
+  title: z.string().min(6).max(40),
+  color: z.string().max(7),
+  style: z.string().max(20),
+  structure: z.string().max(20),
+  pastors: z.string().max(70).optional().nullable(),
+  servicesDates: z.string().max(100).optional().nullable(),
+  mission: z.string().max(200).optional().nullable(),
+  facebookLink: z.string().max(255).optional().nullable(),
+  instagramLink: z.string().max(255).optional().nullable(),
+  whatsappLink: z.string().max(255).optional().nullable(),
+  mapsLink: z.string().max(255).optional().nullable(),
+  youtubeLink: z.string().max(255).optional().nullable(),
+  preachLink: z.string().max(255).optional().nullable(),
+  donationLink: z.string().max(255).optional().nullable(),
   animations: z.string().max(1).optional(),
-  ubication: z
-    .string()
-    .max(100, "La ubicación debe tener máximo 100 caracteres.")
-    .optional()
-    .nullable(),
-  description: z
-    .string()
-    .max(250, "La descripción no puede exceder los 250 caracteres.")
-    .optional()
-    .nullable(),
-  about: z
-    .string()
-    .max(300, "El campo 'Sobre Nosotros' no puede exceder los 300 caracteres.")
-    .optional()
-    .nullable(),
-  language: z.string().max(2, "El idioma debe tener máximo 2 caracteres."),
+  ubication: z.string().optional().nullable(),
+  description: z.string().max(250).optional().nullable(),
+  about: z.string().max(300).optional().nullable(),
+  language: z.string().max(2),
 });
 
 export const StartSchema = z.object({
@@ -92,6 +30,7 @@ export const StartSchema = z.object({
 
 export const UploadEventSchema = z.object({
   title: z.string().min(6).max(40),
+  description: z.string().min(5).max(300).nullish(),
   date: z.string().date().or(z.date()),
   image: z.any(),
 });
@@ -99,6 +38,7 @@ export const UploadEventSchema = z.object({
 const SerializedUploadEventSchema = UploadEventSchema.extend({
   title: parsedString,
   date: parsedString,
+  description: parsedString,
 });
 
 export const DeleteEventSchema = z.object({
@@ -114,14 +54,9 @@ export const DeleteActivitySchema = z.object({
 });
 
 export const PostActivitySchema = z.object({
-  title: z
-    .string()
-    .min(6, "El título de la actividad debe tener al menos 6 caracteres.")
-    .max(40, "El título de la actividad no puede exceder los 40 caracteres."),
-  text: z
-    .string()
-    .min(10, "El texto de la actividad debe tener al menos 10 caracteres.")
-    .max(300, "El texto de la actividad no puede exceder los 300 caracteres."),
+  title: z.string().min(6).max(40),
+  text: z.string().min(10).max(300),
+  date: z.string().max(30).nullish(),
   image: z.any(),
 });
 
@@ -132,6 +67,7 @@ export const EditActivitySchema = PostActivitySchema.extend({
 const SerializedPostActivitySchema = PostActivitySchema.extend({
   text: parsedString,
   title: parsedString,
+  date: parsedString,
 });
 
 const SerializedEditActivitySchema = SerializedPostActivitySchema.extend({
@@ -209,6 +145,13 @@ export const builderContract = c.router(
       contentType: "multipart/form-data",
       body: FileUploadSchema,
     },
+    deleteLogo: {
+      path: "/logo",
+      method: "DELETE",
+      responses: {
+        200: z.any(),
+      },
+    },
     getPastorsImg: {
       path: "/pastorsimg",
       method: "GET",
@@ -225,6 +168,13 @@ export const builderContract = c.router(
       contentType: "multipart/form-data",
       body: FileUploadSchema,
     },
+    deletePastorsImg: {
+      path: "/pastorsimg",
+      method: "DELETE",
+      responses: {
+        200: z.any(),
+      },
+    },
     getCoverImg: {
       path: "/coverimg",
       method: "GET",
@@ -240,6 +190,13 @@ export const builderContract = c.router(
       },
       contentType: "multipart/form-data",
       body: FileUploadSchema,
+    },
+    deleteCoverImg: {
+      path: "/coverimg",
+      method: "DELETE",
+      responses: {
+        200: z.any(),
+      },
     },
     getEvents: {
       path: "/events",
