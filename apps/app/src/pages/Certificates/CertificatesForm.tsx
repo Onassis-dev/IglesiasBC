@@ -252,19 +252,19 @@ const CertificatesForm = ({ open, setOpen }: props) => {
                                         <FormLabel>Diseño</FormLabel>
                                         <FormControl {...field} className="grid grid-cols-2 gap-2">
                                             <RadioGroup onValueChange={field.onChange} defaultValue={'1'}>
-                                                <RadioGroupItem value="1" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                <RadioGroupItem value="1" className="w-full aspect-[11/8.5] rounded-sm border overflow-hidden">
                                                     <img src="/certificates/1.webp" alt="Diseño 1" loading="lazy" />
                                                 </RadioGroupItem>
-                                                <RadioGroupItem value="2" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                <RadioGroupItem value="2" className="w-full aspect-[11/8.5] rounded-sm border overflow-hidden">
                                                     <img src="/certificates/2.webp" alt="Diseño 2" loading="lazy" />
                                                 </RadioGroupItem>
-                                                <RadioGroupItem value="3" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                <RadioGroupItem value="3" className="w-full aspect-[11/8.5] rounded-sm border overflow-hidden">
                                                     <img src="/certificates/3.webp" alt="Diseño 3" loading="lazy" />
                                                 </RadioGroupItem>
-                                                <RadioGroupItem value="4" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                <RadioGroupItem value="4" className="w-full aspect-[11/8.5] rounded-sm border overflow-hidden">
                                                     <img src="/certificates/4.webp" alt="Diseño 4" loading="lazy" />
                                                 </RadioGroupItem>
-                                                <RadioGroupItem value="5" className="w-full aspect-[11/8.5] rounded-sm border">
+                                                <RadioGroupItem value="5" className="w-full aspect-[11/8.5] rounded-sm border overflow-hidden">
                                                     <img src="/certificates/5.webp" alt="Diseño 5" loading="lazy" />
                                                 </RadioGroupItem>
                                             </RadioGroup>

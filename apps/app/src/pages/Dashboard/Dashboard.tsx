@@ -16,7 +16,7 @@ const Dashboard = () => {
             <h2 className="text-2xl font-semibold mb-6 pl-0.5">
                 {greeting} {data?.userData?.username}
             </h2>
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-2 sm:gap-4">
                 {data?.stats?.members && (
                     <Link to="/members">
                         <InfoCard color="purple" title="Miembros activos" data={data?.stats?.members}>

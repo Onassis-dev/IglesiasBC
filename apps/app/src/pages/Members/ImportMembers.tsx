@@ -94,8 +94,9 @@ const ImportMembers = () => {
                                     <Input value={getFormUrl(formUrl)} readOnly className="font-mono text-sm" />
 
                                     <Share url={getFormUrl(formUrl)} title="Formulario de registro">
-                                        <Button variant="outline" size="icon" className="shrink-0">
+                                        <Button variant="outline" size="sm" className="shrink-0 gap-1.5">
                                             <Share2Icon className="size-4 cursor-pointer" />
+                                            Compartir
                                         </Button>
                                     </Share>
                                 </div>
