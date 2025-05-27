@@ -1,6 +1,6 @@
 import { Modal, ModalContent, ModalTitle } from '@/components/ui/auto-modal';
 import { ModalHeader } from '@/components/ui/auto-modal';
-import { Download, Share2, Trash, UsersRound } from 'lucide-react';
+import { Badge, CalendarIcon, Download, Share2, Trash, UsersRound } from 'lucide-react';
 import { displayDate } from '@/lib/timeFunctions';
 import { Button } from '@/components/ui/button';
 import Share from '@/components/common/Share';
@@ -54,7 +54,7 @@ const CertificatesCard = ({ certificate, open, setOpen, setDelete }: props) => {
 
                     <div className="flex items-center gap-3">
                         <div className="bg-muted rounded-md p-2 flex items-center justify-center">
-                            <UsersRound className="w-5 h-5 text-muted-foreground" />
+                            <Badge className="w-5 h-5 text-muted-foreground" />
                         </div>
                         <div className="min-h-10">
                             <p className="text-sm font-medium">Tipo de certificado</p>
@@ -64,7 +64,7 @@ const CertificatesCard = ({ certificate, open, setOpen, setDelete }: props) => {
 
                     <div className="flex items-center gap-3">
                         <div className="bg-muted rounded-md p-2 flex items-center justify-center">
-                            <UsersRound className="w-5 h-5 text-muted-foreground" />
+                            <CalendarIcon className="w-5 h-5 text-muted-foreground" />
                         </div>
                         <div className="min-h-10">
                             <p className="text-sm font-medium">Fecha de expedición</p>

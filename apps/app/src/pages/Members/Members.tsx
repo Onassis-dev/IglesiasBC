@@ -114,7 +114,14 @@ export function Members() {
                         <TableBody>
                             {birthdays ? (
                                 birthdays?.map((birthday: any, i: any) => (
-                                    <TableRow key={i}>
+                                    <TableRow
+                                        key={i}
+                                        className="cursor-pointer"
+                                        onClick={() => {
+                                            setSelectedMember(birthday);
+                                            setOpen1(true);
+                                        }}
+                                    >
                                         <TableCell>{birthday.name}</TableCell>
                                         <TableCell>{displayDate(setCurrentYear(birthday.birthday), `EEEE d 'de' MMMM`)}</TableCell>
                                         <TableCell>{calculateAge(birthday.birthday)}</TableCell>

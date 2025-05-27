@@ -7,7 +7,7 @@ export const UserSchema = z.object({
 });
 
 export const FrontendUserSchema = z.object({
-  username: z.string().min(3),
+  username: z.string().min(3).max(30),
   churchId: z.string().min(1),
 });
 

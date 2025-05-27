@@ -41,7 +41,7 @@ export class MembersService {
 
   async getBirthdays() {
     const rows = await sql`
-    SELECT name, birthday,
+    SELECT id, name, cellphone, email, baptized, email, birthday, "joinDate", "countryCode", "positionId", genre, "civilStatus",
     EXTRACT(MONTH FROM birthday) as month
     FROM members
     WHERE "churchId" = ${this.req.getChurchId()} 

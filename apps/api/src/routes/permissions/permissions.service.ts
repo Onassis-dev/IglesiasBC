@@ -29,9 +29,9 @@ export class PermissionsService {
     const result = rows
       .map((row) => ({
         ...row,
-
         username: query.users.find((user) => user.uid === row.userId)
           ?.displayName,
+        email: query.users.find((user) => user.uid === row.userId)?.email,
       }))
       .filter((row: any) => row.userId !== this.req.getUserId());
 

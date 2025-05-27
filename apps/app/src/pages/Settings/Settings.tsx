@@ -24,7 +24,7 @@ const planNames = ['Plan Gratuito', 'Plan básico', 'Plan avanzado'];
 const Settings = () => {
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<z.infer<typeof EditPermissionSchema>>();
+    const [selectedUser, setSelectedUser] = useState<z.infer<typeof EditPermissionSchema> & { username: string; email: string }>();
 
     const settingsForm = useForm<z.infer<typeof ChurchSchema>>({
         resolver: zodResolver(ChurchSchema),

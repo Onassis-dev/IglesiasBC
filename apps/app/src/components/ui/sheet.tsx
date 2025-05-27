@@ -86,7 +86,14 @@ SheetFooter.displayName = 'SheetFooter';
 
 const SheetTitle = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Title>, React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>>(
     ({ className, ...props }, ref) => (
-        <SheetPrimitive.Title ref={ref} className={cn('text-md font-medium sm:font-semibold text-foreground', className)} {...props} />
+        <SheetPrimitive.Title
+            ref={ref}
+            className={cn(
+                'text-md font-medium sm:font-semibold text-foreground overflow-hidden text-ellipsis px-6 text-center sm:text-left',
+                className
+            )}
+            {...props}
+        />
     )
 );
 SheetTitle.displayName = SheetPrimitive.Title.displayName;

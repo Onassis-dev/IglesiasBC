@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { EditPermissionSchema } from '@iglesiasbc/schemas';
 
 interface props {
-    user: z.infer<typeof EditPermissionSchema> | undefined;
+    user: (z.infer<typeof EditPermissionSchema> & { username: string; email: string }) | undefined;
     open: boolean;
     setOpen: (open: boolean) => void;
 }
@@ -35,7 +35,6 @@ const UserForm = ({ user, open, setOpen }: props) => {
     const client = tsr.useQueryClient();
 
     const handleSubmit = async (values: z.infer<typeof EditPermissionSchema>) => {
-        console.log(values);
         await api(tsr.permissions.edit, values);
         client.refetchQueries({ queryKey: ['permissions'] });
         setOpen(false);
@@ -48,7 +47,6 @@ const UserForm = ({ user, open, setOpen }: props) => {
         }
 
         if (!user) return;
-
         userForm.reset({
             ...user,
         });
@@ -62,7 +60,7 @@ const UserForm = ({ user, open, setOpen }: props) => {
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetContent className="max-w-4xl" submit={submit}>
                 <SheetHeader>
-                    <SheetTitle>Actualizar usuario</SheetTitle>
+                    <SheetTitle>{user?.username || 'Actualizar usuario'}</SheetTitle>
                 </SheetHeader>
 
                 <SheetBody>
@@ -199,6 +197,13 @@ const UserForm = ({ user, open, setOpen }: props) => {
                                     </FormItem>
                                 )}
                             />
+
+                            <FormItem>
+                                <div className="grid mb-4">
+                                    <FormLabel className="mb-2">Correo electrónico</FormLabel>
+                                    <span className="text-secondary font-medium text-xs">{user?.email}</span>
+                                </div>
+                            </FormItem>
                         </form>
                     </Form>
                 </SheetBody>
