@@ -1,8 +1,8 @@
 # IglesiasBC
 
-## Descripción
+## Description
 
-[IglesiasBC](https://iglesiasbc.com) es una plataforma SaaS diseñada para la gestión y conexión de iglesias. El proyecto está estructurado como un monorepo que contiene múltiples aplicaciones y paquetes compartidos.
+[IglesiasBC](https://iglesiasbc.com) is a SaaS platform designed for the management and connection of churches. The project is organized as a monorepo containing multiple applications and shared packages.
 
 ## Estructura del Monorepo
 
@@ -26,11 +26,11 @@ iglesiasbc/
 - **Frontend**: React + Vite
 - **Backend**: NestJS + Fastify
 - **Global**: typescript, ts-rest, shadcn/ui, pnpm
-- **Base de Datos**: PostgreSQL
-- **Documentación**: Scalar, OpenAPI
-- **Despliegue**: Docker, Coolify
+- **Database**: PostgreSQL
+- **Documentation**: Scalar, OpenAPI
+- **Deployment**: Docker, Coolify
 
-## Comandos
+## Common Commands
 
 ```bash
 # Desarrollo
